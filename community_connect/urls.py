@@ -32,7 +32,9 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),  # Add the contact path
     path('profile/', views.profile, name='profile'),  # Ensure this line exists
     path('accounts/', include('allauth.urls')),  # Include allauth URLs
+    
 ]
+
 
 
 
