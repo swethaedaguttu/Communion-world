@@ -19,7 +19,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'events',
-    'features',
     'channels',
     'django.contrib.sites',
     'allauth',

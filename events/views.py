@@ -29,7 +29,6 @@ from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipFo
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required  # Import login_required
-from features.models import Feature  # Import your Feature model
 from django.contrib.auth.views import LoginView
 from django.utils import timezone
 from django.core.paginator import Paginator
@@ -83,7 +82,6 @@ def index(request):
     communities = Community.objects.all()
     unified_nights = UnifiedNight.objects.all()
     events = Event.objects.all()
-    features = Feature.objects.all()
     activities = Activity.objects.all()
 
     search_query = request.GET.get('search', '')
@@ -96,7 +94,6 @@ def index(request):
         'communities': communities,
         'unified_nights': unified_nights,
         'events': events,
-        'features': features,
         'activities': activities,
         'search_query': search_query,  # Include the search query in the context
     }
