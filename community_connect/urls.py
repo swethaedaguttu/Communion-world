@@ -28,7 +28,6 @@ urlpatterns = [
     path('events/', include('events.urls')),
     path('', views.index, name='index'),  # Set the index view for the root URL
     path('login/', views.user_login, name='user_login'),  # Add this for login URL
-    path('features/', include('features.urls')),
     path('about/', views.about_us, name='about_us'),  # Add the about us path
     path('contact/', views.contact, name='contact'),  # Add the contact path
     path('profile/', views.profile, name='profile'),  # Ensure this line exists
