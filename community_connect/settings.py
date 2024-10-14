@@ -1,16 +1,19 @@
 import os
 from pathlib import Path
-import os
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Secret key (keep it secret in production)
 SECRET_KEY = 'django-insecure-djcw^76tgoo9l_r1zbqi0s*g!31q!lgi-h=nrwwinh37$i@cpi'
 
-DEBUG = True
+# Debugging settings
+DEBUG = True  # Set to False in production
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Update as needed
+# Allowed hosts
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Add your domain in production
 
+# Installed apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -30,8 +33,10 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_totp',
 ]
 
+# Site ID for django.contrib.sites
 SITE_ID = 1
 
+# Middleware settings
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -44,8 +49,10 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
+# URL configuration
 ROOT_URLCONF = 'community_connect.urls'
 
+# Templates configuration
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -62,16 +69,20 @@ TEMPLATES = [
     },
 ]
 
+# WSGI application
 WSGI_APPLICATION = 'community_connect.wsgi.application'
 
+# ASGI application
 ASGI_APPLICATION = 'community_connect.asgi.application'
 
+# Channel layers configuration
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # Use Redis in production
     },
 }
 
+# Database configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -79,6 +90,7 @@ DATABASES = {
     }
 }
 
+# Password validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -94,33 +106,63 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Localization settings
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
+# Static files settings
 STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'events', 'static'),
 ]
+
+# Media files settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Authentication settings
 LOGIN_URL = '/login/'
-
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
-
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'error.log'),
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
