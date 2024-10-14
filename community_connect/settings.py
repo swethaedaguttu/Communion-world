@@ -5,13 +5,13 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Secret key (keep it secret in production)
-SECRET_KEY = 'django-insecure-djcw^76tgoo9l_r1zbqi0s*g!31q!lgi-h=nrwwinh37$i@cpi'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-default-secret-key')
 
 # Debugging settings
-DEBUG = True  # Set to False in production
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'  # Set to 'False' in production
 
 # Allowed hosts
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Add your domain in production
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,yourusername.pythonanywhere.com').split(',')
 
 # Installed apps
 INSTALLED_APPS = [
@@ -72,7 +72,7 @@ TEMPLATES = [
 # WSGI application
 WSGI_APPLICATION = 'community_connect.wsgi.application'
 
-# ASGI application
+# ASGI application (if using Channels)
 ASGI_APPLICATION = 'community_connect.asgi.application'
 
 # Channel layers configuration
@@ -85,8 +85,13 @@ CHANNEL_LAYERS = {
 # Database configuration
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.sqlite3',  # Change to 'django.db.backends.postgresql' for production
+        'NAME': BASE_DIR / 'db.sqlite3',  # Use environment variables for production databases
+        # If using PostgreSQL, add the following:
+        # 'USER': os.environ.get('DB_USER'),
+        # 'PASSWORD': os.environ.get('DB_PASSWORD'),
+        # 'HOST': os.environ.get('DB_HOST'),
+        # 'PORT': os.environ.get('DB_PORT'),
     }
 }
 
@@ -166,3 +171,4 @@ LOGGING = {
         },
     },
 }
+
