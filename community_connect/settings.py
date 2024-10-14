@@ -1,18 +1,15 @@
 import os
 from pathlib import Path
-import dj_database_url
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-default-secret-key')  # Use an environment variable for production
+SECRET_KEY = 'django-insecure-djcw^76tgoo9l_r1zbqi0s*g!31q!lgi-h=nrwwinh37$i@cpi'
 
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'  # Set to False in production
+DEBUG = True
 
-ALLOWED_HOSTS = [
-    'community-world.onrender.com',  # Your Render app URL
-    'localhost',
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Update as needed
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -66,6 +63,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'community_connect.wsgi.application'
+
 ASGI_APPLICATION = 'community_connect.asgi.application'
 
 CHANNEL_LAYERS = {
@@ -74,25 +72,12 @@ CHANNEL_LAYERS = {
     },
 }
 
-# Database configuration (update as needed for production)
 DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgresql://postgres:postgres@localhost:5432/mysite',
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
-# For production, consider using PostgreSQL
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('DB_NAME'),
-#         'USER': os.environ.get('DB_USER'),
-#         'PASSWORD': os.environ.get('DB_PASSWORD'),
-#         'HOST': os.environ.get('DB_HOST', 'localhost'),
-#         'PORT': os.environ.get('DB_PORT', '5432'),
-#     }
-# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -110,17 +95,20 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
+
 TIME_ZONE = 'UTC'
+
 USE_I18N = True
+
 USE_TZ = True
 
 STATIC_URL = '/static/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'events', 'static'),
 ]
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
