@@ -5,14 +5,12 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Secret key (keep it secret in production)
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-default-secret-key')
+SECRET_KEY = 'django-insecure-djcw^76tgoo9l_r1zbqi0s*g!31q!lgi-h=nrwwinh37$i@cpi'
 
-# Debugging settings
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'  # Set to 'False' in production
+DEBUG = True # Set to 'False' in production
 
-# Allowed hosts
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,yourusername.pythonanywhere.com').split(',')
-
+# Allowed hosts - allows all hosts if DEBUG is True, otherwise, limit to production hosts
+ALLOWED_HOSTS = []
 # Installed apps
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -48,6 +46,8 @@ MIDDLEWARE = [
     'django_otp.middleware.OTPMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 ]
+
+
 
 # URL configuration
 ROOT_URLCONF = 'community_connect.urls'
@@ -87,7 +87,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',  # Change to 'django.db.backends.postgresql' for production
         'NAME': BASE_DIR / 'db.sqlite3',  # Use environment variables for production databases
-        # If using PostgreSQL, add the following:
+        # If using PostgreSQL, uncomment and use these:
         # 'USER': os.environ.get('DB_USER'),
         # 'PASSWORD': os.environ.get('DB_PASSWORD'),
         # 'HOST': os.environ.get('DB_HOST'),
@@ -171,4 +171,3 @@ LOGGING = {
         },
     },
 }
-

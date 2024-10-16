@@ -539,7 +539,7 @@ class RequestHelpCategory4View(View):
     def get(self, request):
         return render(request, 'events/request_help_category_4.html')
 
-
+@login_required
 def community_networking(request):
     # Retrieve all users in the community excluding the current user
     try:

@@ -24,16 +24,9 @@ from events import views  # Import views from the 'events' app
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('communities/', include('events.urls')),
-    path('events/', include('events.urls')),
-    path('', views.index, name='index'),  # Set the index view for the root URL
-    path('login/', views.user_login, name='user_login'),  # Add this for login URL
-    path('about/', views.about_us, name='about_us'),  # Add the about us path
-    path('contact/', views.contact, name='contact'),  # Add the contact path
-    path('profile/', views.profile, name='profile'),  # Ensure this line exists
-    path('accounts/', include('allauth.urls')),  # Include allauth URLs
+    path('', include('events.urls')),  # Include the app's URL patterns at the root
+    path('accounts/', include('allauth.urls')),
 ]
-
 
 
 
