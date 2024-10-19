@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -15,7 +17,7 @@ class UserProfile(models.Model):
     profile_picture = models.ImageField(upload_to='profile_pictures/', default='default.jpg')
     phone_number = models.CharField(max_length=15, blank=True, null=True)  # Optional contact number
     email_verified = models.BooleanField(default=False)  # Track if the user's email is verified
-    email = models.EmailField(unique=True)
+    email = models.EmailField(max_length=254, unique=True, null=True, blank=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
 
@@ -25,7 +27,12 @@ class UserProfile(models.Model):
 # Automatically create a UserProfile when a new User is created
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance)
+        UserProfile.objects.create(
+            user=instance,
+            email=instance.email,  # Ensure email is from User model
+            first_name=instance.first_name,  # Correctly using the first name
+            last_name=instance.last_name,  # Correctly using the last name
+        )
 
 post_save.connect(create_user_profile, sender=User)
 
@@ -268,4 +275,33 @@ class VolunteerHistory(models.Model):
 
     def __str__(self):
         return f"{self.volunteer_name} - {self.activity.name} ({self.date})"
+
+class VolunteerOpportunity(models.Model):
+    CATEGORY_CHOICES = [
+        ('environmental', 'Environmental'),
+        ('educational', 'Educational'),
+        ('community_service', 'Community Service'),
+        ('interfaith', 'Interfaith'),
+    ]
+
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    image = models.URLField(null=True, blank=True)
+    location = models.CharField(max_length=200)
+    age_requirement = models.CharField(max_length=100)
+    attendees = models.IntegerField(default=0)
+    contact_info = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
+
+
+class SignUp(models.Model):
+    opportunity = models.ForeignKey(VolunteerOpportunity, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+
+    def __str__(self):
+        return f"{self.name} - {self.opportunity.title}"
 

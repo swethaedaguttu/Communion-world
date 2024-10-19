@@ -56,24 +56,26 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" name="username" required placeholder="Enter Username" aria-label="Username" />
+                <input type="text" class="form-control" id="username" name="username" required placeholder="Enter Username" autocomplete="username" />
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required placeholder="Enter Password" aria-label="Password" />
+                <input type="password" class="form-control" id="password" name="password" required placeholder="Enter Password" autocomplete="current-password" />
             </div>
             <button type="submit" class="btn btn-primary btn-block">Login</button>
         </form>
         <p class="footer-text">Don't have an account? <a href="{% url 'register' %}">Register here</a>.</p>
     </div>
 
+
+
     <script>
         // Function to check if the username exists
         async function checkUsername(username) {
-            const response = await fetch(`/check-username/${username}/`); // Replace with your actual endpoint
+            const response = await fetch(`/check-username/${username}/`);
             if (response.ok) {
                 const data = await response.json();
-                return data.exists; // Expecting a response like { exists: true } or { exists: false }
+                return data.exists;
             }
             throw new Error('Network response was not ok');
         }
@@ -84,7 +86,7 @@
             
             if (!username || !password) {
                 event.preventDefault();  // Prevent form submission
-                alert('Please fill out both fields.');  // Show a simple alert
+                alert('Please fill out both fields.');
             } else {
                 // Show loading animation
                 document.querySelector('.loading').style.display = 'block';
@@ -96,11 +98,11 @@
                         this.submit();
                     } else {
                         event.preventDefault(); // Prevent form submission
-                        alert('Username not found. Please register.'); // Show a message
+                        alert('Username not found. Please register.');
                     }
                 } catch (error) {
                     console.error('Error checking username:', error);
-                    alert('An error occurred. Please try again.'); // Handle error
+                    alert('An error occurred. Please try again.');
                 } finally {
                     // Hide loading animation
                     document.querySelector('.loading').style.display = 'none';

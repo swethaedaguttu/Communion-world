@@ -5,120 +5,157 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}InterfaithConnect{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    {% load static %}
-    <link rel="icon" type="image/x-icon" href="{% static 'events/favicon.ico' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
-        /* General body styles */
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #e1e4e7; /* Light gray-blue background */
-            color: #333; /* Dark gray text color */
-        }
-
-        /* Navbar styles */
-        .navbar {
-            background-color: #343a40; /* Dark background for the navbar */
-            position: relative; /* Ensure proper positioning */
+/* General body styles */
+html, body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: white;
+    color: #1b1a1a; /* Dark gray text color */
+    box-sizing: border-box;
 }
-       
-    
 
+/* Navbar styling */
+.navbar {
+    width: 100%;
+    background-color: #A43820; /* Navbar background color */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 90px;
+}
+
+/* Profile image adjustments */
 .navbar .profile-pic {
-    width: 50px; /* Change this value to adjust size */
-    height: 50px; /* Change this value to adjust size */
-    border-radius: 50%; /* Makes the image round */
+    width: 50px; /* Adjust size of the profile image */
+    height: 50px;
+    border-radius: 50%; /* Round image */
 }
 
-
-
-.navbar .profile-name {
-    margin-left: 10px; /* Space between picture and name */
+/* Brand styling */
+.navbar-brand {
+    color: #ececf6 !important;
+    font-weight: bold;
+    font-size: 2.8rem;
+    transition: color 0.3s ease;
 }
 
+.navbar-brand:hover {
+    color: #e9e8e3 !important;
+}
 
-        .navbar-brand {
-            color: #15133C !important; /* White brand color */
-            font-weight: bold;
-            font-size: 2.8rem; /* Larger font size */
-            transition: color 0.3s ease;
-            
-        }
+/* Navbar link styling */
+.nav-link {
+    color: #111010 !important;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 15px; /* Increase padding for better click area */
+}
 
-        .navbar-brand:hover {
-            color: #e9e8e3 !important; /* Golden color on hover */
-        }
+.nav-link:hover {
+    color: #ffcc00 !important;
+}
 
-        .nav-link {
-            color: #d80e0e !important; /* White color for nav links */
-            font-weight: 500; /* Medium weight for better visibility */
-            transition: color 0.3s ease; /* Smooth color transition on hover */
-            position: relative;
-            right: auto;
-            text-decoration: none; /* Remove underlines from links */
+/* Profile section alignment */
+.profile-section {
+    position: relative;
+    right: 0;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
 
-        }
+/* Main container styles */
+.container {
+    max-width: 100%; /* Full width */
+    margin: 0; /* Remove any default margin */
+    padding: 0; /* Remove default padding */
+    display: flex; /* Flex layout to adjust items */
+}
 
-        .nav-link:hover {
-            color: #ffcc00 !important; /* Golden color on hover */
-            text-decoration: none; /* Underline effect on hover */
-        }
+.sidebar {
+    padding: 15px; /* Reduced padding */
+    position: sticky;
+    top: 0;
+    height: 100%; /* Full height */
+    width: 200px; /* Adjust width */
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+}
 
-        /* Main container styles */
-        .container {
-            max-width: 100%; /* Set a maximum width for the content */
-            margin: 0; /* Center the content */
-            padding: 20px; /* Add padding to the container */
-            background-color: #B7CADB;
-        }
+.sidebar h4 {
+    font-size: 18px; /* Reduce font size */
+    margin-bottom: 10px; /* Reduce space below heading */
+}
 
-        /* Sidebar styles */
-        .sidebar {
-            background-color: #EC994B; /* Light background for the sidebar */
-            border-right: 1px solid #dee2e6; /* Border for separation */
-            padding: 20px; /* Padding for the sidebar */
-            position: sticky; /* Keep sidebar sticky */
-            top: 0; /* Stay at the top of the viewport */
-            height: 100%; /* Full height */
-            
-        }
-        .sidebar a {
-        text-decoration: none; /* Remove underlines from all links in the sidebar */
-        color: #333; /* Set a default color for links */
-        }
+/* Sidebar item styles */
+.list-group-item {
+    font-size: 14px; /* Smaller font for items */
+    display: flex;
+    align-items: center; /* Align icons with text */
+    padding: 10px; /* Adjust padding */
+    background-color: transparent; /* Keep background transparent */
+    border: none; /* Remove borders */
+    margin: 0; /* Remove any margin */
+    box-shadow: none; /* Remove shadow */
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+}
 
-        .sidebar a:hover {
-        text-decoration: none; /* Ensure no underline on hover */
-        color: #ffcc00; /* Change color on hover if needed */
-        }
+.list-group-item a {
+    text-decoration: none;
+    color: #d81616; /* Default link color */
+    margin-left: 10px; /* Add spacing between icon and text */
+}
 
+.list-group-item a:hover {
+    color: #A43820; /* Change text color on hover */
+}
 
-        .sidebar-right {
-            border-left: 1px solid #dee2e6; /* Border for separation on the right sidebar */
-        }
+.list-group-item i {
+    color: #A43820; /* Default icon color */
+    margin-right: 10px; /* Space between icon and text */
+}
 
-        /* Community Connect heading styles */
-        h1 {
-            text-align: center; /* Center the heading */
-            font-size: 3.5rem; /* Larger font size for the heading */
-            color: #007bff; /* Blue color for the heading */
-            margin-bottom: 20px; /* Space below the heading */
-            animation: fadeIn 1s ease; /* Fade-in animation */
-        }
+.list-group-item:hover i {
+    color: #ffcc00; /* Icon color when hovering */
+}
 
-        ul {
-        list-style-type: none; /* Remove bullet points */
-        padding-left: 0; /* Remove padding */
-        }
+.list-group-item:hover a {
+    color: #A43820; /* Darker text color on hover */
+}
 
-        ul li {
+/* Container spacing */
+.mt-4 {
+    margin-top: 0; /* Remove margin between navbar and container */
+}
+
+/* Sidebar link styles */
+.sidebar a {
+    text-decoration: none;
+    color: #333; /* Default color */
+}
+
+/* Community Connect heading styles */
+h1 {
+    text-align: center; /* Center the heading */
+    font-size: 3.5rem; /* Larger font size */
+    color: #A43820; /* Blue color */
+    margin-bottom: 20px; /* Space below the heading */
+    animation: fadeIn 1s ease; /* Fade-in animation */
+}
+
+/* List styles */
+ul {
+    list-style-type: none; /* Remove bullet points */
+    padding-left: 0; /* Remove padding */
+}
+
+ul li {
         background-color: #ebebef; /* Background color for list items */
         margin: 15px 0; /* Space between list items */
         padding: 20px; /* Padding inside list items */
-        border-radius: 10px; /* Rounded corners */
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Light shadow effect */
-        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover effect */
         }
 
         /* Targeting links within the list items */
@@ -138,95 +175,141 @@ ul li:hover {
     transform: translateY(-5px); /* Slight upward movement on hover */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
 }
+
+
+
+/* Card styles */
 .card {
-    background-color: #15133C; /* Light blue for "Offer Help" */
+    background-color: #A7BEAE; /* Dark background */
 }
 
 .card-header {
-    background-color: #007bff; /* Blue header for "Offer Help" */
-    color: white; /* White text color for header */
+    background-color: #A43820; /* Blue header */
+    color: white; /* White text */
 }
 
+/* Second card (Request Help) */
 .card:nth-child(2) .card {
-    background-color: white; /* Light pink for "Request Help" */
+    background-color: white;
 }
 
 .card:nth-child(2) .card-header {
-    background-color: #dc3545; /* Red header for "Request Help" */
-    color: white; /* White text color for header */
+    background-color: #dc3545; /* Red header */
+    color: white;
 }
 
-        /* Footer styles */
-        footer {
-            background-color: #343a40; /* Same color as the navbar */
-            color: #ffffff; /* White text color */
-            padding: 20px 0; /* Vertical padding */
-        }
+/* Footer styles */
+footer {
+    background-color: #343a40; /* Dark footer */
+    color: #ffffff; /* White text */
+    padding: 20px 0;
+}
 
-        footer p {
-            margin: 0; /* Remove default margin */
-            text-align: center; /* Center footer text */
-        }
+footer p {
+    margin: 0;
+    text-align: center; /* Center footer text */
+}
 
-        /* Animation for the heading */
-        @keyframes fadeIn {
-            from {
-                opacity: 0; /* Start transparent */
-            }
-            to {
-                opacity: 1; /* End fully visible */
-            }
-        }
+/* Button styles */
+.btn-custom {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
 
-        /* Button styles */
-        .btn-custom {
-            background-color: #007bff; /* Custom button color */
-            color: #ffffff; /* White text */
-            border: none; /* Remove border */
-            padding: 10px 20px; /* Padding */
-            border-radius: 5px; /* Rounded corners */
-            transition: background-color 0.3s ease, transform 0.3s ease; /* Transition for hover effect */
-        }
+.btn-custom:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px); /* Move up on hover */
+}
 
-        .btn-custom:hover {
-            background-color: #0056b3; /* Darker blue on hover */
-            transform: translateY(-3px); /* Slight upward movement on hover */
-        }
+/* Search bar styles */
+.search-container {
+    text-align: center;
+    margin: 20px 0;
+}
 
-        /* Search bar styles */
-        .search-container {
-            text-align: center;
-            margin: 20px 0; /* Space above and below */
-        }
+.search-input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    transition: border 0.3s ease;
+}
 
-        .search-input {
-            width: 300px; /* Fixed width for the input */
-            padding: 10px; /* Padding */
-            border: 1px solid #ced4da; /* Light gray border */
-            border-radius: 5px; /* Rounded corners */
-            transition: border 0.3s ease; /* Smooth border transition */
-        }
+.search-input:focus {
+    border-color: #007bff;
+    outline: none; /* Remove outline */
+}
 
-        .search-input:focus {
-            border-color: #007bff; /* Change border color on focus */
-            outline: none; /* Remove outline */
-        }
+/* Responsive styles */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none; /* Hide sidebar on small screens */
+    }
 
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .sidebar {
-                display: none; /* Hide sidebar on smaller screens */
-            }
+    .container {
+        padding: 10px;
+        flex-direction: column; /* Stack elements */
+    }
 
-            .container {
-                padding: 10px; /* Reduce padding on smaller screens */
-            }
-        }
+    .main-content {
+        width: 100%; /* Full width */
+    }
+}
+
+/* Toggle button styles */
+.navbar-toggler {
+    border: none;
+    background-color: #ffcc00; /* Yellow background */
+}
+
+.navbar-toggler:focus {
+    outline: none; /* Remove focus outline */
+    box-shadow: none; /* Remove shadow */
+}
+
+.navbar-toggler-ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar-toggler-ul li a {
+    text-decoration: none;
+    color: #111010 !important;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-toggler-ul li a:hover {
+    background-color: #ffcc00;
+    color: #007bff !important;
+}
+
+/* Navbar toggle icon */
+.navbar-toggler-icon {
+    background-color: transparent;
+    color: #fff;
+}
+
+/* Animation for heading */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
+    <nav class="navbar navbar-expand-lg">
             <a class="navbar-brand" href="{% url 'index' %}">InterfaithConnect</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -255,59 +338,76 @@ ul li:hover {
                         <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                     </li>
                 </ul>
-<!-- Profile Section -->
-<div class="d-flex flex-column align-items-center" style="position: absolute; right: 20px;">
-    <a href="{% url 'profile_edit' %}">
-        <img src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_640.jpg" alt="Profile" class="rounded-circle profile-pic">
-    </a>
-    <span class="mt-1">SSSS</span> <!-- Replace 'Your Name' with the actual name -->
-</div>
-
-            </div>
+                <!-- Profile Section -->
+                <div class="d-flex flex-column align-items-center profile-section">
+                    <a href="{% url 'profile_edit' %}">
+                        <img src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_640.jpg" alt="Profile" class="rounded-circle profile-pic">
+                    </a>
+                    <span class="mt-1">SSSS</span> <!-- Replace 'Your Name' with the actual name -->
+                </div>
+            
         </div>
     </nav>
-    
-    
+        
     <div class="container mt-4 d-flex flex-row">
         <!-- Left Sidebar -->
-         
         <div class="sidebar d-none d-md-block col-md-3">
             <h4>Quick Links</h4>
             <ul class="list-group">
-                <li class="list-group-item"><a href="{% url 'community_list' %}">View All Communities</a></li>
-                <li class="list-group-item"><a href="{% url 'event_list' %}">View All Events</a></li>
-                <li class="list-group-item"><a href="{% url 'interfaith_networking' %}">Interfaith Networking</a></li>
-                <li class="list-group-item"><a href="{% url 'about_us' %}">About Us</a></li>
-                <li class="list-group-item"><a href="{% url 'contact' %}">Contact Us</a></li>
-                <li class="list-group-item"><a href="{% url 'settings' %}">Settings</a></li>
+                <li class="list-group-item">
+                    <i class="fas fa-users"></i>
+                    <a href="{% url 'community_list' %}">View All Communities</a>
+                </li>
+                <li class="list-group-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <a href="{% url 'event_list' %}">View All Events</a>
+                </li>
+                <li class="list-group-item">
+                    <i class="fas fa-handshake"></i>
+                    <a href="{% url 'interfaith_networking' %}">Interfaith Networking</a>
+                </li>
+                <li class="list-group-item">
+                    <i class="fas fa-info-circle"></i>
+                    <a href="{% url 'about_us' %}">About Us</a>
+                </li>
+                <li class="list-group-item">
+                    <i class="fas fa-envelope"></i>
+                    <a href="{% url 'contact' %}">Contact Us</a>
+                </li>
+                <li class="list-group-item">
+                    <i class="fas fa-cog"></i>
+                    <a href="{% url 'settings' %}">Settings</a>
+                </li>
                 <!-- Toggle Button -->
-                <button class="btn btn-link" id="toggleLinks">Show More Links</button>
-                <div id="additionalLinks" style="display: none;"> <!-- Hidden by default -->
-                <li class="list-group-item"><a href="#volunteer_opportunities">Volunteer Opportunities</a></li>
-                <li class="list-group-item"><a href="#interfaith_collaboration">Interfaith Collaboration Tools</a></li>
-                <li class="list-group-item"><a href="#shared_prayer_requests">Shared Prayer Requests</a></li>
-                <li class="list-group-item"><a href="#meditation_tools">Meditation Tools</a></li>
-                <li class="list-group-item"><a href="#social_media_integration#">Social Media Integration</a></li>
-                <li class="list-group-item"><a href="#community_groups">Community Groups</a></li>
-                <li class="list-group-item"><a href="#gamification_elements">Gamification Elements</a></li>
-                <li class="list-group-item"><a href="#multilingual_support">Multilingual Support</a></li>
-                <li class="list-group-item"><a href="#interactive_maps">Interactive Maps</a></li>
-                <li class="list-group-item"><a href="#cultural_exchange">Cultural Exchange Programs</a></li>
-                <li class="list-group-item"><a href="#mentorship_opportunities">Mentorship Opportunities</a></li>
-                <li class="list-group-item"><a href="#collaborative_projects">Collaborative Projects</a></li>
-                <li class="list-group-item"><a href="#resource_hub">Resource Hub</a></li>
-                <li class="list-group-item"><a href="#feedback_improvement">Feedback and Improvement</a></li>
-                <li class="list-group-item"><a href="#integration_with_texts">Integration with Religious Texts</a></li>
-                <li class="list-group-item"><a href="#charitable_initiatives">Charitable Initiatives</a></li>
-                <li class="list-group-item"><a href="#user_generated_content">User-Generated Content</a></li>
-                <li class="list-group-item"><a href="#faith_based_challenges">Faith-Based Challenges</a></li>
-                <li class="list-group-item"><a href="#crisis_response">Crisis Response Features</a></li>
-                <li class="list-group-item"><a href="#app_integration">App Integration with Social Services</a></li>
-                <li class="list-group-item"><a href="#diversity_celebrations">Diversity Celebrations</a></li>
-                <li class="list-group-item"><a href="#offline_accessibility">Offline Accessibility</a></li>
-                <li class="list-group-item"><a href="#language_tools">Language and Translation Tools</a></li>
-                <li class="list-group-item"><a href="#sustainability_initiatives">Environmental Sustainability Initiatives</a></li>
-                <li class="list-group-item"><a href="#wellness_resources">Wellness and Mental Health Resources</a></li>
+               
+                <!-- Toggle Button -->
+               
+                    <li class="list-group-item"><i class="fas fa-hands-helping"></i> <a href="{% url 'volunteer_opportunities' %}">Volunteer Opportunities</a></li>
+                    <li class="list-group-item"><i class="fas fa-network-wired"></i> <a href="#interfaith_collaboration">Interfaith Collaboration Tools</a></li>
+                    <li class="list-group-item"><i class="fas fa-praying-hands"></i> <a href="#shared_prayer_requests">Shared Prayer Requests</a></li>
+                    <li class="list-group-item"><i class="fas fa-meditation"></i> <a href="#meditation_tools">Meditation Tools</a></li>
+                    <li class="list-group-item"><i class="fas fa-share-alt"></i> <a href="#social_media_integration">Social Media Integration</a></li>
+                    <li class="list-group-item"><i class="fas fa-users"></i> <a href="#community_groups">Community Groups</a></li>
+                    <li class="list-group-item"><i class="fas fa-gamepad"></i> <a href="#gamification_elements">Gamification Elements</a></li>
+                    <li class="list-group-item"><i class="fas fa-language"></i> <a href="#multilingual_support">Multilingual Support</a></li>
+                    <li class="list-group-item"><i class="fas fa-map-marked-alt"></i> <a href="#interactive_maps">Interactive Maps</a></li>
+                    <li class="list-group-item"><i class="fas fa-exchange-alt"></i> <a href="#cultural_exchange">Cultural Exchange Programs</a></li>
+                    <li class="list-group-item"><i class="fas fa-user-graduate"></i> <a href="#mentorship_opportunities">Mentorship Opportunities</a></li>
+                    <li class="list-group-item"><i class="fas fa-project-diagram"></i> <a href="#collaborative_projects">Collaborative Projects</a></li>
+                    <li class="list-group-item"><i class="fas fa-folder"></i> <a href="#resource_hub">Resource Hub</a></li>
+                    <li class="list-group-item"><i class="fas fa-comment-alt"></i> <a href="#feedback_improvement">Feedback and Improvement</a></li>
+                    <li class="list-group-item"><i class="fas fa-book"></i> <a href="#integration_with_texts">Integration with Religious Texts</a></li>
+                    <li class="list-group-item"><i class="fas fa-hand-holding-heart"></i> <a href="#charitable_initiatives">Charitable Initiatives</a></li>
+                    <li class="list-group-item"><i class="fas fa-users-cog"></i> <a href="#user_generated_content">User-Generated Content</a></li>
+                    <li class="list-group-item"><i class="fas fa-tasks"></i> <a href="#faith_based_challenges">Faith-Based Challenges</a></li>
+                    <li class="list-group-item"><i class="fas fa-life-ring"></i> <a href="#crisis_response">Crisis Response Features</a></li>
+                    <li class="list-group-item"><i class="fas fa-mobile-alt"></i> <a href="#app_integration">App Integration with Social Services</a></li>
+                    <li class="list-group-item"><i class="fas fa-globe"></i> <a href="#diversity_celebrations">Diversity Celebrations</a></li>
+                    <li class="list-group-item"><i class="fas fa-wifi"></i> <a href="#offline_accessibility">Offline Accessibility</a></li>
+                    <li class="list-group-item"><i class="fas fa-globe"></i> <a href="#language_tools">Language and Translation Tools</a></li>
+                    <li class="list-group-item"><i class="fas fa-seedling"></i> <a href="#sustainability_initiatives">Environmental Sustainability Initiatives</a></li>
+                    <li class="list-group-item"><i class="fas fa-heartbeat"></i> <a href="#wellness_resources">Wellness and Mental Health Resources</a></li>
+                
 
 
 
@@ -315,7 +415,7 @@ ul li:hover {
         </div>
     
         <!-- Main Content Area -->
-        <div class="main-content col-md-6">
+        <div class="main-content col-md-8">
             <h1 class="text-center">Welcome to InterfaithConnect</h1>
             <p class="lead text-center">Connecting communities, offering support, and sharing experiences across different faiths.</p>
     
@@ -394,16 +494,7 @@ ul li:hover {
         </div>
     
         <!-- Right Sidebar -->
-        <div class="sidebar d-none d-md-block col-md-3">
-            <h4>Upcoming Events</h4>
-            <ul class="list-group">
-                <li class="list-group-item">Event 1: Details of event 1.</li>
-                <li class="list-group-item">Event 2: Details of event 2.</li>
-                <li class="list-group-item">Event 3: Details of event 3.</li>
-                <li class="list-group-item">Event 4: Details of event 4.</li>
-                <li class="list-group-item">Event 5: Details of event 5.</li>
-            </ul>
-        </div>
+       
     </div>
     
     <footer>

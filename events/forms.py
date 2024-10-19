@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import (
     Community, Event, UnifiedNight, Activity, Partnership, SupportRequest,
     Resource, Notification, Feedback, UserProfile, Poll, ConnectionRequest,
-    DiscussionThread, Comment, ResourceRequest, VolunteerHistory, Thread, Comment,
+    DiscussionThread, Comment, ResourceRequest, VolunteerHistory, Thread, Comment, VolunteerOpportunity, SignUp,
 
 )
 
@@ -25,8 +25,8 @@ class EventForm(forms.ModelForm):
         ]
 
 class UserRegistrationForm(forms.ModelForm):
-    confirm_password = forms.CharField(widget=forms.PasswordInput)
-    password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
+    password = forms.CharField(widget=forms.PasswordInput, label='Password')
 
     class Meta:
         model = User
@@ -41,6 +41,14 @@ class UserRegistrationForm(forms.ModelForm):
             self.add_error('confirm_password', 'Passwords must match.')
 
         return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])  # Hash the password
+        if commit:
+            user.save()
+        return user
+
 
 class PartnershipForm(forms.ModelForm):
     class Meta:
@@ -177,3 +185,24 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['first_name', 'last_name', 'profile_picture']  # Include fields you want to update
+
+class VolunteerOpportunityForm(forms.ModelForm):
+    class Meta:
+        model = VolunteerOpportunity
+        fields = ['title', 'description', 'location', 'age_requirement', 'contact_info']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter title'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter description'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter location'}),
+            'age_requirement': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter age requirement'}),
+            'contact_info': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter contact info'}),
+        }
+
+class SignUpForm(forms.ModelForm):
+    class Meta:
+        model = SignUp
+        fields = ['name', 'email']  # Use 'name' instead of 'first_name' and 'last_name'
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter full name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter email'}),
+        }

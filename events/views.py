@@ -21,7 +21,9 @@ from .models import (
     ResourceRequest,
     VolunteerHistory,
     HelpRequest, 
-    Thread, # Import your UserProfile model correctly
+    Thread,
+    VolunteerOpportunity, SignUp,
+ # Import your UserProfile model correctly
 )
 
 from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipForm, SupportForm, FeedbackForm, PollForm, ConnectionRequestForm, ProfileUpdateForm, ProfileEditForm, NotificationPreferencesForm, ProfilePictureForm, CommunityProfileForm, ThreadForm
@@ -106,56 +108,58 @@ def index(request):
 class CustomLoginView(LoginView):
     template_name = 'events/login.html'  # Your login template
 
-    def get(self, request, *args, **kwargs):
-        # Check if there is a message in the session to display
-        message = request.GET.get('message')
-        if message:
-            messages.error(request, message)
-        return super().get(request, *args, **kwargs)
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid username or password.')
+        return super().form_invalid(form)
 
 # Registration view
 def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
+            email = form.cleaned_data.get('email')
+
+            # Check if the email already exists in the User model
+            if User.objects.filter(email=email).exists():
+                messages.error(request, 'This email is already registered. Please use a different email.')
+                return render(request, 'events/register.html', {'form': form})
+
+            # Create the user
             user = form.save()  # Save the user
-            UserProfile.objects.create(user=user)  # Create a user profile
+            
+            # UserProfile is created automatically due to the signal
+
             messages.success(request, 'Registration successful! You can log in now.')
-            return redirect('login')
+            return redirect('login')  # Redirect to the login page
+        else:
+            messages.error(request, 'There were errors in the form submission.')
+            print(form.errors)  # Debugging print for errors
+
     else:
         form = UserRegistrationForm()
+    
     return render(request, 'events/register.html', {'form': form})
-# Login view
+    
+# Login view (use Django's built-in view or customize this)
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        # Check if both fields are filled
         if username and password:
-            # Authenticate the user
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
-                if user.is_active:  # Check if user is active
-                    login(request, user)
-
-                    # Check if UserProfile exists
-                    try:
-                        user_profile = UserProfile.objects.get(user=user)
-                    except UserProfile.DoesNotExist:
-                        messages.error(request, 'Your profile does not exist. Please contact support.')
-                        return redirect('index')
-
-                    return redirect('index')  # Redirect to the home page after login
-                else:
-                    messages.error(request, 'Your account is inactive. Please contact support.')
+                login(request, user)
+                messages.success(request, 'You have successfully logged in.')
+                return redirect('index')  # Redirect to the home page
             else:
-                messages.error(request, 'Invalid username or password.')  # Handle invalid credentials
+                messages.error(request, 'Invalid username or password.')  # Invalid credentials
         else:
-            messages.error(request, 'Please fill out both fields.')
+            messages.error(request, 'Please fill out both fields.')  # Missing input
 
-    return render(request, 'events/login.html')  # No need to pass messages here
+    return render(request, 'events/login.html')
 
 # Logout view
 def user_logout(request):
@@ -169,7 +173,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for user in User.objects.all():
-            if not hasattr(user, 'userprofile'):
+            if not UserProfile.objects.filter(user=user).exists():
                 UserProfile.objects.create(user=user)
                 self.stdout.write(self.style.SUCCESS(f'Created UserProfile for {user.username}'))
 
@@ -539,7 +543,7 @@ class RequestHelpCategory4View(View):
     def get(self, request):
         return render(request, 'events/request_help_category_4.html')
 
-@login_required
+
 def community_networking(request):
     # Retrieve all users in the community excluding the current user
     try:
@@ -718,7 +722,7 @@ def profile_edit(request):
     return render(request, 'profile_edit.html', context)
 
 
-@login_required
+
 def update_password(request):
     if request.method == 'POST':
         password_form = PasswordUpdateForm(user=request.user, data=request.POST)
@@ -765,7 +769,7 @@ def delete_notification(request, notification_id):
     except Notification.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Notification not found'}, status=404)
 
-@login_required
+
 def settings_view(request):
     user = request.user
     profile, created = UserProfile.objects.get_or_create(user=user)
@@ -801,3 +805,48 @@ def settings_view(request):
         'notification_form': notification_form,
     }
     return render(request, 'events/settings.html', context)
+
+def opportunities_list(request):
+    opportunities = VolunteerOpportunity.objects.all()
+
+    # Handle Add Opportunity Form
+    if request.method == 'POST' and 'add_opportunity' in request.POST:
+        add_form = VolunteerOpportunityForm(request.POST)
+        if add_form.is_valid():
+            add_form.save()
+            return redirect('opportunities_list')
+    else:
+        add_form = VolunteerOpportunityForm()
+
+    # Handle Feedback Form
+    if request.method == 'POST' and 'feedback' in request.POST:
+        # Process feedback form logic here
+        return JsonResponse({'success': True})
+
+    # Initialize SignUpForm for rendering
+    sign_up_form = SignUpForm()
+
+    return render(request, 'volunteer/volunteer_opportunities.html', {
+        'opportunities': opportunities,
+        'add_form': add_form,
+        'sign_up_form': sign_up_form,
+    })
+
+def sign_up(request, opportunity_id):
+    opportunity = get_object_or_404(VolunteerOpportunity, id=opportunity_id)
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            signup = form.save(commit=False)
+            signup.opportunity = opportunity
+            signup.save()
+            opportunity.attendees += 1
+            opportunity.save()
+            return JsonResponse({'success': True})
+    else:
+        form = SignUpForm()
+
+    return render(request, 'volunteer/sign_up.html', {
+        'form': form, 
+        'opportunity': opportunity
+    })
