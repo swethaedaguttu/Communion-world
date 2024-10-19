@@ -39,7 +39,7 @@ from events.views import (
     delete_request_view,
     edit_request_view,
     create_community_profile,
-    view_thread, opportunities_list, sign_up ,
+    view_thread, volunteer_opportunities, sign_up ,
 )
 
 urlpatterns = [
@@ -90,7 +90,7 @@ urlpatterns = [
     path('create-thread/', create_thread, name='create_thread'),
     path('events/thread/<int:thread_id>/', view_thread, name='view_thread'),
     path('events/thread/<int:thread_id>/add_comment/', add_comment, name='add_comment'),
-    path('', opportunities_list, name='volunteer_opportunities'),  # Volunteer opportunities list page
+    path('volunteer-opportunities/', volunteer_opportunities, name='volunteer_opportunities'),
     path('sign-up/<int:opportunity_id>/', sign_up, name='sign_up'),  # Sign-up page for a specific opportunity
 
 

@@ -26,7 +26,7 @@ from .models import (
  # Import your UserProfile model correctly
 )
 
-from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipForm, SupportForm, FeedbackForm, PollForm, ConnectionRequestForm, ProfileUpdateForm, ProfileEditForm, NotificationPreferencesForm, ProfilePictureForm, CommunityProfileForm, ThreadForm
+from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipForm, SupportForm, FeedbackForm, PollForm, ConnectionRequestForm, ProfileUpdateForm, ProfileEditForm, NotificationPreferencesForm, ProfilePictureForm, CommunityProfileForm, ThreadForm, VolunteerOpportunityForm, SignUpForm
  # Import your forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -115,57 +115,57 @@ class CustomLoginView(LoginView):
 # Registration view
 def register(request):
     if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get('email')
+        uname = request.POST.get('username')
+        email = request.POST.get('email')
+        pass1 = request.POST.get('password1')
+        pass2 = request.POST.get('password2')
 
-            # Check if the email already exists in the User model
-            if User.objects.filter(email=email).exists():
-                messages.error(request, 'This email is already registered. Please use a different email.')
-                return render(request, 'events/register.html', {'form': form})
+        # Check for empty fields
+        if not uname or not email or not pass1 or not pass2:
+            messages.error(request, "All fields are required.")
+            return redirect('register')
 
-            # Create the user
-            user = form.save()  # Save the user
-            
-            # UserProfile is created automatically due to the signal
+        # Check if the username already exists
+        if User.objects.filter(username=uname).exists():
+            messages.error(request, "Username already exists. Please choose a different one.")
+            return redirect('register')
 
-            messages.success(request, 'Registration successful! You can log in now.')
-            return redirect('login')  # Redirect to the login page
-        else:
-            messages.error(request, 'There were errors in the form submission.')
-            print(form.errors)  # Debugging print for errors
+        # Check if the email already exists
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email already exists. Please choose a different one.")
+            return redirect('register')
 
-    else:
-        form = UserRegistrationForm()
-    
-    return render(request, 'events/register.html', {'form': form})
-    
+        # Check if passwords match
+        if pass1 != pass2:
+            messages.error(request, "Your password and confirm password do not match!")
+            return redirect('register')
+
+        # Create the user
+        my_user = User.objects.create_user(username=uname, email=email, password=pass1)
+        my_user.save()
+        messages.success(request, 'Registration successful! You can now log in.')
+        return redirect('login')
+
+    return render(request, 'events/register.html')
 # Login view (use Django's built-in view or customize this)
 
 def user_login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        if username and password:
-            user = authenticate(request, username=username, password=password)
-
-            if user is not None:
-                login(request, user)
-                messages.success(request, 'You have successfully logged in.')
-                return redirect('index')  # Redirect to the home page
-            else:
-                messages.error(request, 'Invalid username or password.')  # Invalid credentials
+    if request.method=='POST':
+        username=request.POST.get('username')
+        pass1=request.POST.get('pass')
+        user=authenticate(request,username=username,password=pass1)
+        if user is not None:
+            login(request,user)
+            return redirect('index')
         else:
-            messages.error(request, 'Please fill out both fields.')  # Missing input
+            return HttpResponse ("Username or Password is incorrect!!!")
 
-    return render(request, 'events/login.html')
+    return render (request,'events/login.html')
 
 # Logout view
 def user_logout(request):
     logout(request)
-    messages.success(request, 'You have been logged out.')
-    return redirect('index')
+    return redirect('login')
 
 # Command to create UserProfiles for existing users
 class Command(BaseCommand):
@@ -806,7 +806,7 @@ def settings_view(request):
     }
     return render(request, 'events/settings.html', context)
 
-def opportunities_list(request):
+def volunteer_opportunities(request):
     opportunities = VolunteerOpportunity.objects.all()
 
     # Handle Add Opportunity Form
@@ -826,7 +826,7 @@ def opportunities_list(request):
     # Initialize SignUpForm for rendering
     sign_up_form = SignUpForm()
 
-    return render(request, 'volunteer/volunteer_opportunities.html', {
+    return render(request, 'events/volunteer_opportunities.html', {
         'opportunities': opportunities,
         'add_form': add_form,
         'sign_up_form': sign_up_form,

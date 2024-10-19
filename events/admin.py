@@ -1,7 +1,7 @@
 # events/admin.py
 
 from django.contrib import admin
-from .models import Community, Thread, Comment
+from .models import Community, Thread, Comment, VolunteerOpportunity
 
 @admin.register(Community)
 class CommunityAdmin(admin.ModelAdmin):
@@ -10,3 +10,4 @@ class CommunityAdmin(admin.ModelAdmin):
 
 admin.site.register(Thread)
 admin.site.register(Comment)
+admin.site.register(VolunteerOpportunity)
