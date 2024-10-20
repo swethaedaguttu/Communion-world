@@ -36,6 +36,7 @@ from django.contrib.auth.views import LoginView
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django_otp.decorators import otp_required
+from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.db import IntegrityError
 from django.contrib.auth.models import User  # Import the User model
@@ -753,15 +754,20 @@ def profile_edit(request):
 
 @require_POST
 def update_profile_picture(request):
-    profile_picture = request.FILES.get('profile_picture')
-    user_profile = request.user.userprofile
+    try:
+        profile_picture = request.FILES.get('profile_picture')
+        user_profile = request.user.userprofile
 
-    if profile_picture:
-        user_profile.profile_picture = profile_picture
-        user_profile.save()
-        return JsonResponse({'status': 'success'})
-    else:
-        return JsonResponse({'status': 'error', 'message': 'No file uploaded.'}, status=400)
+        if profile_picture:
+            user_profile.profile_picture = profile_picture
+            user_profile.full_clean()  # Validate the model
+            user_profile.save()
+            return JsonResponse({'status': 'success', 'message': 'Profile picture updated successfully!'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'No file uploaded.'}, status=400)
+    except Exception as e:
+        logger.error(f"Error updating profile picture: {e}")
+        return JsonResponse({'status': 'error', 'message': 'An error occurred while updating the profile picture.'}, status=500)
 
 @require_POST
 def update_personal_info(request):
@@ -771,6 +777,7 @@ def update_personal_info(request):
     if not name:
         return JsonResponse({'status': 'error', 'message': 'Name is required.'}, status=400)
 
+    # Update the user profile fields
     user_profile.name = name
     user_profile.location = request.POST.get('location', user_profile.location)
     user_profile.country = request.POST.get('country', user_profile.country)
@@ -782,8 +789,14 @@ def update_personal_info(request):
     user_profile.interests = request.POST.get('interests', user_profile.interests)
     user_profile.social_links = request.POST.get('social_links', user_profile.social_links)
 
-    user_profile.save()
-    return JsonResponse({'status': 'success'})
+    try:
+        user_profile.full_clean()  # Validate the model before saving
+        user_profile.save()
+        return JsonResponse({'status': 'success', 'message': 'Personal information updated successfully!'})
+    except ValidationError as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': 'An error occurred while saving personal information.'}, status=500)
 
 
 def notification_center(request):

@@ -284,26 +284,32 @@
             }, 3000);
         }
 
-        function updateProfilePicture() {
-            const formData = new FormData(document.getElementById('profilePictureForm'));
-            fetch("{% url 'update_profile_picture' %}", {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.querySelector('.profile-picture img').src = data.new_picture_url; // Update profile picture
-                    showToast("Profile picture updated successfully!");
-                } else {
-                    showToast("Failed to update profile picture: " + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showToast("An error occurred while updating the profile picture.");
-            });
+        function updateProfilePicture(event) {
+    event.preventDefault(); // Prevent form submission
+    const formData = new FormData(document.querySelector('#profilePictureForm'));
+
+    fetch('/profile/update/picture/', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            alert(data.message);
+        } else {
+            alert(`Error: ${data.message}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while updating the profile picture.');
+    });
+}
 
         function updatePersonalInfo() {
             const formData = new FormData(document.getElementById('personalInfoForm'));
