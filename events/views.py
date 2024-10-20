@@ -749,21 +749,6 @@ def profile_edit(request):
 
 
 
-def update_password(request):
-    if request.method == 'POST':
-        password_form = PasswordUpdateForm(user=request.user, data=request.POST)
-        if password_form.is_valid():
-            user = password_form.save()
-            update_session_auth_hash(request, user)  # Keeps the user logged in after password change
-            messages.success(request, 'Your password has been updated successfully.')
-            return redirect('profile_edit')
-        else:
-            messages.error(request, 'Please correct the errors in the form.')
-
-    return redirect('profile_edit')
-
-# View for updating the password
-
 
 def notification_center(request):
     # Query all notifications for the logged-in user, ordered by most recent first
@@ -882,3 +867,63 @@ def sign_up(request, opportunity_id):
         'form': form, 
         'opportunity': opportunity
     })
+
+@login_required
+def profile_view(request):
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    activities = Activity.objects.filter(user=request.user)
+    return render(request, 'profile.html', {'user_profile': user_profile, 'activities': activities})
+
+# View for editing user profile
+@login_required
+def edit_profile(request):
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile_view')  # Redirect to profile view after saving
+    else:
+        form = UserProfileForm(instance=user_profile)
+    return render(request, 'edit_profile.html', {'form': form})
+
+# View for adding an activity
+@login_required
+def add_activity(request):
+    if request.method == 'POST':
+        form = ActivityForm(request.POST)
+        if form.is_valid():
+            activity = form.save(commit=False)
+            activity.user = request.user
+            activity.save()
+            return redirect('profile_view')
+    else:
+        form = ActivityForm()
+    return render(request, 'add_activity.html', {'form': form})
+
+# View for listing resources
+def resource_list(request):
+    resources = Resource.objects.all()
+    return render(request, 'resource_list.html', {'resources': resources})
+
+# View for adding a resource
+@login_required
+def add_resource(request):
+    if request.method == 'POST':
+        form = ResourceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('resource_list')
+    else:
+        form = ResourceForm()
+    return render(request, 'add_resource.html', {'form': form})
+
+# Example of a view for enabling 2FA (if you decide to implement it)
+@login_required
+def enable_2fa(request):
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    if request.method == 'POST':
+        user_profile.is_2fa_enabled = True
+        user_profile.save()
+        return redirect('profile_view')
+    return render(request, 'enable_2fa.html', {'user_profile': user_profile})
