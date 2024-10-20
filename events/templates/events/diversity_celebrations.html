@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diversity Celebrations</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        header {
+            background: #007bff;
+            color: white;
+            padding: 20px 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+        }
+
+        nav {
+            text-align: center;
+        }
+
+        nav ul {
+            list-style-type: none;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ffc107;
+        }
+
+        /* Main Styles */
+        main {
+            padding: 20px 0;
+        }
+
+        section {
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        h2 {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Cultural Celebrations Card Styles */
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            width: calc(30% - 20px);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            padding: 15px;
+            background: #007bff;
+            color: white;
+        }
+
+        .card p {
+            padding: 15px;
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 15px 0;
+            background: #f1f1f1;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                width: calc(100% - 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Diversity Celebrations</h1>
+            <nav>
+                <ul>
+                    <li><a href="#cultural-celebrations">Cultural Celebrations</a></li>
+                    <li><a href="#significance">Significance</a></li>
+                    <li><a href="#participate">How to Participate</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="cultural-celebrations">
+            <h2>Cultural Celebrations Around the World</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Diwali</h3>
+                    <p>The Festival of Lights celebrated by Hindus, Sikhs, and Jains, symbolizing the victory of light over darkness.</p>
+                </div>
+                <div class="card">
+                    <h3>Holi</h3>
+                    <p>The Festival of Colors celebrated in India, marking the arrival of spring and love.</p>
+                </div>
+                <div class="card">
+                    <h3>Chinese New Year</h3>
+                    <p>A festival that celebrates the beginning of the new year in the lunar calendar, featuring family reunions and feasts.</p>
+                </div>
+                <div class="card">
+                    <h3>Ramadan</h3>
+                    <p>A holy month of fasting and prayer for Muslims, culminating in Eid al-Fitr, a celebration of breaking the fast.</p>
+                </div>
+                <div class="card">
+                    <h3>Thanksgiving</h3>
+                    <p>A harvest festival celebrated in the United States and Canada, expressing gratitude for the year's blessings.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="significance">
+            <h2>Significance of Diversity Celebrations</h2>
+            <p>Diversity celebrations are essential for fostering understanding and respect among different cultures. They promote:</p>
+            <ul>
+                <li><strong>Awareness:</strong> Increased knowledge about different cultures and traditions.</li>
+                <li><strong>Inclusivity:</strong> Encouragement of acceptance and appreciation for all backgrounds.</li>
+                <li><strong>Community Building:</strong> Strengthening community bonds through shared experiences and celebrations.</li>
+                <li><strong>Cultural Preservation:</strong> Maintaining and passing on cultural practices and traditions.</li>
+            </ul>
+        </section>
+
+        <section id="participate">
+            <h2>How to Participate in Diversity Celebrations</h2>
+            <p>Here are some ways you can engage in diversity celebrations:</p>
+            <ul>
+                <li><strong>Attend Local Events:</strong> Participate in festivals and events in your community that celebrate different cultures.</li>
+                <li><strong>Volunteer:</strong> Offer your time to organizations that promote cultural awareness and diversity.</li>
+                <li><strong>Learn:</strong> Educate yourself about various cultural practices and their significance.</li>
+                <li><strong>Share:</strong> Encourage conversations about diversity within your family and social circles.</li>
+                <li><strong>Support:</strong> Support businesses and artists from diverse backgrounds.</li>
+            </ul>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <form id="contact-form">
+                <input type="text" id="contact-name" placeholder="Your Name" required>
+                <input type="email" id="contact-email" placeholder="Your Email" required>
+                <textarea id="contact-message" placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 InterfaithConnect</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
