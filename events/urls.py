@@ -104,6 +104,7 @@ urlpatterns = [
     path('2fa/enable/', enable_2fa, name='enable_2fa'),  # Enable two-factor authentication
     path('profile/update/picture/', update_profile_picture, name='update_profile_picture'),
     path('profile/update/info/', update_personal_info, name='update_personal_info'),
+    path('profile/', profile_view, name='profile'),  # Ensure this line is present
 
 
 ]

@@ -205,17 +205,17 @@
         <section class="profile-picture">
             <h2>Profile Picture</h2>
             <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
-            <form method="post" enctype="multipart/form-data" id="profilePictureForm" onsubmit="event.preventDefault(); updateProfilePicture();">
+            <form method="post" enctype="multipart/form-data" id="profilePictureForm">
                 {% csrf_token %}
                 <input type="file" id="profile_picture" name="profile_picture" accept="image/*" required>
-                <button type="submit">Update Picture</button>
+                <button type="submit" onclick="updateProfilePicture(event)">Update Picture</button>
             </form>
         </section>
 
         <!-- Personal Information Section -->
         <section>
             <h2>Personal Information</h2>
-            <form method="post" id="personalInfoForm" onsubmit="event.preventDefault(); updatePersonalInfo();">
+            <form method="post" id="personalInfoForm">
                 {% csrf_token %}
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" value="{{ user.username }}" required>
@@ -250,91 +250,92 @@
                 <textarea id="interests" name="interests" rows="4">{{ user_profile.interests }}</textarea>
 
                 <label for="social_links">Social Links:</label>
-                <input type="text" id="social_links" name="social_links" value="{{ user_profile.social_links }}">
+                <textarea id="social_links" name="social_links" rows="4">{{ user_profile.social_links }}</textarea>
 
-                <button type="submit">Update Information</button>
+                <button type="submit" onclick="updatePersonalInfo(event)">Update Information</button>
             </form>
         </section>
 
         <!-- Volunteer History Section -->
         <section class="volunteer-history">
-            <h2>Your Volunteer History</h2>
-            <ul>
-                {% for volunteer in volunteer_history %}
-                <li>{{ volunteer.title }} - {{ volunteer.organization }} ({{ volunteer.date }})</li>
+            <h2>Volunteer History</h2>
+            <ul id="volunteerHistoryList">
+                {% for volunteer in user_profile.volunteer_history.all %}
+                    <li>{{ volunteer.position }} at {{ volunteer.organization }} ({{ volunteer.start_date }} - {{ volunteer.end_date }})</li>
                 {% endfor %}
             </ul>
         </section>
-
-        <!-- Pagination -->
-
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast"></div>
+    <!-- Pagination (if needed) -->
+    <div class="pagination">
+        <a href="#">Previous</a>
+        <a href="#">Next</a>
+    </div>
 
-    <!-- JavaScript Functions -->
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 InterfaithConnect. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Profile updated successfully!</div>
+
     <script>
+        // Function to update the profile picture
+        function updateProfilePicture(event) {
+            event.preventDefault();
+            const form = document.getElementById('profilePictureForm');
+            const formData = new FormData(form);
+
+            fetch('/profile/update/picture/', {  // Update to match URL pattern
+    method: 'POST',
+    body: formData,
+})
+
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Profile picture updated successfully!');
+                    document.querySelector('.profile-picture img').src = data.new_image_url; // Update the image preview
+                } else {
+                    showToast('Error updating profile picture.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Function to update personal information
+        function updatePersonalInfo(event) {
+            event.preventDefault();
+            const form = document.getElementById('personalInfoForm');
+            const formData = new FormData(form);
+
+            fetch('/profile/update/info/', {  // Update to match URL pattern
+    method: 'POST',
+    body: formData,
+})
+
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Personal information updated successfully!');
+                } else {
+                    showToast('Error updating personal information.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Function to show toast notifications
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.style.display = 'block';
             setTimeout(() => {
                 toast.style.display = 'none';
-            }, 3000);
-        }
-
-        function updateProfilePicture(event) {
-    event.preventDefault(); // Prevent form submission
-    const formData = new FormData(document.querySelector('#profilePictureForm'));
-
-    fetch('/profile/update/picture/', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.status === 'success') {
-            alert(data.message);
-        } else {
-            alert(`Error: ${data.message}`);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while updating the profile picture.');
-    });
-}
-
-        function updatePersonalInfo() {
-            const formData = new FormData(document.getElementById('personalInfoForm'));
-            fetch("{% url 'update_personal_info' %}", {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast("Personal information updated successfully!");
-                } else {
-                    showToast("Failed to update personal information: " + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showToast("An error occurred while updating personal information.");
-            });
+            }, 3000); // Hide after 3 seconds
         }
     </script>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 InterfaithConnect. All Rights Reserved.</p>
-    </footer>
 </body>
 </html>
