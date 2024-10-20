@@ -748,6 +748,31 @@ def profile_edit(request):
     return render(request, 'events\profile_edit.html', context)
 
 
+@require_POST
+def update_profile_picture(request):
+    # Handle file upload
+    profile_picture = request.FILES.get('profile_picture')
+    user_profile = request.user.userprofile  # Adjust according to your user profile relation
+    user_profile.profile_picture = profile_picture
+    user_profile.save()
+    return JsonResponse({'status': 'success'})
+
+@require_POST
+def update_personal_info(request):
+    # Handle personal information update
+    user_profile = request.user.userprofile
+    user_profile.name = request.POST.get('name')
+    user_profile.location = request.POST.get('location')
+    user_profile.country = request.POST.get('country')
+    user_profile.state = request.POST.get('state')
+    user_profile.faith_background = request.POST.get('faith_background')
+    user_profile.language = request.POST.get('language')
+    user_profile.dob = request.POST.get('dob')
+    user_profile.gender = request.POST.get('gender')
+    user_profile.interests = request.POST.get('interests')
+    user_profile.social_links = request.POST.get('social_links')
+    user_profile.save()
+    return JsonResponse({'status': 'success'})
 
 
 def notification_center(request):
@@ -871,8 +896,15 @@ def sign_up(request, opportunity_id):
 @login_required
 def profile_view(request):
     user_profile = get_object_or_404(UserProfile, user=request.user)
-    activities = Activity.objects.filter(user=request.user)
-    return render(request, 'profile.html', {'user_profile': user_profile, 'activities': activities})
+    volunteer_history = VolunteerHistory.objects.filter(user=request.user).order_by('-date')
+
+    context = {
+        'user_profile': user_profile,
+        'volunteer_history': volunteer_history,
+    }
+
+    return render(request, 'events/profile.html', context)
+
 
 # View for editing user profile
 @login_required
