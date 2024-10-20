@@ -1,7 +1,7 @@
 # events/admin.py
 
 from django.contrib import admin
-from .models import Community, Thread, Comment, VolunteerOpportunity
+from .models import Community, Thread, Comment, VolunteerOpportunity, CulturalStory
 
 @admin.register(Community)
 class CommunityAdmin(admin.ModelAdmin):
@@ -11,3 +11,17 @@ class CommunityAdmin(admin.ModelAdmin):
 admin.site.register(Thread)
 admin.site.register(Comment)
 admin.site.register(VolunteerOpportunity)
+
+@admin.register(CulturalStory)
+class CulturalStoryAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'is_approved', 'created_at')
+    list_filter = ('is_approved',)
+    search_fields = ('title', 'description')
+
+    # Add an action to approve stories in bulk
+    actions = ['approve_stories']
+
+    def approve_stories(self, request, queryset):
+        queryset.update(is_approved=True)
+        self.message_user(request, "Selected stories have been approved.")
+    approve_stories.short_description = "Approve selected stories"

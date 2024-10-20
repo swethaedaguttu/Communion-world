@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import (
     Community, Event, UnifiedNight, Activity, Partnership, SupportRequest,
     Resource, Notification, Feedback, UserProfile, Poll, ConnectionRequest,
-    DiscussionThread, Comment, ResourceRequest, VolunteerHistory, Thread, Comment, VolunteerOpportunity, SignUp,
+    DiscussionThread, Comment, ResourceRequest, VolunteerHistory, Thread, Comment, VolunteerOpportunity, SignUp, CulturalStory,
 
 )
 from django.contrib.auth.forms import PasswordChangeForm
@@ -211,3 +211,8 @@ class SignUpForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter full name'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter email'}),
         }
+
+class CulturalStoryForm(forms.ModelForm):
+    class Meta:
+        model = CulturalStory
+        fields = ['title', 'description', 'image']

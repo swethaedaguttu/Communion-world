@@ -23,11 +23,11 @@ from .models import (
     VolunteerHistory,
     HelpRequest, 
     Thread,
-    VolunteerOpportunity, SignUp, PrayerRequest, Reply,
+    VolunteerOpportunity, SignUp, PrayerRequest, Reply, CulturalStory,
  # Import your UserProfile model correctly
 )
 
-from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipForm, SupportForm, FeedbackForm, PollForm, ConnectionRequestForm, ProfileUpdateForm, ProfileEditForm, PasswordUpdateForm, NotificationPreferencesForm, ProfilePictureForm, CommunityProfileForm, ThreadForm, VolunteerOpportunityForm, SignUpForm
+from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipForm, SupportForm, FeedbackForm, PollForm, ConnectionRequestForm, ProfileUpdateForm, ProfileEditForm, PasswordUpdateForm, NotificationPreferencesForm, ProfilePictureForm, CommunityProfileForm, ThreadForm, VolunteerOpportunityForm, SignUpForm, CulturalStoryForm
  # Import your forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -1091,4 +1091,39 @@ def gamification_elements_view(request):
         'user_profile': user_profile,
         'achievements': achievements,  # This should contain the user's achievements
     })
+
+def share_culture(request):
+    thank_you = False
+    if request.method == 'POST':
+        form = CulturalStoryForm(request.POST, request.FILES)
+        if form.is_valid():
+            story = form.save(commit=False)
+            story.is_approved = False  # Story needs admin approval
+            story.save()
+            thank_you = True  # Indicate that the user should see a thank-you message
+    else:
+        form = CulturalStoryForm()
+
+    # Get all stories (both approved and unapproved)
+    stories = CulturalStory.objects.all()  # Modify if you want to filter differently
+
+    return render(request, 'events/cultural_exchange.html', {
+        'form': form,
+        'stories': stories,
+        'thank_you': thank_you
+    })
+
+def list_cultural_stories(request):
+    # Only show approved stories
+    stories = CulturalStory.objects.filter(is_approved=True)
+    return render(request, 'cultural_stories.html', {'stories': stories})
+
+def thank_you(request):
+    return render(request, 'thank_you.html')
+
+def admin_approve_story(request, story_id):
+    story = get_object_or_404(CulturalStory, id=story_id)
+    story.is_approved = True
+    story.save()
+    return render(request, 'approval_success.html', {'story': story})
 

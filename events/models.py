@@ -343,3 +343,13 @@ class Reply(models.Model):
 
     def __str__(self):
         return self.message[:20]  # Return the first 20 characters of the reply message
+
+class CulturalStory(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    image = models.ImageField(upload_to='cultural_images/', blank=True, null=True)
+    is_approved = models.BooleanField(default=False)  # For moderation
+    submitted_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.title
