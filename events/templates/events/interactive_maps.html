@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Interactive Maps</title>
+    <style>
+        body {
+            background-color: #f0f8ff;
+        }
+        header {
+            background-color: #6c63ff;
+            color: white;
+            text-align: center;
+            padding: 50px 0;
+        }
+        #map {
+            height: 400px;
+            margin: 20px 0;
+        }
+        .event-list {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Interactive Maps</h1>
+    </header>
+
+    <main class="container my-5">
+        <h2>Explore Locations</h2>
+        <div id="map"></div>
+        <p>Search for locations and events by radius or keyword.</p>
+        <form id="search-form">
+            <div class="form-group">
+                <label for="location">Enter Location:</label>
+                <input type="text" class="form-control" id="location" placeholder="e.g., temple, church, mosque">
+            </div>
+            <div class="form-group">
+                <label for="radius">Radius (in km):</label>
+                <input type="number" class="form-control" id="radius" placeholder="e.g., 10">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <div class="mt-4">
+            <button class="btn btn-secondary" onclick="getCurrentLocation()">Use My Location</button>
+        </div>
+
+        <div class="event-list">
+            <h3>Upcoming Events</h3>
+            <ul id="event-list" class="list-group">
+                <!-- Event items will be dynamically added here -->
+            </ul>
+        </div>
+    </main>
+
+    <footer class="text-center">
+        <p>&copy; 2024 InterfaithConnect</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+    <script>
+        let map;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 10,
+                center: { lat: 12.9716, lng: 77.5946 }, // Default center (Bangalore)
+            });
+
+            // Fetch events and add markers
+            fetchEvents();
+        }
+
+        function fetchEvents() {
+            fetch('/api/events/')
+                .then(response => response.json())
+                .then(data => {
+                    const events = data.events;
+                    events.forEach(event => {
+                        const marker = new google.maps.Marker({
+                            position: { lat: event.lat, lng: event.lng },
+                            map: map,
+                            title: event.name,
+                        });
+
+                        const infoWindow = new google.maps.InfoWindow({
+                            content: `<h5>${event.name}</h5><p>${event.description}</p><p>Date: ${event.event_date}</p>`,
+                        });
+
+                        marker.addListener('click', () => {
+                            infoWindow.open(map, marker);
+                        });
+
+                        addEventToList(event);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching events:', error);
+                });
+        }
+
+        function addEventToList(event) {
+            const eventList = document.getElementById('event-list');
+            const listItem = document.createElement('li');
+            listItem.className = 'list-group-item';
+            listItem.textContent = `${event.name} - ${event.description} (Date: ${event.event_date})`;
+            eventList.appendChild(listItem);
+        }
+
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+
+                    map.setCenter(pos);
+                    new google.maps.Marker({
+                        position: pos,
+                        map: map,
+                        title: "You are here!",
+                    });
+                }, function() {
+                    handleLocationError(true);
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false);
+            }
+        }
+
+        function handleLocationError(browserHasGeolocation) {
+            alert(browserHasGeolocation ?
+                "Error: The Geolocation service failed." :
+                "Error: Your browser doesn't support geolocation.");
+        }
+    </script>
+</body>
+</html>
