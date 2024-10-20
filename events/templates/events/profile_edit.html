@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
     <style>
-               /* General Styles */
-               body {
+        /* General Styles */
+        body {
             font-family: 'Roboto', sans-serif;
             background-color: #F9F6ED; /* Soft beige background */
             color: #2C3E50; /* Dark slate gray text */
@@ -174,9 +174,12 @@
             top: 20px;
             right: 20px;
             z-index: 1050;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
             display: none; /* Hidden by default */
         }
- 
     </style>
 </head>
 <body>
@@ -202,7 +205,7 @@
         <section class="profile-picture">
             <h2>Profile Picture</h2>
             <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
-            <form method="post" enctype="multipart/form-data" id="profilePictureForm">
+            <form method="post" enctype="multipart/form-data" id="profilePictureForm" onsubmit="event.preventDefault(); updateProfilePicture();">
                 {% csrf_token %}
                 <input type="file" id="profile_picture" name="profile_picture" accept="image/*" required>
                 <button type="submit">Update Picture</button>
@@ -212,7 +215,7 @@
         <!-- Personal Information Section -->
         <section>
             <h2>Personal Information</h2>
-            <form method="post" id="personalInfoForm">
+            <form method="post" id="personalInfoForm" onsubmit="event.preventDefault(); updatePersonalInfo();">
                 {% csrf_token %}
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" value="{{ user.username }}" required>
@@ -246,10 +249,10 @@
                 <label for="interests">Interests:</label>
                 <textarea id="interests" name="interests" rows="4">{{ user_profile.interests }}</textarea>
 
-                <label for="social_links">Social Media Links:</label>
-                <input type="url" id="social_links" name="social_links" value="{{ user_profile.social_links }}" placeholder="https://example.com">
+                <label for="social_links">Social Links:</label>
+                <input type="text" id="social_links" name="social_links" value="{{ user_profile.social_links }}">
 
-                <button type="submit">Save Changes</button>
+                <button type="submit">Update Information</button>
             </form>
         </section>
 
@@ -258,93 +261,74 @@
             <h2>Your Volunteer History</h2>
             <ul>
                 {% for volunteer in volunteer_history %}
-                    <li>{{ volunteer.event_name }} - {{ volunteer.date }}</li>
-                {% empty %}
-                    <li>No volunteer history found.</li>
+                <li>{{ volunteer.title }} - {{ volunteer.organization }} ({{ volunteer.date }})</li>
                 {% endfor %}
             </ul>
-
-            <!-- Pagination -->
-            <div class="pagination">
-                {% if volunteer_history.has_previous %}
-                    <a href="?page={{ volunteer_history.previous_page_number }}">Previous</a>
-                {% endif %}
-
-                {% if volunteer_history.has_next %}
-                    <a href="?page={{ volunteer_history.next_page_number }}">Next</a>
-                {% endif %}
-            </div>
         </section>
 
-        <!-- Settings Link -->
-        <div class="settings-link">
-            <a href="{% url 'settings' %}">Go to Settings</a>
-        </div>
-    </div>
+        <!-- Pagination -->
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 InterfaithConnect. All Rights Reserved.</p>
-    </footer>
+    </div>
 
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
 
+    <!-- JavaScript Functions -->
     <script>
-        // Toast Notification Function
         function showToast(message) {
             const toast = document.getElementById('toast');
-            toast.innerText = message;
+            toast.textContent = message;
             toast.style.display = 'block';
             setTimeout(() => {
                 toast.style.display = 'none';
             }, 3000);
         }
-    
-// Update profile picture
-function updateProfilePicture() {
-    const formData = new FormData();
-    const fileInput = document.querySelector('input[name="profile_picture"]');
-    formData.append('profile_picture', fileInput.files[0]);
 
-    fetch('/profile/update/picture/', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            alert('Profile picture updated successfully!');
-        } else {
-            alert(`Error: ${data.message}`);
+        function updateProfilePicture() {
+            const formData = new FormData(document.getElementById('profilePictureForm'));
+            fetch("{% url 'update_profile_picture' %}", {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelector('.profile-picture img').src = data.new_picture_url; // Update profile picture
+                    showToast("Profile picture updated successfully!");
+                } else {
+                    showToast("Failed to update profile picture: " + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast("An error occurred while updating the profile picture.");
+            });
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
 
-// Update personal info
-function updatePersonalInfo() {
-    const formData = new URLSearchParams(new FormData(document.querySelector('#personal-info-form')));
-    
-    fetch('/profile/update/info/', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            alert('Personal information updated successfully!');
-        } else {
-            alert(`Error: ${data.message}`);
+        function updatePersonalInfo() {
+            const formData = new FormData(document.getElementById('personalInfoForm'));
+            fetch("{% url 'update_personal_info' %}", {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast("Personal information updated successfully!");
+                } else {
+                    showToast("Failed to update personal information: " + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast("An error occurred while updating personal information.");
+            });
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
     </script>
-    </body>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 InterfaithConnect. All Rights Reserved.</p>
+    </footer>
+</body>
 </html>

@@ -709,19 +709,21 @@ def request_resource(request):
     return JsonResponse({'status': 'fail'})
 
 def profile_edit(request):
-    user_profile = request.user.userprofile  # Access the UserProfile correctly
+    user_profile = request.user.userprofile
 
     if request.method == 'POST':
         profile_form = ProfileEditForm(request.POST, instance=user_profile)
         picture_form = ProfilePictureForm(request.POST, request.FILES, instance=user_profile)
         password_form = PasswordUpdateForm(user=request.user, data=request.POST)
 
+        # Check if profile and picture forms are valid
         if profile_form.is_valid() and picture_form.is_valid():
             profile_form.save()
             picture_form.save()
             messages.success(request, 'Your profile has been updated successfully.')
             return redirect('profile_view')
-
+        
+        # Check if password form is valid
         if password_form.is_valid():
             password_form.save()
             update_session_auth_hash(request, password_form.user)
@@ -733,9 +735,8 @@ def profile_edit(request):
         picture_form = ProfilePictureForm(instance=user_profile)
         password_form = PasswordUpdateForm(user=request.user)
 
-    # Fetch and paginate volunteer history
     volunteer_history_list = VolunteerHistory.objects.filter(user=request.user).order_by('-date')
-    paginator = Paginator(volunteer_history_list, 5)  # Show 5 events per page
+    paginator = Paginator(volunteer_history_list, 5)
     page_number = request.GET.get('page')
     volunteer_history = paginator.get_page(page_number)
 
@@ -746,7 +747,8 @@ def profile_edit(request):
         'volunteer_history': volunteer_history,
     }
 
-    return render(request, 'events\profile_edit.html', context)
+    return render(request, 'events/profile_edit.html', context)
+
 
 
 @require_POST
@@ -907,23 +909,13 @@ def profile_view(request):
     user_profile = get_object_or_404(UserProfile, user=request.user)
     volunteer_history = VolunteerHistory.objects.filter(user=request.user).order_by('-date')
 
-    # Example: Fetch followers and following counts (assumes you have a method to get these)
-    followers_count = user_profile.followers.count()  # Adjust according to your model
-    following_count = user_profile.following.count()   # Adjust according to your model
-
-    # Example: Activities and resources
-    activities = Activity.objects.filter(user=request.user)  # Replace with your actual logic
-    interfaith_resources = InterfaithResource.objects.filter(user=request.user)  # Replace with your actual logic
-
     context = {
-        'profile': user_profile,
-        'followers_count': followers_count,
-        'following_count': following_count,
-        'activities': activities,
-        'interfaith_resources': interfaith_resources,
+        'user_profile': user_profile,
+        'volunteer_history': volunteer_history,
     }
 
     return render(request, 'events/profile.html', context)
+
 
 # View for editing user profile
 
