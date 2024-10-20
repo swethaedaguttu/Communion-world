@@ -287,11 +287,16 @@ function updateProfilePicture(event) {
     event.preventDefault();
     const form = document.getElementById('profilePictureForm');
     const formData = new FormData(form);
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     fetch('/profile/update/picture/', {
     method: 'POST',
+    headers: {
+        'X-CSRFToken': csrftoken,
+    },
     body: formData,
 })
+
 .then(response => {
     if (!response.ok) {
         return response.json().then(errData => { throw new Error(errData.message); });
@@ -306,6 +311,7 @@ function updateProfilePicture(event) {
         } else {
             showToast('Error: ' + data.message);
         }
+        
     })
 .catch(error => {
     console.error('Error:', error);
