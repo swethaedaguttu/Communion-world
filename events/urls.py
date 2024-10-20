@@ -43,6 +43,8 @@ from events.views import (
     resource_list,
     add_resource,
     enable_2fa,
+    update_profile_picture, 
+    update_personal_info,
 
 )
 
@@ -100,6 +102,8 @@ urlpatterns = [
     path('resources/', resource_list, name='resource_list'),  # List resources
     path('resources/add/', add_resource, name='add_resource'),  # Add a resource
     path('2fa/enable/', enable_2fa, name='enable_2fa'),  # Enable two-factor authentication
+    path('profile/update/picture/', update_profile_picture, name='update_profile_picture'),
+    path('profile/update/info/', update_personal_info, name='update_personal_info'),
 
 
 ]

@@ -750,27 +750,35 @@ def profile_edit(request):
 
 @require_POST
 def update_profile_picture(request):
-    # Handle file upload
     profile_picture = request.FILES.get('profile_picture')
-    user_profile = request.user.userprofile  # Adjust according to your user profile relation
-    user_profile.profile_picture = profile_picture
-    user_profile.save()
-    return JsonResponse({'status': 'success'})
+    user_profile = request.user.userprofile
+
+    if profile_picture:
+        user_profile.profile_picture = profile_picture
+        user_profile.save()
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'No file uploaded.'}, status=400)
 
 @require_POST
 def update_personal_info(request):
-    # Handle personal information update
     user_profile = request.user.userprofile
-    user_profile.name = request.POST.get('name')
-    user_profile.location = request.POST.get('location')
-    user_profile.country = request.POST.get('country')
-    user_profile.state = request.POST.get('state')
-    user_profile.faith_background = request.POST.get('faith_background')
-    user_profile.language = request.POST.get('language')
-    user_profile.dob = request.POST.get('dob')
-    user_profile.gender = request.POST.get('gender')
-    user_profile.interests = request.POST.get('interests')
-    user_profile.social_links = request.POST.get('social_links')
+
+    name = request.POST.get('name')
+    if not name:
+        return JsonResponse({'status': 'error', 'message': 'Name is required.'}, status=400)
+
+    user_profile.name = name
+    user_profile.location = request.POST.get('location', user_profile.location)
+    user_profile.country = request.POST.get('country', user_profile.country)
+    user_profile.state = request.POST.get('state', user_profile.state)
+    user_profile.faith_background = request.POST.get('faith_background', user_profile.faith_background)
+    user_profile.language = request.POST.get('language', user_profile.language)
+    user_profile.dob = request.POST.get('dob', user_profile.dob)
+    user_profile.gender = request.POST.get('gender', user_profile.gender)
+    user_profile.interests = request.POST.get('interests', user_profile.interests)
+    user_profile.social_links = request.POST.get('social_links', user_profile.social_links)
+
     user_profile.save()
     return JsonResponse({'status': 'success'})
 
