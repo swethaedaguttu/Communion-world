@@ -328,6 +328,7 @@ class PrayerRequest(models.Model):
     language = models.CharField(max_length=50, blank=True, null=True)
     is_anonymous = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.prayer_message[:50]  # Return the first 50 characters of the prayer
