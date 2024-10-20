@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.user.username }}'s Profile</title>
+    <style>
+        /* CSS styles for the profile page */
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-right: 20px;
+            border: 2px solid #e1e1e1;
+        }
+
+        .profile-info {
+            flex-grow: 1;
+        }
+
+        .profile-info h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .profile-info p {
+            margin: 5px 0;
+        }
+
+        .follower-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .profile-actions {
+            margin-top: 10px;
+        }
+
+        .edit-button, .logout-button {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-right: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .edit-button {
+            background-color: #4CAF50; /* Green */
+        }
+
+        .logout-button {
+            background-color: #f44336; /* Red */
+        }
+
+        .activity-list, .resource-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .activity-item, .resource-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .activity-item span {
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        @media (max-width: 600px) {
+            .profile-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .profile-picture {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <img class="profile-picture" src="{{ profile.profile_picture.url }}" alt="{{ profile.user.username }}'s Profile Picture">
+            <div class="profile-info">
+                <h1>{{ profile.user.username }}</h1>
+                <p><strong>Bio:</strong> {{ profile.bio }}</p>
+                <p><strong>Community:</strong> {{ profile.community }}</p>
+                <p><strong>Country:</strong> {{ profile.country }}</p>
+                <p><strong>Volunteering Details:</strong> {{ profile.volunteering_details }}</p>
+                <p><strong>Interfaith Interests:</strong> {{ profile.interfaith_interests }}</p>
+                <div class="follower-info">
+                    <p><strong>Followers:</strong> {{ followers_count }}</p>
+                    <p><strong>Following:</strong> {{ following_count }}</p>
+                </div>
+                <div class="profile-actions">
+                    <a href="{% url 'edit_profile' %}" class="edit-button">Edit Profile</a>
+                    <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+                </div>
+            </div>
+        </div>
+
+        <h3>Activities:</h3>
+        <ul class="activity-list">
+            {% for activity in activities %}
+                <li class="activity-item">{{ activity.description }} - <span>{{ activity.date }}</span></li>
+            {% empty %}
+                <li class="activity-item">No activities yet.</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Interfaith Community Resources:</h3>
+        <ul class="resource-list">
+            {% for resource in interfaith_resources %}
+                <li class="resource-item">
+                    <strong>{{ resource.title }}</strong> ({{ resource.date }}): {{ resource.description }}
+                </li>
+            {% empty %}
+                <li class="resource-item">No upcoming events or resources.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

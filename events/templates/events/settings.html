@@ -21,7 +21,7 @@
         }
 
         .navbar-brand, .nav-link {
-            color: #ffffff !important; /* White text */
+            color: #1f1d1d !important; /* White text */
             font-weight: 500;
         }
 
@@ -95,6 +95,9 @@
                         <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                     </li>
                 </ul>
+                <a href="{% url 'profile' %}" class="ml-auto">
+                    <img src="{{ user.profile.image.url }}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px; border: 2px solid white;"/>
+                </a>
             </div>
         </div>
     </nav>
@@ -160,16 +163,7 @@
             <button type="submit" class="btn btn-custom">Update Notifications</button>
         </form>
 
-        <!-- Profile Picture Upload -->
-        <h2 class="mt-4">Profile Picture</h2>
-        <form id="profile-picture-form" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="profile_picture">Upload Profile Picture</label>
-                <input type="file" class="form-control-file" id="profile_picture" name="profile_picture">
-            </div>
-            <button type="submit" class="btn btn-custom">Upload Picture</button>
-        </form>
+
 
         <!-- Two-Factor Authentication -->
         <h2 class="mt-4">Two-Factor Authentication</h2>
@@ -190,84 +184,107 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function confirmSubmit() {
             return confirm('Are you sure you want to save changes?');
         }
-    
-        // Function to show toast notifications
+
+        // Toast notification function (optional)
         function showToast(message) {
-            // Create a toast element
-            const toastHTML = `
-                <div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-body">
-                        ${message}
-                    </div>
-                </div>`;
-            
-            // Append toast to body
-            $('body').append(toastHTML);
-    
-            // Show the toast
-            const toastElement = $('#toast');
-            toastElement.toast({ delay: 3000 }); // Show for 3 seconds
-            toastElement.toast('show');
-    
-            // Remove the toast after displaying
-            toastElement.on('hidden.bs.toast', function () {
+            var toast = $('<div class="toast" role="alert" aria-live="assertive" aria-atomic="true"><div class="toast-body">' + message + '</div></div>');
+            $('body').append(toast);
+            toast.toast({ delay: 3000 });
+            toast.toast('show');
+            toast.on('hidden.bs.toast', function () {
                 $(this).remove();
             });
         }
-    
-        // Example of triggering the toast after a successful form submission
-        $(document).ready(function() {
-            $('#settings-form').on('submit', function(e) {
-                e.preventDefault(); // Prevent default form submission
-                
-                // Here you can add your AJAX request to submit the form data
-    
-                // Show success message (this should be called after a successful submission)
-                showToast('Your settings have been successfully updated!');
-            });
-    
-            $('#password-change-form').on('submit', function(e) {
-                e.preventDefault(); // Prevent default form submission
-    
-                // Here you can add your AJAX request to submit the form data
-    
-                // Show success message
-                showToast('Your password has been successfully changed!');
-            });
-    
-            $('#notification-preferences-form').on('submit', function(e) {
-                e.preventDefault(); // Prevent default form submission
-    
-                // Here you can add your AJAX request to submit the form data
-    
-                // Show success message
-                showToast('Notification preferences updated!');
-            });
-    
-            $('#profile-picture-form').on('submit', function(e) {
-                e.preventDefault(); // Prevent default form submission
-    
-                // Here you can add your AJAX request to submit the form data
-    
-                // Show success message
-                showToast('Profile picture uploaded successfully!');
-            });
-    
-            $('#two-factor-form').on('submit', function(e) {
-                e.preventDefault(); // Prevent default form submission
-    
-                // Here you can add your AJAX request to submit the form data
-    
-                // Show success message
-                showToast('Two-Factor Authentication settings updated!');
+                // Example of triggering the toast after a successful form submission
+                $(document).ready(function() {
+        // Function to show toast messages
+        function showToast(message) {
+            $('.toast-body').text(message);
+            $('.toast').toast({ delay: 3000 }); // Toast will show for 3 seconds
+            $('.toast').toast('show'); // Show the toast
+        }
+
+        $('#settings-form').on('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            // Example AJAX request to submit the form data
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'), // Get form action URL
+                data: $(this).serialize(), // Serialize form data
+                success: function(response) {
+                    // Show success message
+                    showToast('Your settings have been successfully updated!');
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors here
+                    showToast('An error occurred while updating settings. Please try again.');
+                }
             });
         });
+
+        $('#password-change-form').on('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            // Example AJAX request to submit the form data
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'), // Get form action URL
+                data: $(this).serialize(), // Serialize form data
+                success: function(response) {
+                    // Show success message
+                    showToast('Your password has been successfully changed!');
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors here
+                    showToast('An error occurred while changing your password. Please try again.');
+                }
+            });
+        });
+
+        $('#notification-preferences-form').on('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            // Example AJAX request to submit the form data
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'), // Get form action URL
+                data: $(this).serialize(), // Serialize form data
+                success: function(response) {
+                    // Show success message
+                    showToast('Notification preferences updated!');
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors here
+                    showToast('An error occurred while updating notification preferences. Please try again.');
+                }
+            });
+        });
+
+
+        $('#two-factor-form').on('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            // Example AJAX request to submit the form data
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'), // Get form action URL
+                data: $(this).serialize(), // Serialize form data
+                success: function(response) {
+                    // Show success message
+                    showToast('Two-Factor Authentication settings updated!');
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors here
+                    showToast('An error occurred while updating Two-Factor Authentication settings. Please try again.');
+                }
+            });
+        });
+    });
     </script>
-    </body>
+</body>
 </html>
