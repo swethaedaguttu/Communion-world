@@ -45,8 +45,10 @@ from events.views import (
     enable_2fa,
     update_profile_picture, 
     update_personal_info,
+    shared_prayer_requests,
     submit_prayer, 
     prayer_feed,
+    submit_reply,
 )
 
 urlpatterns = [
@@ -108,6 +110,8 @@ urlpatterns = [
     path('profile/', profile_view, name='profile'),  # Ensure this line is present
     path('api/submit-prayer/', submit_prayer, name='submit_prayer'),  # API endpoint for submitting prayers
     path('api/get-prayers/', prayer_feed, name='prayer_feed'),  # API endpoint for retrieving prayers
+    path('shared-prayer-requests/', shared_prayer_requests, name='shared_prayer_requests'),
+    path('api/submit-reply/', submit_reply, name='submit_reply'),  # New endpoint
 
 
 ]

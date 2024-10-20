@@ -23,7 +23,7 @@ from .models import (
     VolunteerHistory,
     HelpRequest, 
     Thread,
-    VolunteerOpportunity, SignUp, PrayerRequest,
+    VolunteerOpportunity, SignUp, PrayerRequest, Reply,
  # Import your UserProfile model correctly
 )
 
@@ -46,6 +46,7 @@ from django.views import View
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 import json
 
 import logging
@@ -989,6 +990,10 @@ def enable_2fa(request):
         return redirect('profile_view')
     return render(request, 'enable_2fa.html', {'user_profile': user_profile})
 
+
+def shared_prayer_requests(request):
+    return render(request, 'events/shared_prayer_requests.html')  # Adjust the template name as needed
+
 @csrf_exempt  # Remove this in production, use CSRF tokens instead
 def submit_prayer(request):
     if request.method == 'POST':
@@ -1004,6 +1009,35 @@ def submit_prayer(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 # View to retrieve all prayer requests
+
+
 def prayer_feed(request):
-    prayers = PrayerRequest.objects.all().order_by('-created_at')
-    return JsonResponse({'prayers': list(prayers.values())})  # Return prayers as JSON
+    if request.method == 'GET':
+        prayers = PrayerRequest.objects.all().order_by('-created_at')
+        prayers_data = [
+            {
+                'name': prayer.name if not prayer.is_anonymous else None,
+                'message': prayer.prayer_message,
+                'faith_tradition': prayer.faith_tradition,
+            }
+            for prayer in prayers
+        ]
+        return JsonResponse({'prayers': prayers_data})
+    
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+def submit_reply(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        prayer_id = data.get('prayer_id')
+        reply_message = data.get('reply_message')
+
+        prayer_request = PrayerRequest.objects.get(id=prayer_id)  # Get the prayer request
+        reply = Reply.objects.create(
+            prayer_request=prayer_request,
+            message=reply_message
+        )
+        return JsonResponse({'status': 'success', 'reply_id': reply.id})
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+

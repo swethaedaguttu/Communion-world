@@ -331,3 +331,11 @@ class PrayerRequest(models.Model):
 
     def __str__(self):
         return self.prayer_message[:50]  # Return the first 50 characters of the prayer
+
+class Reply(models.Model):
+    prayer_request = models.ForeignKey(PrayerRequest, related_name='replies', on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.message[:20]  # Return the first 20 characters of the reply message
