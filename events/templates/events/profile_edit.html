@@ -130,46 +130,50 @@
             }, 3000);
         }
     
-        // Profile Picture Form Submission
-        const profilePictureForm = document.getElementById('profilePictureForm');
-        profilePictureForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
+// Update profile picture
+function updateProfilePicture() {
+    const formData = new FormData();
+    const fileInput = document.querySelector('input[name="profile_picture"]');
+    formData.append('profile_picture', fileInput.files[0]);
+
+    fetch('/profile/update/picture/', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Profile picture updated successfully!');
+        } else {
+            alert(`Error: ${data.message}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// Update personal info
+function updatePersonalInfo() {
+    const formData = new URLSearchParams(new FormData(document.querySelector('#personal-info-form')));
     
-            fetch('{% url "update_profile_picture" %}', { // Add the URL endpoint for the profile picture submission
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    showToast('Profile picture updated successfully!');
-                    location.reload(); // Reload the page to see changes
-                } else {
-                    showToast('Error updating profile picture.');
-                }
-            })
-            .catch(error => showToast('Error: ' + error.message));
-        });
-    
-        // Personal Info Form Submission
-        const personalInfoForm = document.getElementById('personalInfoForm');
-        personalInfoForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-    
-            fetch('{% url "update_personal_info" %}', { // Add the URL endpoint for the personal info submission
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    showToast('Profile updated successfully!');
-                } else {
-                    showToast('Error updating profile.');
-                }
-            })
-            .catch(error => showToast('Error: ' + error.message));
-        });
+    fetch('/profile/update/info/', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Personal information updated successfully!');
+        } else {
+            alert(`Error: ${data.message}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
     </script>
     </body>
 </html>
