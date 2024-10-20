@@ -762,12 +762,20 @@ def update_profile_picture(request):
             user_profile.profile_picture = profile_picture
             user_profile.full_clean()  # Validate the model
             user_profile.save()
-            return JsonResponse({'status': 'success', 'message': 'Profile picture updated successfully!'})
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Profile picture updated successfully!',
+                'new_image_url': user_profile.profile_picture.url  # Return new image URL
+            })
         else:
             return JsonResponse({'status': 'error', 'message': 'No file uploaded.'}, status=400)
+
+    except ValidationError as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     except Exception as e:
         logger.error(f"Error updating profile picture: {e}")
         return JsonResponse({'status': 'error', 'message': 'An error occurred while updating the profile picture.'}, status=500)
+
 
 @require_POST
 def update_personal_info(request):

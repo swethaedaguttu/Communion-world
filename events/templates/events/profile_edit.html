@@ -282,28 +282,35 @@
     <div id="toast" class="toast">Profile updated successfully!</div>
 
     <script>
-        // Function to update the profile picture
-        function updateProfilePicture(event) {
-            event.preventDefault();
-            const form = document.getElementById('profilePictureForm');
-            const formData = new FormData(form);
+// Function to update the profile picture
+function updateProfilePicture(event) {
+    event.preventDefault();
+    const form = document.getElementById('profilePictureForm');
+    const formData = new FormData(form);
 
-            fetch('/profile/update/picture/', {  // Update to match URL pattern
-    method: 'POST',
-    body: formData,
-})
-
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast('Profile picture updated successfully!');
-                    document.querySelector('.profile-picture img').src = data.new_image_url; // Update the image preview
-                } else {
-                    showToast('Error updating profile picture.');
-                }
-            })
-            .catch(error => console.error('Error:', error));
+    fetch('/profile/update/picture/', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            showToast('Profile picture updated successfully!');
+            document.querySelector('.profile-picture img').src = data.new_image_url; // Update the image preview
+        } else {
+            showToast('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error updating profile picture.');
+    });
+}
 
         // Function to update personal information
         function updatePersonalInfo(event) {
