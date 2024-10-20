@@ -322,3 +322,12 @@ class SignUp(models.Model):
     def __str__(self):
         return f"{self.name} - {self.opportunity.title}"
 
+class PrayerRequest(models.Model):
+    prayer_message = models.TextField()
+    faith_tradition = models.CharField(max_length=100, blank=True, null=True)
+    language = models.CharField(max_length=50, blank=True, null=True)
+    is_anonymous = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.prayer_message[:50]  # Return the first 50 characters of the prayer

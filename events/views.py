@@ -23,7 +23,7 @@ from .models import (
     VolunteerHistory,
     HelpRequest, 
     Thread,
-    VolunteerOpportunity, SignUp,
+    VolunteerOpportunity, SignUp, PrayerRequest,
  # Import your UserProfile model correctly
 )
 
@@ -45,6 +45,9 @@ from django.core.mail import send_mail
 from django.views import View
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+from django.views.decorators.csrf import csrf_exempt
+import json
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -985,3 +988,22 @@ def enable_2fa(request):
         user_profile.save()
         return redirect('profile_view')
     return render(request, 'enable_2fa.html', {'user_profile': user_profile})
+
+@csrf_exempt  # Remove this in production, use CSRF tokens instead
+def submit_prayer(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        prayer_request = PrayerRequest.objects.create(
+            prayer_message=data.get('prayerMessage'),
+            faith_tradition=data.get('faithTradition'),
+            language=data.get('language'),
+            is_anonymous=data.get('isAnonymous')
+        )
+        return JsonResponse({'status': 'success', 'prayer_id': prayer_request.id})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+# View to retrieve all prayer requests
+def prayer_feed(request):
+    prayers = PrayerRequest.objects.all().order_by('-created_at')
+    return JsonResponse({'prayers': list(prayers.values())})  # Return prayers as JSON
