@@ -48,7 +48,7 @@ from events.views import (
     shared_prayer_requests,
     submit_prayer, 
     prayer_feed,
-    submit_reply,
+    submit_reply, gamification_elements_view,
 )
 
 urlpatterns = [
@@ -112,6 +112,7 @@ urlpatterns = [
     path('api/get-prayers/', prayer_feed, name='prayer_feed'),  # API endpoint for retrieving prayers
     path('shared-prayer-requests/', shared_prayer_requests, name='shared_prayer_requests'),
     path('api/submit-reply/', submit_reply, name='submit_reply'),  # New endpoint
+    path('gamification/', gamification_elements_view, name='gamification_elements'),
 
 
 ]

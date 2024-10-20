@@ -28,6 +28,9 @@ class UserProfile(models.Model):
     volunteering_details = models.TextField(blank=True)
     interfaith_interests = models.TextField(blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
+    points = models.IntegerField(default=0)
+    badges = models.JSONField(default=list)  # For storing badge data
+
 
     def __str__(self):
         return f'{self.user.username} Profile'

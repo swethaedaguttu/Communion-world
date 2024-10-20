@@ -994,23 +994,28 @@ def enable_2fa(request):
 def shared_prayer_requests(request):
     return render(request, 'events/shared_prayer_requests.html')  # Adjust the template name as needed
 
-@csrf_exempt  # Remove this in production, use CSRF tokens instead
+@csrf_exempt  # Remove this in production for security
 def submit_prayer(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             prayer_request = PrayerRequest.objects.create(
-                prayer_message=data.get('message'),  # Changed key to match your AJAX data
-                faith_tradition=data.get('faith_tradition'),  # Changed key to match your AJAX data
+                prayer_message=data.get('message'),  # Adjust to match your AJAX data
+                faith_tradition=data.get('faith_tradition'),  # Adjust to match your AJAX data
                 language=data.get('language'),
-                is_anonymous=data.get('is_anonymous')  # Changed key to match your AJAX data
+                is_anonymous=data.get('is_anonymous')  # Adjust to match your AJAX data
             )
+            logger.info(f"Prayer created successfully: {prayer_request.id}")
             return JsonResponse({'status': 'success', 'prayer_id': prayer_request.id})
 
+        except json.JSONDecodeError:
+            logger.error("Invalid JSON format in the request body.")
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
         except Exception as e:
+            logger.error(f"Error submitting prayer: {str(e)}")
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 # View to retrieve all prayer requests
 def prayer_feed(request):
@@ -1026,30 +1031,64 @@ def prayer_feed(request):
                 for prayer in prayers
             ]
             return JsonResponse({'prayers': prayers_data}, status=200)
-        
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-    
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
+        except Exception as e:
+            logger.error(f"Error retrieving prayers: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+@csrf_exempt  # Remove in production for security
 def submit_reply(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             prayer_id = data.get('prayer_id')
-            reply_message = data.get('reply')
+            reply_message = data.get('reply')  # Ensure this matches your AJAX data
 
-            prayer_request = PrayerRequest.objects.get(id=prayer_id)  # Get the prayer request
+            # Validate input
+            if not prayer_id:
+                return JsonResponse({'status': 'error', 'message': 'Prayer ID is required'}, status=400)
+            if not reply_message:
+                return JsonResponse({'status': 'error', 'message': 'Reply message is required'}, status=400)
+
+            # Retrieve the prayer request
+            try:
+                prayer_request = PrayerRequest.objects.get(id=prayer_id)
+            except PrayerRequest.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Prayer request not found'}, status=404)
+
+            # Create the reply
             reply = Reply.objects.create(
                 prayer_request=prayer_request,
                 message=reply_message
             )
-            return JsonResponse({'status': 'success', 'reply_id': reply.id})
+            logger.info(f"Reply created successfully: {reply.id} for prayer ID: {prayer_id}")
 
-        except PrayerRequest.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Prayer request not found'}, status=404)
+            return JsonResponse({'status': 'success', 'reply_id': reply.id}, status=201)
+
+        except json.JSONDecodeError:
+            logger.error("Invalid JSON format in the request body.")
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+            logger.error(f"Error sending reply: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': 'An unexpected error occurred'}, status=500)
 
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+@login_required
+def gamification_elements_view(request):
+    # Get the leaderboard sorted by points in descending order
+    leaderboard = UserProfile.objects.order_by('-points')[:10]  # Top 10 users
+    # Retrieve achievements/badges for the logged-in user
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    # You can add any specific achievements or badges logic here
+    achievements = []  # Populate this list based on your logic
+
+    return render(request, 'events\gamification_elements.html', {
+        'leaderboard': leaderboard,
+        'user_profile': user_profile,
+        'achievements': achievements,  # This should contain the user's achievements
+    })
 
