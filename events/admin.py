@@ -25,3 +25,4 @@ class CulturalStoryAdmin(admin.ModelAdmin):
         queryset.update(is_approved=True)
         self.message_user(request, "Selected stories have been approved.")
     approve_stories.short_description = "Approve selected stories"
+

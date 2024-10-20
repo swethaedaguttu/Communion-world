@@ -51,7 +51,6 @@ from events.views import (
     submit_reply, gamification_elements_view, share_culture, list_cultural_stories, thank_you, admin_approve_story,
 )
 
-app_name = 'events'  # Use your app's name
 
 
 urlpatterns = [
@@ -116,7 +115,7 @@ urlpatterns = [
     path('shared-prayer-requests/', shared_prayer_requests, name='shared_prayer_requests'),
     path('api/submit-reply/', submit_reply, name='submit_reply'),  # New endpoint
     path('gamification/', gamification_elements_view, name='gamification_elements'),
-    path('share_culture', share_culture, name='share_culture'),
+    path('share_culture', share_culture, name='cultural_exchange'),
     path('thank-you/', thank_you, name='thank_you'),
     path('stories/', list_cultural_stories, name='list_stories'),
     

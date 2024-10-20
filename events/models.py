@@ -347,9 +347,12 @@ class Reply(models.Model):
 class CulturalStory(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    image = models.ImageField(upload_to='cultural_images/', blank=True, null=True)
-    is_approved = models.BooleanField(default=False)  # For moderation
-    submitted_at = models.DateTimeField(default=timezone.now)
+    image = models.ImageField(upload_to='stories/', blank=True, null=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)  # This field should be defined
 
     def __str__(self):
         return self.title
+
+
