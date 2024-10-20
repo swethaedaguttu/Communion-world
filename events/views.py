@@ -907,26 +907,26 @@ def profile_view(request):
     user_profile = get_object_or_404(UserProfile, user=request.user)
     volunteer_history = VolunteerHistory.objects.filter(user=request.user).order_by('-date')
 
+    # Example: Fetch followers and following counts (assumes you have a method to get these)
+    followers_count = user_profile.followers.count()  # Adjust according to your model
+    following_count = user_profile.following.count()   # Adjust according to your model
+
+    # Example: Activities and resources
+    activities = Activity.objects.filter(user=request.user)  # Replace with your actual logic
+    interfaith_resources = InterfaithResource.objects.filter(user=request.user)  # Replace with your actual logic
+
     context = {
-        'user_profile': user_profile,
-        'volunteer_history': volunteer_history,
+        'profile': user_profile,
+        'followers_count': followers_count,
+        'following_count': following_count,
+        'activities': activities,
+        'interfaith_resources': interfaith_resources,
     }
 
     return render(request, 'events/profile.html', context)
 
-
 # View for editing user profile
-@login_required
-def edit_profile(request):
-    user_profile = get_object_or_404(UserProfile, user=request.user)
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
-        if form.is_valid():
-            form.save()
-            return redirect('profile_view')  # Redirect to profile view after saving
-    else:
-        form = UserProfileForm(instance=user_profile)
-    return render(request, 'edit_profile.html', {'form': form})
+
 
 # View for adding an activity
 @login_required

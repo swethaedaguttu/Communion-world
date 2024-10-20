@@ -5,7 +5,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
     <style>
-        /* (Your existing CSS styles remain unchanged) */
+               /* General Styles */
+               body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #F9F6ED; /* Soft beige background */
+            color: #2C3E50; /* Dark slate gray text */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #2C6E6E; /* Deep teal navbar */
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important; /* White text */
+            font-weight: 500;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .navbar-brand:hover, .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 40px auto; /* Increased top margin */
+            padding: 20px;
+            background: #ffffff; /* White background for content area */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: 2.5em;
+            color: #2C3E50; /* Dark slate gray */
+        }
+
+        /* Form Section */
+        section {
+            margin-bottom: 30px;
+        }
+
+        section h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            color: #2C3E50; /* Dark slate gray */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #2C3E50; /* Dark slate gray */
+        }
+
+        form input, form textarea, form select {
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px; /* Rounded input fields */
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        form input:focus, form textarea:focus, form select:focus {
+            border-color: #2C6E6E; /* Deep teal */
+            outline: none;
+        }
+
+        form button {
+            padding: 12px;
+            background-color: #FF6F61; /* Soft coral button */
+            color: #ffffff; /* White text on buttons */
+            border: none;
+            border-radius: 25px; /* Rounded button */
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s; /* Animation */
+        }
+
+        form button:hover {
+            background-color: #A7D5D5; /* Light teal hover color */
+            color: #2C3E50; /* Dark text on hover */
+            transform: translateY(-2px); /* Lift effect on hover */
+        }
+
+        /* Profile Picture Section */
+        .profile-picture {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .profile-picture img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 4px solid #ddd;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+        .profile-picture input[type="file"] {
+            display: block;
+            margin: 0 auto;
+            padding: 8px;
+            font-size: 1em;
+        }
+
+        /* Volunteer History */
+        .volunteer-history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .volunteer-history li {
+            padding: 10px 15px;
+            background-color: #EDF4F2; /* Light teal */
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            background-color: #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #2C3E50; /* Dark slate gray */
+            transition: background-color 0.3s ease;
+        }
+        .pagination a:hover {
+            background-color: #bbb;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2C6E6E; /* Deep teal footer */
+            color: #ffffff; /* White footer text */
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            display: none; /* Hidden by default */
+        }
+ 
     </style>
 </head>
 <body>
