@@ -6,66 +6,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings | Community Connect</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* General body styles */
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
+            background-color: #F9F6ED; /* Soft beige background */
+            color: #2C3E50; /* Dark slate gray text */
             margin: 0;
             padding: 0;
-            background-color: #e9ecef; /* Light gray-blue background */
-            color: #333; /* Dark gray text color */
         }
 
-        /* Navbar styles */
         .navbar {
-            background-color: #343a40; /* Dark background for the navbar */
+            background-color: #2C6E6E; /* Deep teal navbar */
         }
 
-        .navbar-brand {
-            color: #ffffff !important; /* White brand color */
-            font-weight: bold;
+        .navbar-brand, .nav-link {
+            color: #ffffff !important; /* White text */
+            font-weight: 500;
         }
 
-        .nav-link {
-            color: #ffffff !important; /* White color for nav links */
-        }
-
-        /* Main container styles */
         .container {
-            max-width: 800px; /* Set a maximum width for the content */
-            margin: auto; /* Center the content */
-            padding: 20px; /* Add padding to the container */
+            max-width: 800px;
+            margin: 40px auto; /* Increased top margin */
+            padding: 20px;
+            background: #ffffff; /* White background for content area */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            border-radius: 10px; /* Rounded corners */
         }
 
-        /* Footer styles */
         footer {
-            background-color: #343a40; /* Same color as the navbar */
-            color: #ffffff; /* White text color */
-            padding: 20px 0; /* Vertical padding */
+            background-color: #2C6E6E; /* Deep teal footer */
+            color: #ffffff; /* White footer text */
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
         }
 
-        footer p {
-            margin: 0; /* Remove default margin */
-            text-align: center; /* Center footer text */
-        }
-
-        /* Button styles */
         .btn-custom {
-            background-color: #007bff; /* Custom button color */
-            color: #ffffff; /* White text */
-            border: none; /* Remove border */
-            padding: 10px 20px; /* Padding */
-            border-radius: 5px; /* Rounded corners */
-            transition: background-color 0.3s ease; /* Transition for hover effect */
+            background-color: #FF6F61; /* Soft coral button */
+            color: #ffffff; /* White text on buttons */
+            border-radius: 25px; /* Rounded button */
+            transition: background-color 0.3s, transform 0.2s; /* Animation */
         }
 
         .btn-custom:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+            background-color: #A7D5D5; /* Light teal hover color */
+            color: #2C3E50; /* Dark text on hover */
+            transform: translateY(-2px); /* Lift effect on hover */
+        }
+
+        .form-control, .form-check-input {
+            border-radius: 5px; /* Rounded input fields */
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem; /* More space between form groups */
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            display: none; /* Hidden by default */
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="{% url 'index' %}">InterfaithConnect</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,60 +101,51 @@
 
     <div class="container mt-4">
         <h1 class="text-center">Account Settings</h1>
-
+        
         <!-- Profile Update Form -->
         <form id="settings-form" method="POST" action="{% url 'settings' %}">
             {% csrf_token %}
-        
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
             </div>
-        
             <div class="form-group">
                 <label for="email">Email address</label>
                 <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
             </div>
-        
             <div class="form-group">
                 <label for="first_name">First Name</label>
                 <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}">
             </div>
-        
             <div class="form-group">
                 <label for="last_name">Last Name</label>
                 <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
             </div>
-        
             <button type="submit" class="btn btn-custom" onclick="return confirmSubmit()">Save Changes</button>
-        
         </form>
 
         <!-- Password Change Form -->
         <h2 class="mt-4">Change Password</h2>
-        <form method="POST" action="#change_password">
+        <form id="password-change-form" method="POST">
             {% csrf_token %}
             <div class="form-group">
                 <label for="current_password">Current Password</label>
                 <input type="password" class="form-control" id="current_password" name="current_password" required>
             </div>
-
             <div class="form-group">
                 <label for="new_password">New Password</label>
                 <input type="password" class="form-control" id="new_password" name="new_password" required>
             </div>
-
             <div class="form-group">
                 <label for="confirm_password">Confirm New Password</label>
                 <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
             </div>
-
             <button type="submit" class="btn btn-custom">Change Password</button>
         </form>
 
         <!-- Notification Preferences -->
         <h2 class="mt-4">Notification Preferences</h2>
-        <form method="POST" action="#update_notifications">
+        <form id="notification-preferences-form" method="POST">
             {% csrf_token %}
             <div class="form-group">
                 <div class="form-check">
@@ -162,7 +162,7 @@
 
         <!-- Profile Picture Upload -->
         <h2 class="mt-4">Profile Picture</h2>
-        <form method="POST" action="#update_profile_picture#" enctype="multipart/form-data">
+        <form id="profile-picture-form" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
                 <label for="profile_picture">Upload Profile Picture</label>
@@ -173,80 +173,101 @@
 
         <!-- Two-Factor Authentication -->
         <h2 class="mt-4">Two-Factor Authentication</h2>
-        <form method="POST" action="#update_2fa#">
+        <form id="two-factor-form" method="POST">
             {% csrf_token %}
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="two_factor" name="two_factor" {% if user.profile.two_factor %}checked{% endif %}>
                 <label class="form-check-label" for="two_factor">Enable Two-Factor Authentication</label>
             </div>
-            <button type="submit" class="btn btn-custom">Update 2FA</button>
+            <button type="submit" class="btn btn-custom">Update 2FA Settings</button>
         </form>
-
-        <!-- Account Activity Log -->
-        <h2 class="mt-4">Account Activity Log</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Activity</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for activity in user.activity_log.all %}
-                <tr>
-                    <td>{{ activity.date }}</td>
-                    <td>{{ activity.description }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="2">No recent activity.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <!-- Connected Accounts -->
-        <h2 class="mt-4">Connected Accounts</h2>
-        <form method="POST" action="#connect_social">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="facebook">Link Facebook Account</label>
-                <input type="text" class="form-control" id="facebook" name="facebook" placeholder="Facebook URL" value="{{ user.profile.facebook }}">
-            </div>
-            <div class="form-group">
-                <label for="twitter">Link Twitter Account</label>
-                <input type="text" class="form-control" id="twitter" name="twitter" placeholder="Twitter URL" value="{{ user.profile.twitter }}">
-            </div>
-            <button type="submit" class="btn btn-custom">Connect Accounts</button>
-        </form>
-
-        <!-- Delete Account Section -->
-        <h2 class="mt-4">Delete Account</h2>
-        <p class="text-danger">Warning: This action is irreversible. If you wish to permanently delete your account, please click the button below.</p>
-        <form method="POST" action="{% url 'settings' %}" onsubmit="return confirmDelete();">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Delete My Account</button>
-        </form>
-
     </div>
 
-    <footer>
-        <p>&copy; 2024 InterfaithConnect. All Rights Reserved.</p>
+    <footer class="text-center mt-4">
+        <p>&copy; 2024 Interfaith Connect. All rights reserved.</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function confirmSubmit() {
-            return confirm("Are you sure you want to save the changes?");
+            return confirm('Are you sure you want to save changes?');
         }
-        function confirmDelete() {
-        return confirm("Are you sure you want to delete your account? This action cannot be undone.");
-    }
-
-    </script>
     
-</body>
+        // Function to show toast notifications
+        function showToast(message) {
+            // Create a toast element
+            const toastHTML = `
+                <div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>`;
+            
+            // Append toast to body
+            $('body').append(toastHTML);
+    
+            // Show the toast
+            const toastElement = $('#toast');
+            toastElement.toast({ delay: 3000 }); // Show for 3 seconds
+            toastElement.toast('show');
+    
+            // Remove the toast after displaying
+            toastElement.on('hidden.bs.toast', function () {
+                $(this).remove();
+            });
+        }
+    
+        // Example of triggering the toast after a successful form submission
+        $(document).ready(function() {
+            $('#settings-form').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+                
+                // Here you can add your AJAX request to submit the form data
+    
+                // Show success message (this should be called after a successful submission)
+                showToast('Your settings have been successfully updated!');
+            });
+    
+            $('#password-change-form').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+    
+                // Here you can add your AJAX request to submit the form data
+    
+                // Show success message
+                showToast('Your password has been successfully changed!');
+            });
+    
+            $('#notification-preferences-form').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+    
+                // Here you can add your AJAX request to submit the form data
+    
+                // Show success message
+                showToast('Notification preferences updated!');
+            });
+    
+            $('#profile-picture-form').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+    
+                // Here you can add your AJAX request to submit the form data
+    
+                // Show success message
+                showToast('Profile picture uploaded successfully!');
+            });
+    
+            $('#two-factor-form').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+    
+                // Here you can add your AJAX request to submit the form data
+    
+                // Show success message
+                showToast('Two-Factor Authentication settings updated!');
+            });
+        });
+    </script>
+    </body>
 </html>
-

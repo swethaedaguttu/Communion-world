@@ -8,6 +8,11 @@ from .models import (
     DiscussionThread, Comment, ResourceRequest, VolunteerHistory, Thread, Comment, VolunteerOpportunity, SignUp,
 
 )
+from django.contrib.auth.forms import PasswordChangeForm
+class PasswordUpdateForm(PasswordChangeForm):
+    class Meta:
+        model = User
+        fields = ('old_password', 'new_password1', 'new_password2')
 
 
 

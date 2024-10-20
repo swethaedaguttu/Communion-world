@@ -20,22 +20,32 @@ class UserProfile(models.Model):
     email = models.EmailField(max_length=254, unique=True, null=True, blank=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
+    email_notifications = models.BooleanField(default=False)
+    sms_notifications = models.BooleanField(default=False)
+    push_notifications = models.BooleanField(default=False)
+
 
 
     def __str__(self):
         return f'{self.user.username} Profile'
 
 # Automatically create a UserProfile when a new User is created
+@receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(
-            user=instance,
-            email=instance.email,  # Ensure email is from User model
-            first_name=instance.first_name,  # Correctly using the first name
-            last_name=instance.last_name,  # Correctly using the last name
-        )
+        # Ensure a profile is only created if it doesn't already exist
+        if not UserProfile.objects.filter(user=instance).exists():
+            UserProfile.objects.create(
+                user=instance,
+                email=instance.email,  # Ensure email is from User model
+                first_name=instance.first_name,  # Correctly using the first name
+                last_name=instance.last_name,  # Correctly using the last name
+            )
 
-post_save.connect(create_user_profile, sender=User)
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    # Save the associated user profile
+    instance.userprofile.save()
 
 class Community(models.Model):
     # Choices for community type
@@ -273,6 +283,9 @@ class VolunteerHistory(models.Model):
     activity = models.ForeignKey(Activity, default=1, on_delete=models.CASCADE)
     date = models.DateField()
     hours = models.PositiveIntegerField()
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return f"{self.volunteer_name} - {self.activity.name} ({self.date})"

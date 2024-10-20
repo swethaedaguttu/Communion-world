@@ -26,7 +26,7 @@ from .models import (
  # Import your UserProfile model correctly
 )
 
-from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipForm, SupportForm, FeedbackForm, PollForm, ConnectionRequestForm, ProfileUpdateForm, ProfileEditForm, NotificationPreferencesForm, ProfilePictureForm, CommunityProfileForm, ThreadForm, VolunteerOpportunityForm, SignUpForm
+from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipForm, SupportForm, FeedbackForm, PollForm, ConnectionRequestForm, ProfileUpdateForm, ProfileEditForm, PasswordUpdateForm, NotificationPreferencesForm, ProfilePictureForm, CommunityProfileForm, ThreadForm, VolunteerOpportunityForm, SignUpForm
  # Import your forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -79,7 +79,7 @@ def verify_otp(request):
 
     return render(request, 'events/verify_otp.html')
 
-
+@login_required
 def index(request):
     communities = Community.objects.all()
     unified_nights = UnifiedNight.objects.all()
@@ -141,26 +141,36 @@ def register(request):
             return redirect('register')
 
         # Create the user
-        my_user = User.objects.create_user(username=uname, email=email, password=pass1)
-        my_user.save()
-        messages.success(request, 'Registration successful! You can now log in.')
-        return redirect('login')
+        try:
+            my_user = User.objects.create_user(username=uname, email=email, password=pass1)
+            my_user.save()
+
+            # Do not manually create the UserProfile, the post_save signal will handle it
+            
+            messages.success(request, 'Registration successful! You can now log in.')
+            return redirect('login')
+        except Exception as e:
+            print(f"Error occurred during user registration: {e}")
+            messages.error(request, "An error occurred during registration. Please try again.")
+            return redirect('register')
 
     return render(request, 'events/register.html')
 # Login view (use Django's built-in view or customize this)
 
 def user_login(request):
-    if request.method=='POST':
-        username=request.POST.get('username')
-        pass1=request.POST.get('pass')
-        user=authenticate(request,username=username,password=pass1)
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')  # Ensure this matches the input name in the form
+
+        user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request,user)
+            login(request, user)
             return redirect('index')
         else:
-            return HttpResponse ("Username or Password is incorrect!!!")
+            return HttpResponse("Username or Password is incorrect!!!")
 
-    return render (request,'events/login.html')
+    return render(request, 'events/login.html')
+
 
 # Logout view
 def user_logout(request):
@@ -168,38 +178,33 @@ def user_logout(request):
     return redirect('login')
 
 # Command to create UserProfiles for existing users
-class Command(BaseCommand):
-    help = 'Create UserProfiles for existing users'
-
-    def handle(self, *args, **options):
-        for user in User.objects.all():
-            if not UserProfile.objects.filter(user=user).exists():
-                UserProfile.objects.create(user=user)
-                self.stdout.write(self.style.SUCCESS(f'Created UserProfile for {user.username}'))
 
 # Community Views
-
+@login_required
 def about_us(request):
     return render(request, 'events/about_us.html')  # Adjust the template name as necessary
-
+@login_required
 def contact(request):
     return render(request, 'events/contact.html')  # Adjust the template name as necessary
-
+@login_required
 def profile(request):
     return render(request, 'profile.html')  # Make sure this template exists
 
  # Ensure only logged-in users can create communities
+@login_required
 def community_list_view(request):
     communities = Community.objects.all()
     return render(request, 'events/community_list.html', {'communities': communities})
 
  # Ensure only logged-in users can view community details
+@login_required
 def community_details_view(request, community_id):
     community = get_object_or_404(Community, id=community_id)
     events = Event.objects.filter(community=community)
     return render(request, 'events/community_details.html', {'community': community, 'events': events})
 
  # Ensure only logged-in users can create communities
+@login_required
 def community_create_view(request):
     if request.method == 'POST':
         form = CommunityForm(request.POST)
@@ -213,6 +218,7 @@ def community_create_view(request):
         form = CommunityForm()
     return render(request, 'events/community_form.html', {'form': form})
 
+@login_required
 def create_community_profile(request):
     if request.method == 'POST':
         form = CommunityProfileForm(request.POST, request.FILES)
@@ -237,16 +243,19 @@ def create_community_profile(request):
 # Event Views
 
   # Ensure only logged-in users can view events
+@login_required
 def event_list_view(request):
     events = Event.objects.all()
     return render(request, 'events/event_list.html', {'events': events})
 
   # Ensure only logged-in users can view event details
+@login_required
 def event_details_view(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     return render(request, 'events/event_details.html', {'event': event})
 
   # Ensure only logged-in users can create events
+@login_required
 def event_create_view(request):
     if request.method == 'POST':
         form = EventForm(request.POST)
@@ -260,6 +269,7 @@ def event_create_view(request):
         form = EventForm()
     return render(request, 'events/event_form.html', {'form': form})
 
+@login_required
 def interfaith_networking(request):
     # Fetch communities involved in interfaith activities
     communities = Community.objects.filter(is_interfaith=True)  # Filter communities based on some criteria
@@ -275,7 +285,7 @@ def interfaith_networking(request):
     
     return render(request, 'events/interfaith_networking.html', context)
 
-
+@login_required
 def create_event_view(request):
     communities = Community.objects.all()  # Fetch all communities
 
@@ -311,6 +321,7 @@ def create_event_view(request):
 
     return render(request, 'events/create_event.html', {'communities': communities})
 
+@login_required
 def partnership_create_view(request):
     if request.method == 'POST':
         form = PartnershipForm(request.POST)
@@ -324,7 +335,7 @@ def partnership_create_view(request):
         form = PartnershipForm()
     return render(request, 'events/partnership_form.html', {'form': form})
 
-
+@login_required
 def support_request_view(request):
     if request.method == 'POST':
         form = SupportForm(request.POST)
@@ -338,7 +349,7 @@ def support_request_view(request):
         form = SupportForm()
     return render(request, 'events/support_request_form.html', {'form': form})
 
-
+@login_required
 def feedback_view(request):
     if request.method == 'POST':
         form = FeedbackForm(request.POST)
@@ -352,7 +363,7 @@ def feedback_view(request):
         form = FeedbackForm()
     return render(request, 'events/feedback_form.html', {'form': form})
 
-
+@login_required
 def community_delete_view(request, community_id):
     community = get_object_or_404(Community, id=community_id)
     if request.method == 'POST':
@@ -361,7 +372,7 @@ def community_delete_view(request, community_id):
         return redirect('community_list')  # Adjust the redirect as needed
     return render(request, 'events/community_confirm_delete.html', {'community': community})
 
-
+@login_required
 def event_delete_view(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     if request.method == 'POST':
@@ -370,6 +381,7 @@ def event_delete_view(request, event_id):
         return redirect('event_list')  # Adjust the redirect as needed
     return render(request, 'events/event_confirm_delete.html', {'event': event})
 
+@login_required
 def ai_response(prompt):
     try:
         openai.api_key = 'your_openai_api_key'  # Use environment variables for sensitive data
@@ -383,7 +395,7 @@ def ai_response(prompt):
     except openai.error.OpenAIError as e:
         return "AI is currently unavailable. Please try again later."
 
-
+@login_required
 def ai_chat_view(request):
     if request.method == 'POST':
         user_input = request.POST.get('user_input')
@@ -392,18 +404,21 @@ def ai_chat_view(request):
 
     return render(request, 'events/ai_chat.html')
 
+@login_required
 def feedback_list_view(request):
     feedbacks = Feedback.objects.all()
     return render(request, 'events/feedback_list.html', {'feedbacks': feedbacks})
 
+@login_required
 def notification_list_view(request):
     notifications = Notification.objects.filter(user=request.user)  # Adjust as per your notification model
     return render(request, 'events/notification_list.html', {'notifications': notifications})
 
-
+@login_required
 def resources_view(request):
     resources = Resource.objects.all()
     return render(request, 'events/resources.html', {'resources': resources})
+
 
 class OfferHelpView(View):
     def get(self, request):
@@ -431,7 +446,8 @@ class OfferHelpView(View):
 
         # Redirect to the same page after form submission
         return redirect('offer_help')
-        
+
+      
 class RequestHelpView(View):
     def get(self, request):
         help_requests = HelpRequest.objects.all()  # Get all help requests
@@ -467,6 +483,7 @@ class RequestHelpView(View):
         # Redirect to the same page after successful submission
         return redirect('request_help')
 
+@login_required
 def update_status(request, request_id):
     help_request = get_object_or_404(HelpRequest, id=request_id)
     if request.method == "POST":
@@ -477,9 +494,11 @@ def update_status(request, request_id):
 
     return render(request, 'update_status.html', {'help_request': help_request})
 
+
 def view_request_details(request, request_id):
     help_request = get_object_or_404(HelpRequest, id=request_id)
     return render(request, 'request_details.html', {'help_request': help_request})
+
 
 def request_help_view(request):
     # Get all help requests from the database
@@ -497,10 +516,12 @@ def request_help_view(request):
         'messages': get_messages(request),  # If you are using messages framework
     })
 
+
 def delete_request_view(request, request_id):
     request_to_delete = get_object_or_404(HelpRequest, id=request_id)
     request_to_delete.delete()
     return redirect('request_help')  # Redirect to the request help page or another page after deletion
+
 
 def edit_request_view(request, request_id):
     request_to_edit = get_object_or_404(HelpRequest, id=request_id)
@@ -516,7 +537,7 @@ def edit_request_view(request, request_id):
 
     return render(request, 'edit_request.html', {'form': form})  # Adjust template name accordingly
 
-            
+          
 class OfferHelpCategoryView(View):
     template_name = 'events/offer_help_category.html'  # Use a common template for all categories
 
@@ -531,19 +552,22 @@ class RequestHelpCategory1View(View):
     def get(self, request):
         return render(request, 'events/request_help_category_1.html')
 
+
 class RequestHelpCategory2View(View):
     def get(self, request):
         return render(request, 'events/request_help_category_2.html')
+
 
 class RequestHelpCategory3View(View):
     def get(self, request):
         return render(request, 'events/request_help_category_3.html')
 
+
 class RequestHelpCategory4View(View):
     def get(self, request):
         return render(request, 'events/request_help_category_4.html')
 
-
+@login_required
 def community_networking(request):
     # Retrieve all users in the community excluding the current user
     try:
@@ -572,7 +596,7 @@ def community_networking(request):
     }
 
     return render(request, 'events/community_networking.html', context)
-
+@login_required
 def search_users(request):
     if 'q' in request.GET:
         query = request.GET['q']
@@ -580,7 +604,7 @@ def search_users(request):
         return render(request, 'search_results.html', {'users': users})
     return JsonResponse([], safe=False)
 
-
+@login_required
 def create_poll(request):
     if request.method == "POST":
         form = PollForm(request.POST)
@@ -593,7 +617,7 @@ def create_poll(request):
     form = PollForm()
     return render(request, 'create_poll.html', {'form': form})
 
-
+@login_required
 def respond_to_poll(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
     if request.method == "POST":
@@ -604,7 +628,7 @@ def respond_to_poll(request, poll_id):
 
     return render(request, 'respond_to_poll.html', {'poll': poll})
 
-
+@login_required
 def send_connection_request(request, user_id):
     if request.method == "POST":
         user_to_connect = get_object_or_404(UserProfile, id=user_id)
@@ -615,11 +639,13 @@ def send_connection_request(request, user_id):
     return JsonResponse({'success': False}, status=400)
 
 # View for the discussion forums page
+@login_required
 def discussion_forums(request):
     threads = DiscussionThread.objects.all()
     return render(request, 'events/discussion_forums.html', {'threads': threads})
 
 # View for creating a new discussion thread
+@login_required
 def create_thread(request):
     if request.method == 'POST':
         form = ThreadForm(request.POST)
@@ -633,6 +659,7 @@ def create_thread(request):
     return render(request, 'create_thread.html', {'form': form})
 
   # Ensure the user is logged in
+@login_required
 def view_thread(request, thread_id):
     thread = get_object_or_404(Thread, id=thread_id)
     comments = thread.comments.all()  # Get all comments related to the thread
@@ -655,6 +682,7 @@ def view_thread(request, thread_id):
     })
 
   # Ensure the user is logged in
+@login_required
 def add_comment(request):
     if request.method == 'POST':
         thread_id = request.POST.get('thread_id')
@@ -680,10 +708,9 @@ def request_resource(request):
     return JsonResponse({'status': 'fail'})
 
 def profile_edit(request):
-    user_profile = request.user.profile  # Assuming a one-to-one relation between User and Profile
+    user_profile = request.user.userprofile  # Access the UserProfile correctly
 
     if request.method == 'POST':
-        # Handle profile and picture forms
         profile_form = ProfileEditForm(request.POST, instance=user_profile)
         picture_form = ProfilePictureForm(request.POST, request.FILES, instance=user_profile)
         password_form = PasswordUpdateForm(user=request.user, data=request.POST)
@@ -696,18 +723,17 @@ def profile_edit(request):
 
         if password_form.is_valid():
             password_form.save()
-            update_session_auth_hash(request, password_form.user)  # Prevents user from being logged out
+            update_session_auth_hash(request, password_form.user)
             messages.success(request, 'Your password has been updated successfully.')
             return redirect('profile_edit')
 
     else:
-        # Handle GET request: initialize forms with current user data
         profile_form = ProfileEditForm(instance=user_profile)
         picture_form = ProfilePictureForm(instance=user_profile)
         password_form = PasswordUpdateForm(user=request.user)
 
     # Fetch and paginate volunteer history
-    volunteer_history_list = VolunteerHistory.objects.filter(user=request.user).order_by('-event_date')
+    volunteer_history_list = VolunteerHistory.objects.filter(user=request.user).order_by('-date')
     paginator = Paginator(volunteer_history_list, 5)  # Show 5 events per page
     page_number = request.GET.get('page')
     volunteer_history = paginator.get_page(page_number)
@@ -719,7 +745,7 @@ def profile_edit(request):
         'volunteer_history': volunteer_history,
     }
 
-    return render(request, 'profile_edit.html', context)
+    return render(request, 'events\profile_edit.html', context)
 
 
 
@@ -784,19 +810,24 @@ def settings_view(request):
         # Handle profile update
         profile_form = ProfileEditForm(request.POST, instance=profile)
         profile_picture_form = ProfilePictureForm(request.POST, request.FILES, instance=profile)
-        notification_form = NotificationPreferencesForm(request.POST, instance=profile)
+        notification_form = NotificationPreferencesForm(request.POST)
 
         if profile_form.is_valid() and profile_picture_form.is_valid() and notification_form.is_valid():
             profile_form.save()
             profile_picture_form.save()
-            notification_form.save()
+            notification_form.save(user=user)  # Pass user when saving notification preferences
+
             messages.success(request, 'Profile updated successfully.')
             return redirect('settings')  # Redirect to the settings page after updating
 
     else:
         profile_form = ProfileEditForm(instance=profile)
         profile_picture_form = ProfilePictureForm(instance=profile)
-        notification_form = NotificationPreferencesForm(instance=profile)
+        notification_form = NotificationPreferencesForm(initial={
+            'email_notifications': profile.email_notifications,
+            'sms_notifications': profile.sms_notifications,
+            'push_notifications': profile.push_notifications,
+        })
 
     context = {
         'user': user,
@@ -805,6 +836,7 @@ def settings_view(request):
         'notification_form': notification_form,
     }
     return render(request, 'events/settings.html', context)
+
 
 def volunteer_opportunities(request):
     opportunities = VolunteerOpportunity.objects.all()
