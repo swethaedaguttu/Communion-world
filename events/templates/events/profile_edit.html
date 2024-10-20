@@ -289,16 +289,17 @@ function updateProfilePicture(event) {
     const formData = new FormData(form);
 
     fetch('/profile/update/picture/', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
+    method: 'POST',
+    body: formData,
+})
+.then(response => {
+    if (!response.ok) {
+        return response.json().then(errData => { throw new Error(errData.message); });
+    }
+    return response.json();
+})
+.then(data => {
+
         if (data.status === 'success') {
             showToast('Profile picture updated successfully!');
             document.querySelector('.profile-picture img').src = data.new_image_url; // Update the image preview
@@ -306,12 +307,11 @@ function updateProfilePicture(event) {
             showToast('Error: ' + data.message);
         }
     })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Error updating profile picture.');
-    });
+.catch(error => {
+    console.error('Error:', error);
+    showToast('Error updating profile picture: ' + error.message);
+});
 }
-
         // Function to update personal information
         function updatePersonalInfo(event) {
             event.preventDefault();

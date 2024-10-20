@@ -754,9 +754,13 @@ def profile_edit(request):
 
 @require_POST
 def update_profile_picture(request):
+    print("Received POST request to update profile picture.")
     try:
         profile_picture = request.FILES.get('profile_picture')
+        print(f"Uploaded file: {profile_picture}")
+
         user_profile = request.user.userprofile
+        print(f"User profile: {user_profile}")
 
         if profile_picture:
             user_profile.profile_picture = profile_picture
@@ -765,7 +769,7 @@ def update_profile_picture(request):
             return JsonResponse({
                 'status': 'success',
                 'message': 'Profile picture updated successfully!',
-                'new_image_url': user_profile.profile_picture.url  # Return new image URL
+                'new_image_url': user_profile.profile_picture.url
             })
         else:
             return JsonResponse({'status': 'error', 'message': 'No file uploaded.'}, status=400)
