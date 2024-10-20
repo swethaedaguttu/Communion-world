@@ -719,13 +719,13 @@ def profile_edit(request):
             profile_form.save()
             picture_form.save()
             messages.success(request, 'Your profile has been updated successfully.')
-            return redirect('profile_edit')
+            return redirect('profile_view')
 
         if password_form.is_valid():
             password_form.save()
             update_session_auth_hash(request, password_form.user)
             messages.success(request, 'Your password has been updated successfully.')
-            return redirect('profile_edit')
+            return redirect('profile_view')
 
     else:
         profile_form = ProfileEditForm(instance=user_profile)
@@ -904,7 +904,7 @@ def add_activity(request):
 # View for listing resources
 def resource_list(request):
     resources = Resource.objects.all()
-    return render(request, 'resource_list.html', {'resources': resources})
+    return render(request, 'events/resource_details.html', {'resources': resources})
 
 # View for adding a resource
 @login_required
@@ -913,10 +913,10 @@ def add_resource(request):
         form = ResourceForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('resource_list')
+            return redirect('resource_details')
     else:
         form = ResourceForm()
-    return render(request, 'add_resource.html', {'form': form})
+    return render(request, 'events/resource_directory.html', {'form': form})
 
 # Example of a view for enabling 2FA (if you decide to implement it)
 @login_required

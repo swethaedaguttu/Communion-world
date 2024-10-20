@@ -38,7 +38,12 @@ from events.views import (
     delete_request_view,
     edit_request_view,
     create_community_profile,
-    view_thread, volunteer_opportunities, sign_up ,
+    view_thread, volunteer_opportunities, sign_up, profile_view,
+    add_activity,
+    resource_list,
+    add_resource,
+    enable_2fa,
+
 )
 
 urlpatterns = [
@@ -90,6 +95,11 @@ urlpatterns = [
     path('events/thread/<int:thread_id>/add_comment/', add_comment, name='add_comment'),
     path('volunteer-opportunities/', volunteer_opportunities, name='volunteer_opportunities'),
     path('sign-up/<int:opportunity_id>/', sign_up, name='sign_up'),  # Sign-up page for a specific opportunity
+    path('profile/', profile_view, name='profile_view'),  # View user profile
+    path('activity/add/', add_activity, name='add_activity'),  # Add an activity
+    path('resources/', resource_list, name='resource_list'),  # List resources
+    path('resources/add/', add_resource, name='add_resource'),  # Add a resource
+    path('2fa/enable/', enable_2fa, name='enable_2fa'),  # Enable two-factor authentication
 
 
 ]
