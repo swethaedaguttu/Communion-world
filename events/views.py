@@ -735,13 +735,16 @@ def profile_edit(request):
 def update_profile_picture(request):
     if request.method == 'POST':
         try:
-            profile = request.user.profile  # Assuming user has a related profile
-            if 'profile_picture' in request.FILES:
-                profile.profile_picture = request.FILES['profile_picture']
+            if request.user.is_authenticated:
+                user_profile = request.user.userprofile  # Access UserProfile instead of Profile
+                if 'profile_picture' in request.FILES:
+                    user_profile.profile_picture = request.FILES['profile_picture']
+                else:
+                    user_profile.profile_picture = 'profile_pictures/default.jpg'  # Default picture if not provided
+                user_profile.save()
+                return JsonResponse({'success': True, 'message': 'Profile picture updated successfully'})
             else:
-                profile.profile_picture = 'profile_pictures/default.jpg'  # Manually set default if needed
-            profile.save()
-            return JsonResponse({'success': True, 'message': 'Profile picture updated successfully'})
+                return JsonResponse({'success': False, 'message': 'User is not authenticated'}, status=403)
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=400)

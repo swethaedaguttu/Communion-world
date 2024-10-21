@@ -343,8 +343,11 @@ footer p {
                     <a href="{% url 'profile_edit' %}">
                         <img src="{{ user_profile.profile_picture.url }}" alt="Profile" class="rounded-circle profile-pic">
                     </a>
-                    <span class="mt-1">{{ user.username }}</span> <!-- Dynamically display username -->
-                </div>                
+                    <span class="mt-1">{{ user_profile.user.username }}</span>
+                    <p>Profile Picture URL: {{ user_profile.profile_picture.url }}</p> <!-- Debugging line -->
+                </div>
+                
+                             
             
         </div>
     </nav>
