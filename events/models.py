@@ -376,4 +376,21 @@ class InitiativeJoin(models.Model):
     def __str__(self):
         return f'{self.name} joined {self.charity.name}'
 
+class Contact(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Message from {self.name}'
+
+class Donation(models.Model):
+    charity = models.ForeignKey(Charity, related_name='donations', on_delete=models.CASCADE)
+    donor_name = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Donation of {self.amount} by {self.donor_name} to {self.charity.name}'
 

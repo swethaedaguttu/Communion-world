@@ -341,10 +341,10 @@ footer p {
                 <!-- Profile Section -->
                 <div class="d-flex flex-column align-items-center profile-section">
                     <a href="{% url 'profile_edit' %}">
-                        <img src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_640.jpg" alt="Profile" class="rounded-circle profile-pic">
+                        <img src="{{ user_profile.profile_picture.url }}" alt="Profile" class="rounded-circle profile-pic">
                     </a>
-                    <span class="mt-1">SSSS</span> <!-- Replace 'Your Name' with the actual name -->
-                </div>
+                    <span class="mt-1">{{ user.username }}</span> <!-- Dynamically display username -->
+                </div>                
             
         </div>
     </nav>
@@ -386,19 +386,16 @@ footer p {
                     <li class="list-group-item"><i class="fas fa-network-wired"></i> <a href="#interfaith_collaboration">Interfaith Collaboration Tools</a></li>
                     <li class="list-group-item"><i class="fas fa-praying-hands"></i> <a href="{% url 'shared_prayer_requests' %}">Shared Prayer Requests</a></li>
                     <li class="list-group-item"><i class="fas fa-gamepad"></i> <a href="{% url 'gamification_elements' %}">Gamification Elements</a></li>
-                    <li class="list-group-item"><i class="fas fa-language"></i> <a href="#multilingual_support">Multilingual Support</a></li>
-                    <li class="list-group-item"><i class="fas fa-map-marked-alt"></i> <a href="#interactive_maps">Interactive Maps</a></li>
+                    <li class="list-group-item"><i class="fas fa-map-marked-alt"></i> <a href="{% url 'interactive_maps' %}">Interactive Maps</a></li>
                     <li class="list-group-item"><i class="fas fa-exchange-alt"></i> <a href="{% url 'cultural_exchange' %}">Cultural Exchange Programs</a></li>
                     <li class="list-group-item"><i class="fas fa-user-graduate"></i> <a href="#mentorship_opportunities">Mentorship Opportunities</a></li>
                     <li class="list-group-item"><i class="fas fa-project-diagram"></i> <a href="#collaborative_projects">Collaborative Projects</a></li>
-                    <li class="list-group-item"><i class="fas fa-folder"></i> <a href="#resource_hub">Resource Hub</a></li>
+                    <li class="list-group-item"><i class="fas fa-folder"></i> <a href="{% url 'resource_directory' %}">Resource Hub</a></li>
                     <li class="list-group-item"><i class="fas fa-comment-alt"></i> <a href="#feedback_improvement">Feedback and Improvement</a></li>
                     <li class="list-group-item"><i class="fas fa-hand-holding-heart"></i> <a href="{% url 'charitable_initiatives' user_id=user.id  %}">Charitable Initiatives</a></li>
                     <li class="list-group-item"><i class="fas fa-life-ring"></i> <a href="#crisis_response">Crisis Response Features</a></li>
                     <li class="list-group-item"><i class="fas fa-mobile-alt"></i> <a href="#app_integration">App Integration with Social Services</a></li>
                     <li class="list-group-item"><i class="fas fa-globe"></i> <a href="#diversity_celebrations">Diversity Celebrations</a></li>
-                    <li class="list-group-item"><i class="fas fa-seedling"></i> <a href="#sustainability_initiatives">Environmental Sustainability Initiatives</a></li>
-                    <li class="list-group-item"><i class="fas fa-heartbeat"></i> <a href="#wellness_resources">Wellness and Mental Health Resources</a></li>
                 
 
 

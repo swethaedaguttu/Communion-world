@@ -49,7 +49,9 @@ from events.views import (
     submit_prayer, 
     prayer_feed,
     submit_reply, gamification_elements_view, share_culture, list_cultural_stories, thank_you, admin_approve_story,
-    charitable_initiatives, add_charity,
+    charitable_initiatives, add_charity, join_initiative,
+    contact_and_save, resources_view, interactive_maps,
+
 )
 
 
@@ -108,8 +110,8 @@ urlpatterns = [
     path('resources/', resource_list, name='resource_list'),  # List resources
     path('resources/add/', add_resource, name='add_resource'),  # Add a resource
     path('2fa/enable/', enable_2fa, name='enable_2fa'),  # Enable two-factor authentication
-    path('profile/update/picture/', update_profile_picture, name='update_profile_picture'),
-    path('profile/update/info/', update_personal_info, name='update_personal_info'),
+    path('update_profile_picture/', update_profile_picture, name='update_profile_picture'),
+    path('update_personal_info/', update_personal_info, name='update_personal_info'),
     path('profile/', profile_view, name='profile'),  # Ensure this line is present
     path('api/submit-prayer/', submit_prayer, name='submit_prayer'),  # API endpoint for submitting prayers
     path('api/get-prayers/', prayer_feed, name='prayer_feed'),  # API endpoint for retrieving prayers
@@ -124,6 +126,10 @@ urlpatterns = [
     path('admin/approve/<int:story_id>/', admin_approve_story, name='admin_approve_story'),
     path('charitable_initiatives/<int:user_id>/', charitable_initiatives, name='charitable_initiatives'),
     path('add-charity/', add_charity, name='add_charity'),
+    path('join_initiative/<int:user_id>/', join_initiative, name='join_initiative'),
+    path('contact_and_save/', contact_and_save, name='contact_and_save'),
+    path('resource_directory/', resources_view, name='resource_directory'),
+    path('interactive_maps/', interactive_maps, name='interactive_maps'),
 
 
 ]

@@ -6,7 +6,7 @@ from .models import (
     Community, Event, UnifiedNight, Activity, Partnership, SupportRequest,
     Resource, Notification, Feedback, UserProfile, Poll, ConnectionRequest,
     DiscussionThread, Comment, ResourceRequest, VolunteerHistory, Thread, Comment, VolunteerOpportunity, SignUp, CulturalStory, Charity,
-    InitiativeJoin,
+    InitiativeJoin, Contact, Donation,
 )
 from django.contrib.auth.forms import PasswordChangeForm
 class PasswordUpdateForm(PasswordChangeForm):
@@ -226,3 +226,29 @@ class InitiativeJoinForm(forms.ModelForm):
     class Meta:
         model = InitiativeJoin
         fields = ['charity', 'name', 'email', 'message']
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ['name', 'email', 'message']
+        widgets = {
+            'message': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Your message here...'}),
+        }
+        labels = {
+            'name': 'Your Name',
+            'email': 'Your Email',
+            'message': 'Your Message',
+        }
+
+class DonationForm(forms.ModelForm):
+    class Meta:
+        model = Donation
+        fields = ['charity', 'donor_name', 'amount']
+        widgets = {
+            'amount': forms.NumberInput(attrs={'placeholder': 'Enter donation amount'}),
+        }
+        labels = {
+            'charity': 'Select Charity',
+            'donor_name': 'Your Name',
+            'amount': 'Donation Amount',
+        }

@@ -27,7 +27,8 @@ from .models import (
  # Import your UserProfile model correctly
 )
 
-from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipForm, SupportForm, FeedbackForm, PollForm, ConnectionRequestForm, ProfileUpdateForm, ProfileEditForm, PasswordUpdateForm, NotificationPreferencesForm, ProfilePictureForm, CommunityProfileForm, ThreadForm, VolunteerOpportunityForm, SignUpForm, CulturalStoryForm, CharityForm, InitiativeJoinForm
+from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipForm, SupportForm, FeedbackForm, PollForm, ConnectionRequestForm, ProfileUpdateForm, ProfileEditForm, PasswordUpdateForm, NotificationPreferencesForm, ProfilePictureForm, CommunityProfileForm, ThreadForm, VolunteerOpportunityForm, SignUpForm, CulturalStoryForm, CharityForm, InitiativeJoinForm,ContactForm, DonationForm
+
  # Import your forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -426,7 +427,7 @@ def notification_list_view(request):
 @login_required
 def resources_view(request):
     resources = Resource.objects.all()
-    return render(request, 'events/resources.html', {'resources': resources})
+    return render(request, 'events/resources_directory.html', {'resources': resources})
 
 
 class OfferHelpView(View):
@@ -717,87 +718,36 @@ def request_resource(request):
     return JsonResponse({'status': 'fail'})
 
 def profile_edit(request):
-    user_profile = request.user.userprofile
+    user_profile = request.user.userprofile  # Assuming one-to-one relationship with User model
 
     if request.method == 'POST':
-        profile_form = ProfileEditForm(request.POST, instance=user_profile)
-        picture_form = ProfilePictureForm(request.POST, request.FILES, instance=user_profile)
-        password_form = PasswordUpdateForm(user=request.user, data=request.POST)
+        # Check if the request is for updating the profile picture
+        if 'profile_picture' in request.FILES:
+            return update_profile_picture(request, user_profile)
 
-        # Check if profile and picture forms are valid
-        if profile_form.is_valid() and picture_form.is_valid():
-            profile_form.save()
-            picture_form.save()
-            messages.success(request, 'Your profile has been updated successfully.')
-            return redirect('profile_view')
-        
-        # Check if password form is valid
-        if password_form.is_valid():
-            password_form.save()
-            update_session_auth_hash(request, password_form.user)
-            messages.success(request, 'Your password has been updated successfully.')
-            return redirect('profile_view')
+        # Check if the request is for updating personal information
+        return update_personal_info(request, user_profile)
 
-    else:
-        profile_form = ProfileEditForm(instance=user_profile)
-        picture_form = ProfilePictureForm(instance=user_profile)
-        password_form = PasswordUpdateForm(user=request.user)
+    # GET request: Render the profile edit form
+    return render(request, 'events\profile_edit.html', {'user_profile': user_profile})
 
-    volunteer_history_list = VolunteerHistory.objects.filter(user=request.user).order_by('-date')
-    paginator = Paginator(volunteer_history_list, 5)
-    page_number = request.GET.get('page')
-    volunteer_history = paginator.get_page(page_number)
-
-    context = {
-        'profile_form': profile_form,
-        'picture_form': picture_form,
-        'password_form': password_form,
-        'volunteer_history': volunteer_history,
-    }
-
-    return render(request, 'events/profile_edit.html', context)
-
-
-
-@require_POST
+@csrf_exempt
 def update_profile_picture(request):
-    print("Received POST request to update profile picture.")
-    try:
-        profile_picture = request.FILES.get('profile_picture')
-        print(f"Uploaded file: {profile_picture}")
+    if request.method == 'POST':
+        try:
+            profile = request.user.profile  # Assuming user has a related profile
+            if 'profile_picture' in request.FILES:
+                profile.profile_picture = request.FILES['profile_picture']
+            else:
+                profile.profile_picture = 'profile_pictures/default.jpg'  # Manually set default if needed
+            profile.save()
+            return JsonResponse({'success': True, 'message': 'Profile picture updated successfully'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=400)
 
-        user_profile = request.user.userprofile
-        print(f"User profile: {user_profile}")
-
-        if profile_picture:
-            user_profile.profile_picture = profile_picture
-            user_profile.full_clean()  # Validate the model
-            user_profile.save()
-            return JsonResponse({
-                'status': 'success',
-                'message': 'Profile picture updated successfully!',
-                'new_image_url': user_profile.profile_picture.url
-            })
-        else:
-            return JsonResponse({'status': 'error', 'message': 'No file uploaded.'}, status=400)
-
-    except ValidationError as e:
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-    except Exception as e:
-        logger.error(f"Error updating profile picture: {e}")
-        return JsonResponse({'status': 'error', 'message': 'An error occurred while updating the profile picture.'}, status=500)
-
-
-@require_POST
-def update_personal_info(request):
-    user_profile = request.user.userprofile
-
-    name = request.POST.get('name')
-    if not name:
-        return JsonResponse({'status': 'error', 'message': 'Name is required.'}, status=400)
-
-    # Update the user profile fields
-    user_profile.name = name
+def update_personal_info(request, user_profile):
+    # Handle personal info update (like name, location, etc.)
     user_profile.location = request.POST.get('location', user_profile.location)
     user_profile.country = request.POST.get('country', user_profile.country)
     user_profile.state = request.POST.get('state', user_profile.state)
@@ -805,18 +755,11 @@ def update_personal_info(request):
     user_profile.language = request.POST.get('language', user_profile.language)
     user_profile.dob = request.POST.get('dob', user_profile.dob)
     user_profile.gender = request.POST.get('gender', user_profile.gender)
-    user_profile.interests = request.POST.get('interests', user_profile.interests)
-    user_profile.social_links = request.POST.get('social_links', user_profile.social_links)
 
-    try:
-        user_profile.full_clean()  # Validate the model before saving
-        user_profile.save()
-        return JsonResponse({'status': 'success', 'message': 'Personal information updated successfully!'})
-    except ValidationError as e:
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': 'An error occurred while saving personal information.'}, status=500)
+    # Save updated user profile
+    user_profile.save()
 
+    return JsonResponse({'success': True})
 
 def notification_center(request):
     # Query all notifications for the logged-in user, ordered by most recent first
@@ -1130,10 +1073,13 @@ def admin_approve_story(request, story_id):
     story.save()
     return render(request, 'approval_success.html', {'story': story})
 
+# View to handle all charitable initiatives
 @login_required
 def charitable_initiatives(request, user_id):
     user_profile = get_object_or_404(UserProfile, id=user_id)
     charities = Charity.objects.all()
+    contact_form = ContactForm()
+    donation_form = DonationForm()
 
     if request.method == 'POST':
         # Handle new charity creation
@@ -1144,6 +1090,11 @@ def charitable_initiatives(request, user_id):
             founder_name = request.POST.get('founder_name')
             founder_email = request.POST.get('founder_email')
 
+            # Simple validation before saving to the database
+            if not all([charity_name, charity_description, charity_location, founder_name, founder_email]):
+                return JsonResponse({'success': False, 'message': 'All fields are required.'}, status=400)
+
+            # Create the new Charity
             charity = Charity.objects.create(
                 name=charity_name,
                 description=charity_description,
@@ -1157,6 +1108,8 @@ def charitable_initiatives(request, user_id):
         elif 'link_charity' in request.POST:
             charity_id = request.POST.get('initiative')
             charity = get_object_or_404(Charity, id=charity_id)
+
+            # Link the charity to the user's profile
             user_profile.initiative = charity
             user_profile.save()
             return JsonResponse({'success': True, 'message': 'Charity linked successfully!'})
@@ -1166,44 +1119,109 @@ def charitable_initiatives(request, user_id):
             name = request.POST.get('name')
             email = request.POST.get('email')
             message = request.POST.get('message')
-            # Add logic to save join request or send email notification
+
+            # Basic validation for joining an initiative
+            if not all([name, email, message]):
+                return JsonResponse({'success': False, 'message': 'Please fill out all the fields.'}, status=400)
+
+            # Save join request in the Contact model
+            Contact.objects.create(
+                name=name,
+                email=email,
+                message=message,
+                initiative=user_profile.initiative
+            )
             return JsonResponse({'success': True, 'message': f'Thank you for joining! {name}'})
 
+        # Handle donations
+        elif 'make_donation' in request.POST:
+            donation_form = DonationForm(request.POST)
+            if donation_form.is_valid():
+                donation_form.save()
+                return JsonResponse({'success': True, 'message': 'Donation made successfully!'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Please correct the errors in the donation form.'}, status=400)
+
+    # Handle GET request, return the forms and existing charities
     else:
         form = CharityForm()
 
     return render(request, 'events/charitable_initiatives.html', {
         'charities': charities,
         'form': form,
+        'contact_form': contact_form,
+        'donation_form': donation_form,
         'user_profile': user_profile
     })
 
-@method_decorator(csrf_protect, name='dispatch')
-@require_POST  # Ensure only POST requests are accepted
+# View to add a new charity (via POST request)
+@csrf_exempt  # For testing purposes; ensure proper CSRF handling in production
 def add_charity(request):
     if request.method == 'POST':
-        try:
-            charity_name = request.POST.get('name')
-            charity_description = request.POST.get('description')
-            charity_location = request.POST.get('location')
-            founder_name = request.POST.get('founder')
-            founder_email = request.POST.get('founder_email')
+        charity_name = request.POST.get('name')
+        charity_description = request.POST.get('description')
+        charity_location = request.POST.get('location')
+        founder_name = request.POST.get('founder')
+        founder_email = request.POST.get('founder_email')
 
-            # Save charity data to the database
-            charity = Charity.objects.create(
-                name=charity_name,
-                description=charity_description,
-                location=charity_location,
-                founder_name=founder_name,
-                founder_email=founder_email
-            )
+        # Validate that all required fields are provided
+        if not all([charity_name, charity_description, charity_location, founder_name, founder_email]):
+            return JsonResponse({'success': False, 'message': 'All fields are required.'}, status=400)
 
-            return JsonResponse({'success': True, 'message': 'Charity added successfully!'})
+        # Create and save the new Charity
+        charity = Charity.objects.create(
+            name=charity_name,
+            description=charity_description,
+            location=charity_location,
+            founder_name=founder_name,
+            founder_email=founder_email
+        )
 
-        except Exception as e:
-            # Log the error or print it for debugging
-            print(f"Error: {str(e)}")
-            return JsonResponse({'success': False, 'message': str(e)}, status=500)
+        return JsonResponse({'success': True, 'message': 'Charity added successfully!'})
 
-    # Return a message for GET requests
     return JsonResponse({'success': False, 'message': 'Invalid request method. Use POST to add charity.'}, status=400)
+
+# View to handle joining a charitable initiative
+@login_required
+def join_initiative(request, user_id):
+    user_profile = get_object_or_404(UserProfile, id=user_id)
+    
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+
+        # Basic validation
+        if not all([name, email, message]):
+            return JsonResponse({'success': False, 'message': 'Please fill out all the fields.'}, status=400)
+
+        # Save the join request in the Contact model
+        Contact.objects.create(
+            name=name,
+            email=email,
+            message=message,
+            initiative=user_profile.initiative
+        )
+        return JsonResponse({'success': True, 'message': f'Thank you for joining! {name}'})
+    
+    return JsonResponse({'success': False, 'message': 'Invalid request method. Use POST to join an initiative.'}, status=400)
+
+# Contact Form handling to save and store user data
+@login_required
+def contact_and_save(request):
+    if request.method == 'POST':
+        contact_form = ContactForm(request.POST)
+
+        if contact_form.is_valid():
+            contact_form.save()  # Save the contact details in the database
+            return JsonResponse({'success': True, 'message': 'Contact information saved successfully!'})
+        else:
+            return JsonResponse({'success': False, 'message': 'Invalid form data.'}, status=400)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
+
+@login_required
+def interactive_maps(request):
+    events = Event.objects.all()  # Fetch all events from the database
+    return render(request, 'interactive_maps.html', {'events': events})
+

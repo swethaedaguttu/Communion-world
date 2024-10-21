@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Charitable Initiatives</title>
     <style>
-                body {
+        /* CSS styles */
+        body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f7f7f7;
         }
-
         header {
             background: #4CAF50;
             color: white;
@@ -19,42 +19,33 @@
             text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
         nav ul {
             list-style-type: none;
             padding: 0;
         }
-
         nav ul li {
             display: inline;
             margin: 0 15px;
         }
-
         nav a {
             color: white;
             text-decoration: none;
             font-size: 1.2em;
-            position: relative;
         }
-
         nav a:hover {
             color: #ffeb3b;
             text-decoration: underline;
         }
-
         main {
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
-
         h2 {
             border-bottom: 3px solid #4CAF50;
             padding-bottom: 10px;
             margin-bottom: 20px;
-            animation: fadeIn 1s ease-in-out;
         }
-
         .initiative {
             border: 1px solid #ccc;
             border-radius: 10px;
@@ -64,16 +55,13 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s, box-shadow 0.3s;
         }
-
         .initiative:hover {
             transform: translateY(-5px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
-
         form {
             margin: 20px 0;
         }
-
         input,
         textarea {
             width: 100%;
@@ -83,12 +71,10 @@
             border-radius: 5px;
             transition: box-shadow 0.3s;
         }
-
         input:focus,
         textarea:focus {
             box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
         }
-
         button {
             background: #4CAF50;
             color: white;
@@ -99,60 +85,45 @@
             font-size: 1em;
             transition: background 0.3s;
         }
-
         button:hover {
             background: #45a049;
         }
-
         footer {
             text-align: center;
             padding: 20px 0;
             background: #f1f1f1;
-            position: relative;
         }
-
-        .scroll-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #4CAF50;
-            color: white;
-            padding: 10px;
-            border-radius: 50%;
-            display: none;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .scroll-top:hover {
-            background: #45a049;
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
         .hidden {
             display: none;
         }
-
-        .success-message {
+        .success-message,
+        .error-message {
             display: none;
-            color: green;
-        }
-
-        form {
+            padding: 10px;
+            border-radius: 5px;
             margin-top: 10px;
         }
-
-        .initiative {
-            margin-bottom: 20px;
+        .success-message {
+            color: green;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .error-message {
+            color: red;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            display: none;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .members-list {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
@@ -162,7 +133,7 @@
     <h1>Charitable Initiatives</h1>
     <nav>
         <ul>
-            <li><a href="#">Home</a></li>
+            <li><a href="{% url 'index' %}">Home</a></li>
             <li><a href="#about">About Us</a></li>
             <li><a href="#initiatives">Initiatives</a></li>
             <li><a href="#join">Join Us</a></li>
@@ -180,175 +151,158 @@
     <section id="initiatives">
         <h2>Current Initiatives</h2>
         <div id="initiative-list">
+            {% for charity in charities %}
             <div class="initiative">
-                <h3>Food Drive</h3>
-                <p>Join us in our mission to collect food for local families in need.</p>
-                <button type="button" onclick="showSignupForm('food-drive-form')">Join</button>
-                <form id="food-drive-form" class="hidden">
-                    <input type="text" id="name" placeholder="Your Name" required>
-                    <input type="email" id="email" placeholder="Your Email" required>
-                    <textarea id="message" placeholder="How can you help?" required></textarea>
+                <h3>{{ charity.name }}</h3>
+                <p>{{ charity.description }}</p>
+                <button type="button" onclick="showSignupForm('{{ charity.id }}-form')">Join</button>
+                <form id="{{ charity.id }}-form" class="hidden" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="Your Email" required>
+                    <textarea name="message" placeholder="How can you help?" required></textarea>
                     <button type="submit">Submit</button>
+                    <p class="loading">Loading...</p>
+                    <p class="error-message">There was an error processing your request.</p>
+                    <p class="success-message">Thank you for joining {{ charity.name }}!</p>
                 </form>
-                <p class="success-message">Thank you for joining the Food Drive!</p>
+                <button type="button" onclick="toggleMembers('{{ charity.id }}-members')">Show Join Members</button>
+                <div id="{{ charity.id }}-members" class="hidden members-list">
+                    <p>Loading members...</p>
+                    <ul></ul>
+                </div>
             </div>
-
-            <div class="initiative">
-                <h3>Clothing Donation</h3>
-                <p>Help us provide warm clothing for those without during winter.</p>
-                <button type="button" onclick="showSignupForm('clothing-donation-form')">Join</button>
-                <form id="clothing-donation-form" class="hidden">
-                    <input type="text" id="name" placeholder="Your Name" required>
-                    <input type="email" id="email" placeholder="Your Email" required>
-                    <textarea id="message" placeholder="How can you help?" required></textarea>
-                    <button type="submit">Submit</button>
-                </form>
-                <p class="success-message">Thank you for joining the Clothing Donation!</p>
-            </div>
-
-            <div class="initiative">
-                <h3>Community Clean-Up</h3>
-                <p>Participate in our monthly clean-up to keep our neighborhood beautiful.</p>
-                <button type="button" onclick="showSignupForm('clean-up-form')">Join</button>
-                <form id="clean-up-form" class="hidden">
-                    <input type="text" id="name" placeholder="Your Name" required>
-                    <input type="email" id="email" placeholder="Your Email" required>
-                    <textarea id="message" placeholder="How can you help?" required></textarea>
-                    <button type="submit">Submit</button>
-                </form>
-                <p class="success-message">Thank you for joining the Community Clean-Up!</p>
-            </div>
+            {% endfor %}
         </div>
     </section>
 
     <section id="join">
         <h2>Join Our Community</h2>
-        <form id="join-form">
-            <input type="text" id="name" placeholder="Your Name" required>
-            <input type="email" id="email" placeholder="Your Email" required>
-            <textarea id="message" placeholder="How can you help?" required></textarea>
+        <form id="join-form" method="post" onsubmit="handleJoinSubmit(event)">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="How can you help?" required></textarea>
             <button type="submit">Join</button>
+            <p class="loading">Loading...</p>
+            <p class="error-message">There was an error processing your request.</p>
+            <p class="success-message">Thank you for joining our community!</p>
         </form>
     </section>
 
     <section id="new-charity">
         <h2>Start a New Charity</h2>
-        <form id="new-charity-form" class="new-charity-form">
-            <input type="text" id="new-charity-name" placeholder="Charity Name" required>
-            <input type="text" id="new-charity-location" placeholder="Location" required>
-            <textarea id="new-charity-description" placeholder="Charity Description" required></textarea>
-            <input type="text" id="charity-founder" placeholder="Your Name" required>
-            <input type="email" id="founder-email" placeholder="Your Email" required>
+        <form id="new-charity-form" method="post" onsubmit="handleNewCharitySubmit(event)">
+            {% csrf_token %}
+            <input type="text" name="charity_name" placeholder="Charity Name" required>
+            <input type="text" name="charity_location" placeholder="Location" required>
+            <textarea name="charity_description" placeholder="Charity Description" required></textarea>
+            <input type="text" name="founder_name" placeholder="Your Name" required>
+            <input type="email" name="founder_email" placeholder="Your Email" required>
             <button type="submit">Add New Charity</button>
+            <p class="loading">Loading...</p>
+            <p class="error-message">There was an error processing your request.</p>
+            <p class="success-message">New charity added successfully!</p>
         </form>
     </section>
 
     <section id="contact">
         <h2>Contact Us</h2>
-        <form id="contact-form">
-            <input type="text" id="contact-name" placeholder="Your Name" required>
-            <input type="email" id="contact-email" placeholder="Your Email" required>
-            <textarea id="contact-message" placeholder="Your Message" required></textarea>
+        <form id="contact-form" method="post" onsubmit="handleContactSubmit(event)">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" required></textarea>
             <button type="submit">Send Message</button>
+            <p class="loading">Loading...</p>
+            <p class="error-message">There was an error processing your request.</p>
+            <p class="success-message">Your message has been sent successfully!</p>
         </form>
     </section>
 </main>
 
+<footer>
+    <p>&copy; 2024 InterfaithConnect. All rights reserved.</p>
+</footer>
+
+<!-- JavaScript -->
 <script>
-// Function to get the CSRF token from the cookie
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Check if this cookie string begins with the name we want
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
+    // Function to toggle visibility of forms or lists
+    function toggleVisibility(id) {
+        const element = document.getElementById(id);
+        element.classList.toggle('hidden');
+    }
+
+    // Function to show the signup form
+    function showSignupForm(formId) {
+        const form = document.getElementById(formId);
+        toggleVisibility(formId);
+    }
+
+    // Function to handle form submissions
+    async function handleJoinSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        await submitForm(form.action, formData, form);
+    }
+
+    async function handleNewCharitySubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        await submitForm(form.action, formData, form);
+    }
+
+    async function handleContactSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        await submitForm(form.action, formData, form);
+    }
+
+    // General form submission handler
+    async function submitForm(action, formData, form) {
+        const loadingMessage = form.querySelector('.loading');
+        const errorMessage = form.querySelector('.error-message');
+        const successMessage = form.querySelector('.success-message');
+
+        loadingMessage.classList.remove('hidden');
+        errorMessage.classList.add('hidden');
+        successMessage.classList.add('hidden');
+
+        try {
+            const response = await fetch(action, {
+                method: 'POST',
+                body: formData
+            });
+            if (!response.ok) throw new Error('Network response was not ok');
+            successMessage.classList.remove('hidden');
+        } catch (error) {
+            errorMessage.classList.remove('hidden');
+        } finally {
+            loadingMessage.classList.add('hidden');
         }
     }
-    return cookieValue;
-}
 
-// Show the signup form when the button is clicked
-function showSignupForm(formId) {
-    document.getElementById(formId).classList.toggle('hidden');
-}
+    // Function to load members for a charity
+    async function toggleMembers(memberListId) {
+        const membersList = document.getElementById(memberListId);
+        const membersListUl = membersList.querySelector('ul');
+        membersListUl.innerHTML = ''; // Clear previous members
 
-// Handle form submissions dynamically
-document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const formData = new FormData(form);
-        const formId = form.id;
-        const successMessage = form.nextElementSibling;
-
-        fetch('/add-charity', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Form data submitted:', data);
-
-            if (data.success) {
-                // Hide the form and show success message
-                form.classList.add('hidden');
-                successMessage.style.display = 'block';
-            } else {
-                console.error('Submission failed:', data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error submitting form:', error);
-        });
-    });
-});
-
-// Add a new charity dynamically with location and founder info
-document.getElementById('new-charity-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const charityName = document.getElementById('new-charity-name').value;
-    const charityDescription = document.getElementById('new-charity-description').value;
-    const charityLocation = document.getElementById('new-charity-location').value;
-    const founderName = document.getElementById('charity-founder').value;
-    const founderEmail = document.getElementById('founder-email').value;
-
-    if (charityName && charityDescription && charityLocation && founderName && founderEmail) {
-        const newCharity = document.createElement('div');
-        newCharity.className = 'initiative';
-        newCharity.innerHTML = `
-            <h3>${charityName} (${charityLocation})</h3>
-            <p>${charityDescription}</p>
-            <p>Founded by: ${founderName} (${founderEmail})</p>
-            <button type="button" onclick="showSignupForm('${charityName}-form')">Sign Up</button>
-            <form id="${charityName}-form" class="hidden">
-                <input type="text" id="name" placeholder="Your Name" required>
-                <input type="email" id="email" placeholder="Your Email" required>
-                <textarea id="message" placeholder="How can you help?" required></textarea>
-                <button type="submit">Submit</button>
-            </form>
-            <p class="success-message" style="display: none;">Thank you for joining ${charityName}!</p>
-        `;
-
-        // Add the new charity to the initiative list
-        document.getElementById('initiative-list').appendChild(newCharity);
-
-        // Clear form inputs
-        document.getElementById('new-charity-name').value = '';
-        document.getElementById('new-charity-location').value = '';
-        document.getElementById('new-charity-description').value = '';
-        document.getElementById('charity-founder').value = '';
-        document.getElementById('founder-email').value = '';
+        if (membersList.classList.contains('hidden')) {
+            // Fetch members only if showing
+            const response = await fetch(`/api/members/${memberListId.split('-')[0]}`);
+            const members = await response.json();
+            members.forEach(member => {
+                const li = document.createElement('li');
+                li.textContent = `${member.name} (${member.email})`;
+                membersListUl.appendChild(li);
+            });
+        }
+        toggleVisibility(memberListId);
     }
-});
 </script>
 
 </body>

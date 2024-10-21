@@ -7,62 +7,206 @@
     <title>Interactive Maps</title>
     <style>
         body {
-            background-color: #f0f8ff;
+            font-family: 'Roboto', sans-serif;
+            background-color: #F9F6ED; /* Soft beige background */
+            color: #e9edf0; /* Dark slate gray text */
+            margin: 0;
+            padding: 0;
         }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #2C6E6E; /* Deep teal navbar */
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important; /* White text */
+            font-weight: 500;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .navbar-brand:hover, .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 40px auto; /* Increased top margin */
+            padding: 20px;
+            background: #2C3E50; /* White background for content area */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        /* Header */
         header {
-            background-color: #6c63ff;
-            color: white;
             text-align: center;
-            padding: 50px 0;
+            margin-bottom: 30px;
         }
-        #map {
-            height: 400px;
-            margin: 20px 0;
+        header h1 {
+            font-size: 2.5em;
+            color: #1676c9; /* Dark slate gray */
         }
+
+        /* Form Section */
+        section {
+            margin-bottom: 30px;
+        }
+
+        section h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            color: #e2e6ea; /* Dark slate gray */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #e3e6e9; /* Dark slate gray */
+        }
+
+        form input, form textarea, form select {
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px; /* Rounded input fields */
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        form input:focus, form textarea:focus, form select:focus {
+            border-color: #2C6E6E; /* Deep teal */
+            outline: none;
+        }
+
+        form button {
+            padding: 12px;
+            background-color: #FF6F61; /* Soft coral button */
+            color: #eaedf1; /* White text on buttons */
+            border: none;
+            border-radius: 25px; /* Rounded button */
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s; /* Animation */
+        }
+
+        form button:hover {
+            background-color: #A7D5D5; /* Light teal hover color */
+            color: #2C3E50; /* Dark text on hover */
+            transform: translateY(-2px); /* Lift effect on hover */
+        }
+
+        /* Event List Section */
         .event-list {
             margin-top: 20px;
+        }
+        .event-list h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            color: #dfe3e6; /* Dark slate gray */
+        }
+        .event-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .event-list li {
+            padding: 10px 15px;
+            background-color: #EDF4F2; /* Light teal */
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #2C3E50;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2C6E6E; /* Deep teal footer */
+            color: #ffffff; /* White footer text */
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Interactive Maps</h1>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="#">InterfaithConnect</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'index' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'about_us' %}/">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'event_list' %}">Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <h1 class="text-center my-3">Interactive Maps</h1>
     </header>
 
     <main class="container my-5">
-        <h2>Explore Locations</h2>
-        <div id="map"></div>
-        <p>Search for locations and events by radius or keyword.</p>
-        <form id="search-form">
-            <div class="form-group">
-                <label for="location">Enter Location:</label>
-                <input type="text" class="form-control" id="location" placeholder="e.g., temple, church, mosque">
-            </div>
-            <div class="form-group">
-                <label for="radius">Radius (in km):</label>
-                <input type="number" class="form-control" id="radius" placeholder="e.g., 10">
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
+        <section>
+            <h2>Explore Locations</h2>
+            <div id="map" style="height: 400px; margin: 20px 0;"></div>
+            <p>Search for locations and events by radius or keyword.</p>
+            <form id="search-form" onsubmit="return handleSearch(event)">
+                <div class="form-group">
+                    <label for="location">Enter Location:</label>
+                    <input type="text" class="form-control" id="location" placeholder="e.g., temple, church, mosque" required>
+                </div>
+                <div class="form-group">
+                    <label for="radius">Radius (in km):</label>
+                    <input type="number" class="form-control" id="radius" placeholder="e.g., 10" min="1" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
 
-        <div class="mt-4">
-            <button class="btn btn-secondary" onclick="getCurrentLocation()">Use My Location</button>
-        </div>
+            <div class="mt-4">
+                <button class="btn btn-secondary" onclick="getCurrentLocation()">Use My Location</button>
+            </div>
+        </section>
 
         <div class="event-list">
             <h3>Upcoming Events</h3>
-            <ul id="event-list" class="list-group">
-                <!-- Event items will be dynamically added here -->
+            <ul class="list-group" id="event-list">
+                {% for event in events %}
+                    <li class="list-group-item">
+                        <a href="{% url 'event_details' event.id %}">{{ event.title }}</a> 
+                        <span>{{ event.date }}</span>
+                    </li>
+                {% endfor %}
             </ul>
         </div>
     </main>
 
-    <footer class="text-center">
+    <footer>
         <p>&copy; 2024 InterfaithConnect</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAITPLd5FJabNM-q7YDE8LP0imF_ZjGv4Y&callback=initMap" async defer></script>
     <script>
         let map;
 
@@ -71,9 +215,7 @@
                 zoom: 10,
                 center: { lat: 12.9716, lng: 77.5946 }, // Default center (Bangalore)
             });
-
-            // Fetch events and add markers
-            fetchEvents();
+            fetchEvents(); // Fetch events and add markers
         }
 
         function fetchEvents() {
@@ -105,40 +247,37 @@
         }
 
         function addEventToList(event) {
-            const eventList = document.getElementById('event-list');
-            const listItem = document.createElement('li');
-            listItem.className = 'list-group-item';
-            listItem.textContent = `${event.name} - ${event.description} (Date: ${event.event_date})`;
+            const eventList = document.getElementById("event-list");
+            const listItem = document.createElement("li");
+            listItem.className = "list-group-item";
+            listItem.innerHTML = `<a href="/events/${event.id}/">${event.title}</a> <span>${event.date}</span>`;
             eventList.appendChild(listItem);
+        }
+
+        function handleSearch(event) {
+            event.preventDefault();
+            const location = document.getElementById("location").value;
+            const radius = document.getElementById("radius").value;
+            // Logic for searching the location and updating the map
         }
 
         function getCurrentLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
+                navigator.geolocation.getCurrentPosition(position => {
                     const pos = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude,
                     };
-
                     map.setCenter(pos);
                     new google.maps.Marker({
                         position: pos,
                         map: map,
                         title: "You are here!",
                     });
-                }, function() {
-                    handleLocationError(true);
                 });
             } else {
-                // Browser doesn't support Geolocation
-                handleLocationError(false);
+                alert("Geolocation is not supported by this browser.");
             }
-        }
-
-        function handleLocationError(browserHasGeolocation) {
-            alert(browserHasGeolocation ?
-                "Error: The Geolocation service failed." :
-                "Error: Your browser doesn't support geolocation.");
         }
     </script>
 </body>
