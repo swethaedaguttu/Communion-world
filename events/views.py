@@ -23,11 +23,11 @@ from .models import (
     VolunteerHistory,
     HelpRequest, 
     Thread,
-    VolunteerOpportunity, SignUp, PrayerRequest, Reply, CulturalStory,
+    VolunteerOpportunity, SignUp, PrayerRequest, Reply, CulturalStory, Charity, InitiativeJoin,
  # Import your UserProfile model correctly
 )
 
-from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipForm, SupportForm, FeedbackForm, PollForm, ConnectionRequestForm, ProfileUpdateForm, ProfileEditForm, PasswordUpdateForm, NotificationPreferencesForm, ProfilePictureForm, CommunityProfileForm, ThreadForm, VolunteerOpportunityForm, SignUpForm, CulturalStoryForm
+from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipForm, SupportForm, FeedbackForm, PollForm, ConnectionRequestForm, ProfileUpdateForm, ProfileEditForm, PasswordUpdateForm, NotificationPreferencesForm, ProfilePictureForm, CommunityProfileForm, ThreadForm, VolunteerOpportunityForm, SignUpForm, CulturalStoryForm, CharityForm, InitiativeJoinForm
  # Import your forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -46,6 +46,9 @@ from django.views import View
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
+
 from django.http import JsonResponse
 import json
 
@@ -1127,3 +1130,80 @@ def admin_approve_story(request, story_id):
     story.save()
     return render(request, 'approval_success.html', {'story': story})
 
+@login_required
+def charitable_initiatives(request, user_id):
+    user_profile = get_object_or_404(UserProfile, id=user_id)
+    charities = Charity.objects.all()
+
+    if request.method == 'POST':
+        # Handle new charity creation
+        if 'create_charity' in request.POST:
+            charity_name = request.POST.get('charity_name')
+            charity_description = request.POST.get('charity_description')
+            charity_location = request.POST.get('charity_location')
+            founder_name = request.POST.get('founder_name')
+            founder_email = request.POST.get('founder_email')
+
+            charity = Charity.objects.create(
+                name=charity_name,
+                description=charity_description,
+                location=charity_location,
+                founder_name=founder_name,
+                founder_email=founder_email
+            )
+            return JsonResponse({'success': True, 'message': 'Charity created successfully!'})
+
+        # Handle linking charity to user profile
+        elif 'link_charity' in request.POST:
+            charity_id = request.POST.get('initiative')
+            charity = get_object_or_404(Charity, id=charity_id)
+            user_profile.initiative = charity
+            user_profile.save()
+            return JsonResponse({'success': True, 'message': 'Charity linked successfully!'})
+
+        # Handle joining initiatives
+        elif 'join_initiative' in request.POST:
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            message = request.POST.get('message')
+            # Add logic to save join request or send email notification
+            return JsonResponse({'success': True, 'message': f'Thank you for joining! {name}'})
+
+    else:
+        form = CharityForm()
+
+    return render(request, 'events/charitable_initiatives.html', {
+        'charities': charities,
+        'form': form,
+        'user_profile': user_profile
+    })
+
+@method_decorator(csrf_protect, name='dispatch')
+@require_POST  # Ensure only POST requests are accepted
+def add_charity(request):
+    if request.method == 'POST':
+        try:
+            charity_name = request.POST.get('name')
+            charity_description = request.POST.get('description')
+            charity_location = request.POST.get('location')
+            founder_name = request.POST.get('founder')
+            founder_email = request.POST.get('founder_email')
+
+            # Save charity data to the database
+            charity = Charity.objects.create(
+                name=charity_name,
+                description=charity_description,
+                location=charity_location,
+                founder_name=founder_name,
+                founder_email=founder_email
+            )
+
+            return JsonResponse({'success': True, 'message': 'Charity added successfully!'})
+
+        except Exception as e:
+            # Log the error or print it for debugging
+            print(f"Error: {str(e)}")
+            return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+    # Return a message for GET requests
+    return JsonResponse({'success': False, 'message': 'Invalid request method. Use POST to add charity.'}, status=400)

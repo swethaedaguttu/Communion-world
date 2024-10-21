@@ -379,7 +379,7 @@ footer p {
                     <a href="{% url 'settings' %}">Settings</a>
                 </li>
                 <!-- Toggle Button -->
-               
+                
                 <!-- Toggle Button -->
                
                     <li class="list-group-item"><i class="fas fa-hands-helping"></i> <a href="{% url 'volunteer_opportunities' %}">Volunteer Opportunities</a></li>
@@ -393,7 +393,7 @@ footer p {
                     <li class="list-group-item"><i class="fas fa-project-diagram"></i> <a href="#collaborative_projects">Collaborative Projects</a></li>
                     <li class="list-group-item"><i class="fas fa-folder"></i> <a href="#resource_hub">Resource Hub</a></li>
                     <li class="list-group-item"><i class="fas fa-comment-alt"></i> <a href="#feedback_improvement">Feedback and Improvement</a></li>
-                    <li class="list-group-item"><i class="fas fa-hand-holding-heart"></i> <a href="#charitable_initiatives">Charitable Initiatives</a></li>
+                    <li class="list-group-item"><i class="fas fa-hand-holding-heart"></i> <a href="{% url 'charitable_initiatives' user_id=user.id  %}">Charitable Initiatives</a></li>
                     <li class="list-group-item"><i class="fas fa-life-ring"></i> <a href="#crisis_response">Crisis Response Features</a></li>
                     <li class="list-group-item"><i class="fas fa-mobile-alt"></i> <a href="#app_integration">App Integration with Social Services</a></li>
                     <li class="list-group-item"><i class="fas fa-globe"></i> <a href="#diversity_celebrations">Diversity Celebrations</a></li>

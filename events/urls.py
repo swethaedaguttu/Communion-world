@@ -49,6 +49,7 @@ from events.views import (
     submit_prayer, 
     prayer_feed,
     submit_reply, gamification_elements_view, share_culture, list_cultural_stories, thank_you, admin_approve_story,
+    charitable_initiatives, add_charity,
 )
 
 
@@ -121,6 +122,8 @@ urlpatterns = [
     
     # Admin URLs for approving stories
     path('admin/approve/<int:story_id>/', admin_approve_story, name='admin_approve_story'),
+    path('charitable_initiatives/<int:user_id>/', charitable_initiatives, name='charitable_initiatives'),
+    path('add-charity/', add_charity, name='add_charity'),
 
 
 ]

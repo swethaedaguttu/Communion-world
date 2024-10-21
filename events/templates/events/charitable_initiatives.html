@@ -255,6 +255,23 @@
 </main>
 
 <script>
+// Function to get the CSRF token from the cookie
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Check if this cookie string begins with the name we want
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 // Show the signup form when the button is clicked
 function showSignupForm(formId) {
     document.getElementById(formId).classList.toggle('hidden');
@@ -265,23 +282,28 @@ document.querySelectorAll('form').forEach(form => {
     form.addEventListener('submit', function(event) {
         event.preventDefault();
 
+        const formData = new FormData(form);
         const formId = form.id;
         const successMessage = form.nextElementSibling;
 
-        // Handle form submission via AJAX
-        const formData = new FormData(form);
-
-        fetch('server_endpoint_url', {
+        fetch('/add-charity', {
             method: 'POST',
-            body: formData
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token
+            }
         })
         .then(response => response.json())
         .then(data => {
             console.log('Form data submitted:', data);
 
-            // Hide the form and show success message
-            form.classList.add('hidden');
-            successMessage.style.display = 'block';
+            if (data.success) {
+                // Hide the form and show success message
+                form.classList.add('hidden');
+                successMessage.style.display = 'block';
+            } else {
+                console.error('Submission failed:', data.message);
+            }
         })
         .catch(error => {
             console.error('Error submitting form:', error);
@@ -313,7 +335,7 @@ document.getElementById('new-charity-form').addEventListener('submit', function(
                 <textarea id="message" placeholder="How can you help?" required></textarea>
                 <button type="submit">Submit</button>
             </form>
-            <p class="success-message">Thank you for joining ${charityName}!</p>
+            <p class="success-message" style="display: none;">Thank you for joining ${charityName}!</p>
         `;
 
         // Add the new charity to the initiative list

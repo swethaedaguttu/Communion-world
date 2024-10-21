@@ -6,7 +6,7 @@ from .models import (
     Community, Event, UnifiedNight, Activity, Partnership, SupportRequest,
     Resource, Notification, Feedback, UserProfile, Poll, ConnectionRequest,
     DiscussionThread, Comment, ResourceRequest, VolunteerHistory, Thread, Comment, VolunteerOpportunity, SignUp, CulturalStory, Charity,
-
+    InitiativeJoin,
 )
 from django.contrib.auth.forms import PasswordChangeForm
 class PasswordUpdateForm(PasswordChangeForm):
@@ -221,3 +221,8 @@ class CharityForm(forms.ModelForm):
     class Meta:
         model = Charity
         fields = ['name', 'description', 'location', 'founder_name', 'founder_email']
+
+class InitiativeJoinForm(forms.ModelForm):
+    class Meta:
+        model = InitiativeJoin
+        fields = ['charity', 'name', 'email', 'message']
