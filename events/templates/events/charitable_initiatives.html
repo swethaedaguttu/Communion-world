@@ -5,166 +5,329 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Charitable Initiatives</title>
     <style>
-        body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+                body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
 
-header {
-    background: #4CAF50;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
-}
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-nav ul {
-    list-style-type: none;
-    padding: 0;
-}
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
 
-nav ul li {
-    display: inline;
-    margin: 0 15px;
-}
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
 
-nav a {
-    color: white;
-    text-decoration: none;
-}
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+            position: relative;
+        }
 
-main {
-    padding: 20px;
-}
+        nav a:hover {
+            color: #ffeb3b;
+            text-decoration: underline;
+        }
 
-h2 {
-    border-bottom: 2px solid #4CAF50;
-    padding-bottom: 10px;
-}
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-.initiative {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 15px;
-    margin: 10px 0;
-}
+        h2 {
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
 
-form {
-    margin: 15px 0;
-}
+        .initiative {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
 
-input, textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
+        .initiative:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
 
-button {
-    background: #4CAF50;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+        form {
+            margin: 20px 0;
+        }
 
-button:hover {
-    background: #45a049;
-}
+        input,
+        textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: box-shadow 0.3s;
+        }
 
-footer {
-    text-align: center;
-    padding: 10px 0;
-    background: #f1f1f1;
-}
+        input:focus,
+        textarea:focus {
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
 
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background: #f1f1f1;
+            position: relative;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            display: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .scroll-top:hover {
+            background: #45a049;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .success-message {
+            display: none;
+            color: green;
+        }
+
+        form {
+            margin-top: 10px;
+        }
+
+        .initiative {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Charitable Initiatives</h1>
-        <nav>
-            <ul>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#initiatives">Initiatives</a></li>
-                <li><a href="#join">Join Us</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <main>
-        <section id="about">
-            <h2>About Us</h2>
-            <p>We connect communities through charitable initiatives and foster unity among different faiths.</p>
-        </section>
+<header>
+    <h1>Charitable Initiatives</h1>
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#initiatives">Initiatives</a></li>
+            <li><a href="#join">Join Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
 
-        <section id="initiatives">
-            <h2>Current Initiatives</h2>
-            <div id="initiative-list">
-                <div class="initiative">
-                    <h3>Food Drive</h3>
-                    <p>Join us in our mission to collect food for local families in need.</p>
-                </div>
-                <div class="initiative">
-                    <h3>Clothing Donation</h3>
-                    <p>Help us provide warm clothing for those without during winter.</p>
-                </div>
-                <div class="initiative">
-                    <h3>Community Clean-Up</h3>
-                    <p>Participate in our monthly clean-up to keep our neighborhood beautiful.</p>
-                </div>
+<main>
+    <section id="about">
+        <h2>About Us</h2>
+        <p>We connect communities through charitable initiatives and foster unity among different faiths.</p>
+    </section>
+
+    <section id="initiatives">
+        <h2>Current Initiatives</h2>
+        <div id="initiative-list">
+            <div class="initiative">
+                <h3>Food Drive</h3>
+                <p>Join us in our mission to collect food for local families in need.</p>
+                <button type="button" onclick="showSignupForm('food-drive-form')">Join</button>
+                <form id="food-drive-form" class="hidden">
+                    <input type="text" id="name" placeholder="Your Name" required>
+                    <input type="email" id="email" placeholder="Your Email" required>
+                    <textarea id="message" placeholder="How can you help?" required></textarea>
+                    <button type="submit">Submit</button>
+                </form>
+                <p class="success-message">Thank you for joining the Food Drive!</p>
             </div>
-        </section>
 
-        <section id="join">
-            <h2>Join Our Community</h2>
-            <form id="join-form">
+            <div class="initiative">
+                <h3>Clothing Donation</h3>
+                <p>Help us provide warm clothing for those without during winter.</p>
+                <button type="button" onclick="showSignupForm('clothing-donation-form')">Join</button>
+                <form id="clothing-donation-form" class="hidden">
+                    <input type="text" id="name" placeholder="Your Name" required>
+                    <input type="email" id="email" placeholder="Your Email" required>
+                    <textarea id="message" placeholder="How can you help?" required></textarea>
+                    <button type="submit">Submit</button>
+                </form>
+                <p class="success-message">Thank you for joining the Clothing Donation!</p>
+            </div>
+
+            <div class="initiative">
+                <h3>Community Clean-Up</h3>
+                <p>Participate in our monthly clean-up to keep our neighborhood beautiful.</p>
+                <button type="button" onclick="showSignupForm('clean-up-form')">Join</button>
+                <form id="clean-up-form" class="hidden">
+                    <input type="text" id="name" placeholder="Your Name" required>
+                    <input type="email" id="email" placeholder="Your Email" required>
+                    <textarea id="message" placeholder="How can you help?" required></textarea>
+                    <button type="submit">Submit</button>
+                </form>
+                <p class="success-message">Thank you for joining the Community Clean-Up!</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="join">
+        <h2>Join Our Community</h2>
+        <form id="join-form">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <textarea id="message" placeholder="How can you help?" required></textarea>
+            <button type="submit">Join</button>
+        </form>
+    </section>
+
+    <section id="new-charity">
+        <h2>Start a New Charity</h2>
+        <form id="new-charity-form" class="new-charity-form">
+            <input type="text" id="new-charity-name" placeholder="Charity Name" required>
+            <input type="text" id="new-charity-location" placeholder="Location" required>
+            <textarea id="new-charity-description" placeholder="Charity Description" required></textarea>
+            <input type="text" id="charity-founder" placeholder="Your Name" required>
+            <input type="email" id="founder-email" placeholder="Your Email" required>
+            <button type="submit">Add New Charity</button>
+        </form>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <form id="contact-form">
+            <input type="text" id="contact-name" placeholder="Your Name" required>
+            <input type="email" id="contact-email" placeholder="Your Email" required>
+            <textarea id="contact-message" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+</main>
+
+<script>
+// Show the signup form when the button is clicked
+function showSignupForm(formId) {
+    document.getElementById(formId).classList.toggle('hidden');
+}
+
+// Handle form submissions dynamically
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formId = form.id;
+        const successMessage = form.nextElementSibling;
+
+        // Handle form submission via AJAX
+        const formData = new FormData(form);
+
+        fetch('server_endpoint_url', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Form data submitted:', data);
+
+            // Hide the form and show success message
+            form.classList.add('hidden');
+            successMessage.style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Error submitting form:', error);
+        });
+    });
+});
+
+// Add a new charity dynamically with location and founder info
+document.getElementById('new-charity-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const charityName = document.getElementById('new-charity-name').value;
+    const charityDescription = document.getElementById('new-charity-description').value;
+    const charityLocation = document.getElementById('new-charity-location').value;
+    const founderName = document.getElementById('charity-founder').value;
+    const founderEmail = document.getElementById('founder-email').value;
+
+    if (charityName && charityDescription && charityLocation && founderName && founderEmail) {
+        const newCharity = document.createElement('div');
+        newCharity.className = 'initiative';
+        newCharity.innerHTML = `
+            <h3>${charityName} (${charityLocation})</h3>
+            <p>${charityDescription}</p>
+            <p>Founded by: ${founderName} (${founderEmail})</p>
+            <button type="button" onclick="showSignupForm('${charityName}-form')">Sign Up</button>
+            <form id="${charityName}-form" class="hidden">
                 <input type="text" id="name" placeholder="Your Name" required>
                 <input type="email" id="email" placeholder="Your Email" required>
                 <textarea id="message" placeholder="How can you help?" required></textarea>
-                <button type="submit">Join</button>
+                <button type="submit">Submit</button>
             </form>
-        </section>
+            <p class="success-message">Thank you for joining ${charityName}!</p>
+        `;
 
-        <section id="contact">
-            <h2>Contact Us</h2>
-            <form id="contact-form">
-                <input type="text" id="contact-name" placeholder="Your Name" required>
-                <input type="email" id="contact-email" placeholder="Your Email" required>
-                <textarea id="contact-message" placeholder="Your Message" required></textarea>
-                <button type="submit">Send Message</button>
-            </form>
-        </section>
-    </main>
+        // Add the new charity to the initiative list
+        document.getElementById('initiative-list').appendChild(newCharity);
 
-    <footer>
-        <p>&copy; 2024 Charitable Initiatives</p>
-    </footer>
-
-    <script>
-        document.getElementById('join-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
-
-    console.log("Join form submitted:", { name, email, message });
-    alert('Thank you for joining our community!');
+        // Clear form inputs
+        document.getElementById('new-charity-name').value = '';
+        document.getElementById('new-charity-location').value = '';
+        document.getElementById('new-charity-description').value = '';
+        document.getElementById('charity-founder').value = '';
+        document.getElementById('founder-email').value = '';
+    }
 });
+</script>
 
-document.getElementById('contact-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const name = document.getElementById('contact-name').value;
-    const email = document.getElementById('contact-email').value;
-    const message = document.getElementById('contact-message').value;
-
-    console.log("Contact form submitted:", { name, email, message });
-    alert('Thank you for your message! We will get back to you soon.');
-});
-
-    </script>
 </body>
 </html>

@@ -30,6 +30,7 @@ class UserProfile(models.Model):
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
     points = models.IntegerField(default=0)
     badges = models.JSONField(default=list)  # For storing badge data
+    initiative = models.ForeignKey('Charity', related_name='participants', on_delete=models.CASCADE)
 
 
     def __str__(self):
@@ -354,5 +355,15 @@ class CulturalStory(models.Model):
 
     def __str__(self):
         return self.title
+
+class Charity(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    location = models.CharField(max_length=255)
+    founder_name = models.CharField(max_length=255)
+    founder_email = models.EmailField()
+
+    def __str__(self):
+        return self.name
 
 
