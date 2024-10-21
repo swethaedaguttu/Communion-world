@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import (
     Community, Event, UnifiedNight, Activity, Partnership, SupportRequest,
     Resource, Notification, Feedback, UserProfile, Poll, ConnectionRequest,
-    DiscussionThread, Comment, ResourceRequest, VolunteerHistory, Thread, Comment, VolunteerOpportunity, SignUp, CulturalStory,
+    DiscussionThread, Comment, ResourceRequest, VolunteerHistory, Thread, Comment, VolunteerOpportunity, SignUp, CulturalStory, Charity,
 
 )
 from django.contrib.auth.forms import PasswordChangeForm
@@ -189,7 +189,7 @@ class CommentForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['first_name', 'last_name', 'profile_picture']  # Include fields you want to update
+        fields = ['first_name', 'last_name', 'profile_picture','initiative']  # Include fields you want to update
 
 class VolunteerOpportunityForm(forms.ModelForm):
     class Meta:
@@ -216,3 +216,8 @@ class CulturalStoryForm(forms.ModelForm):
     class Meta:
         model = CulturalStory
         fields = ['title', 'description', 'image']
+
+class CharityForm(forms.ModelForm):
+    class Meta:
+        model = Charity
+        fields = ['name', 'description', 'location', 'founder_name', 'founder_email']

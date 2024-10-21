@@ -25,7 +25,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userprofile',
             name='initiative',
-            field=models.ForeignKey(default=0.0010375494071146246, on_delete=django.db.models.deletion.CASCADE, related_name='participants', to='events.charity'),
-            preserve_default=False,
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='participants', to='events.charity', null=True, blank=True),
         ),
     ]

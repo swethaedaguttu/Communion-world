@@ -366,4 +366,14 @@ class Charity(models.Model):
     def __str__(self):
         return self.name
 
+class InitiativeJoin(models.Model):
+    charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.name} joined {self.charity.name}'
+
 
