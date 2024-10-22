@@ -25,6 +25,7 @@ class UserProfile(models.Model):
     push_notifications = models.BooleanField(default=False)
     community = models.CharField(max_length=100, blank=True)
     country = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=100, blank=True)
     volunteering_details = models.TextField(blank=True)
     interfaith_interests = models.TextField(blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)

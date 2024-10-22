@@ -91,6 +91,7 @@ def verify_otp(request):
 
 @login_required
 def index(request):
+    user_profile = get_object_or_404(UserProfile, user=request.user)
     communities = Community.objects.all()
     unified_nights = UnifiedNight.objects.all()
     events = Event.objects.all()
@@ -108,6 +109,8 @@ def index(request):
         'events': events,
         'activities': activities,
         'search_query': search_query,  # Include the search query in the context
+        'user_profile': user_profile,
+
     }
     return render(request, 'events/index.html', context)
 
@@ -749,20 +752,29 @@ def update_profile_picture(request):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=400)
 
-def update_personal_info(request, user_profile):
-    # Handle personal info update (like name, location, etc.)
-    user_profile.location = request.POST.get('location', user_profile.location)
-    user_profile.country = request.POST.get('country', user_profile.country)
-    user_profile.state = request.POST.get('state', user_profile.state)
-    user_profile.faith_background = request.POST.get('faith_background', user_profile.faith_background)
-    user_profile.language = request.POST.get('language', user_profile.language)
-    user_profile.dob = request.POST.get('dob', user_profile.dob)
-    user_profile.gender = request.POST.get('gender', user_profile.gender)
+@csrf_exempt  # Only use this for testing, remove in production
+def update_personal_info(request):
+    if request.method == 'POST':
+        user_profile = get_object_or_404(UserProfile, user=request.user)
+        try:
+            # Update the profile fields
+            user_profile.location = request.POST.get('location', user_profile.location)
+            user_profile.country = request.POST.get('country', user_profile.country)
+            user_profile.state = request.POST.get('state', user_profile.state)
+            user_profile.faith_background = request.POST.get('faith_background', user_profile.faith_background)
+            user_profile.language = request.POST.get('language', user_profile.language)
+            user_profile.dob = request.POST.get('dob', user_profile.dob)
+            user_profile.gender = request.POST.get('gender', user_profile.gender)
 
-    # Save updated user profile
-    user_profile.save()
+            # Save the updated profile
+            user_profile.save()
 
-    return JsonResponse({'success': True})
+            return JsonResponse({'success': True})
+        except Exception as e:
+            print(f"Error updating personal info: {e}")
+            return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=400)
 
 def notification_center(request):
     # Query all notifications for the logged-in user, ordered by most recent first
@@ -798,6 +810,7 @@ def delete_notification(request, notification_id):
 def settings_view(request):
     user = request.user
     profile, created = UserProfile.objects.get_or_create(user=user)
+    user_profile = get_object_or_404(UserProfile, user=request.user)
 
     if request.method == 'POST':
         # Check if the request is for account deletion
@@ -833,6 +846,8 @@ def settings_view(request):
         'profile_form': profile_form,
         'profile_picture_form': profile_picture_form,
         'notification_form': notification_form,
+        'user_profile': user_profile,
+
     }
     return render(request, 'events/settings.html', context)
 

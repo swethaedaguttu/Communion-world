@@ -287,27 +287,40 @@
 
         // Update Personal Information
         function updatePersonalInfo(event) {
-            event.preventDefault();
-            const form = document.getElementById('personalInfoForm');
-            const formData = new FormData(form);
-            
-            fetch("{% url 'update_personal_info' %}", {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Personal information updated successfully!");
-                } else {
-                    alert("Failed to update personal information.");
-                }
-            })
-            .catch(error => console.error("Error updating personal information:", error));
+    event.preventDefault(); // Prevent default form submission
+
+    const form = document.getElementById('personalInfoForm'); // Get form element
+    const formData = new FormData(form); // Create FormData object
+
+    // Get the CSRF token from the hidden input field
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    fetch("{% url 'update_personal_info' %}", {
+        method: 'POST',
+        body: formData, // Include form data
+        headers: {
+            'X-CSRFToken': csrfToken, // Include CSRF token
         }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`); // Handle HTTP errors
+        }
+        return response.json(); // Parse JSON response
+    })
+    .then(data => {
+        if (data.success) {
+            alert("Personal information updated successfully!"); // Success message
+        } else {
+            alert("Failed to update personal information: " + (data.message || 'Unknown error.')); // Error message
+        }
+    })
+    .catch(error => {
+        console.error("Error updating personal information:", error); // Log error
+        alert("An error occurred while updating personal information: " + error.message); // User-friendly error
+    });
+}
+
     </script>
 
     <!-- Footer -->

@@ -62,10 +62,11 @@ html, body {
 /* Profile section alignment */
 .profile-section {
     position: relative;
-    right: 0;
+    right: 40px;
     display: flex;
     align-items: center;
     margin-left: auto;
+    width: 50px;
 }
 
 /* Main container styles */
@@ -343,10 +344,8 @@ footer p {
                     <a href="{% url 'profile_edit' %}">
                         <img src="{{ user_profile.profile_picture.url }}" alt="Profile" class="rounded-circle profile-pic">
                     </a>
-                    <span class="mt-1">{{ user_profile.user.username }}</span>
-                    <p>Profile Picture URL: {{ user_profile.profile_picture.url }}</p> <!-- Debugging line -->
+                    <span class="mt-1">{{ user.username }}</span>
                 </div>
-                
                              
             
         </div>
