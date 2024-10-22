@@ -15,11 +15,11 @@ class UserProfile(models.Model):
     interests = models.TextField(blank=True, null=True)
     social_links = models.URLField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', default='default.jpg')
-    phone_number = models.CharField(max_length=15, blank=True, null=True)  # Optional contact number
-    email_verified = models.BooleanField(default=False)  # Track if the user's email is verified
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    email_verified = models.BooleanField(default=False)
     email = models.EmailField(max_length=254, unique=True, null=True, blank=True)
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=30, blank=True)
+    first_name = models.CharField(max_length=30, blank=True, null=True)
+    last_name = models.CharField(max_length=30, blank=True, null=True)
     email_notifications = models.BooleanField(default=False)
     sms_notifications = models.BooleanField(default=False)
     push_notifications = models.BooleanField(default=False)
@@ -30,30 +30,33 @@ class UserProfile(models.Model):
     interfaith_interests = models.TextField(blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
     points = models.IntegerField(default=0)
-    badges = models.JSONField(default=list)  # For storing badge data
+    badges = models.JSONField(default=list)
     initiative = models.ForeignKey('Charity', related_name='participants', on_delete=models.CASCADE)
 
+    # New fields added
+    language = models.CharField(max_length=50, blank=True, null=True)  # Language preference
+    dob = models.DateField(blank=True, null=True)  # Date of birth
+    gender = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], blank=True, null=True)  # Gender options
 
     def __str__(self):
         return f'{self.user.username} Profile'
 
-# Automatically create a UserProfile when a new User is created
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        # Ensure a profile is only created if it doesn't already exist
-        if not UserProfile.objects.filter(user=instance).exists():
-            UserProfile.objects.create(
-                user=instance,
-                email=instance.email,  # Ensure email is from User model
-                first_name=instance.first_name,  # Correctly using the first name
-                last_name=instance.last_name,  # Correctly using the last name
-            )
 
 @receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    # Save the associated user profile
-    instance.userprofile.save()
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(
+            user=instance,
+            email=instance.email,
+            first_name=instance.first_name,
+            last_name=instance.last_name
+        )
+    else:
+        user_profile = instance.userprofile
+        user_profile.email = instance.email
+        user_profile.first_name = instance.first_name
+        user_profile.last_name = instance.last_name
+        user_profile.save()
 
 class Community(models.Model):
     # Choices for community type
@@ -395,3 +398,11 @@ class Donation(models.Model):
     def __str__(self):
         return f'Donation of {self.amount} by {self.donor_name} to {self.charity.name}'
 
+class Festival(models.Model):
+    name = models.CharField(max_length=100)
+    community = models.CharField(max_length=100)
+    date = models.DateField()
+    icon = models.URLField()
+
+    def __str__(self):
+        return f"{self.name} ({self.community})"

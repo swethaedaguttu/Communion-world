@@ -720,19 +720,27 @@ def request_resource(request):
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
 
+@login_required
 def profile_edit(request):
     user_profile = request.user.userprofile  # Assuming one-to-one relationship with User model
 
     if request.method == 'POST':
-        # Check if the request is for updating the profile picture
-        if 'profile_picture' in request.FILES:
-            return update_profile_picture(request, user_profile)
+        try:
+            # Check if the request is for updating the profile picture
+            if 'profile_picture' in request.FILES:
+                update_profile_picture(request, user_profile)
+                messages.success(request, "Profile picture updated successfully!")
+            else:
+                # Update personal information
+                update_personal_info(request, user_profile)
+                messages.success(request, "Personal information updated successfully!")
 
-        # Check if the request is for updating personal information
-        return update_personal_info(request, user_profile)
+            return redirect('profile_view')  # Redirect to a profile view after successful update
+        except Exception as e:
+            messages.error(request, f"Error updating profile: {e}")
 
     # GET request: Render the profile edit form
-    return render(request, 'events\profile_edit.html', {'user_profile': user_profile})
+    return render(request, 'events/profile_edit.html', {'user_profile': user_profile})
 
 @csrf_exempt
 def update_profile_picture(request):
@@ -752,26 +760,44 @@ def update_profile_picture(request):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=400)
 
-@csrf_exempt  # Only use this for testing, remove in production
+@csrf_exempt
 def update_personal_info(request):
     if request.method == 'POST':
         user_profile = get_object_or_404(UserProfile, user=request.user)
+
         try:
             # Update the profile fields
+            user_profile.first_name = request.POST.get('first_name', user_profile.first_name)
+            user_profile.last_name = request.POST.get('last_name', user_profile.last_name)
+            user_profile.bio = request.POST.get('bio', user_profile.bio)
             user_profile.location = request.POST.get('location', user_profile.location)
             user_profile.country = request.POST.get('country', user_profile.country)
             user_profile.state = request.POST.get('state', user_profile.state)
             user_profile.faith_background = request.POST.get('faith_background', user_profile.faith_background)
             user_profile.language = request.POST.get('language', user_profile.language)
-            user_profile.dob = request.POST.get('dob', user_profile.dob)
+
+            # Handle date of birth (ensure it's a valid date format before assigning)
+            dob = request.POST.get('dob')
+            if dob:
+                user_profile.dob = dob  # Assign the date as a string
+
             user_profile.gender = request.POST.get('gender', user_profile.gender)
+
+            # Update the username
+            new_username = request.POST.get('username', '').strip()
+            if new_username and new_username != request.user.username:
+                if not User.objects.filter(username=new_username).exists():
+                    request.user.username = new_username
+                    request.user.save()
+                else:
+                    return JsonResponse({'success': False, 'message': 'Username already exists.'}, status=400)
 
             # Save the updated profile
             user_profile.save()
 
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'message': 'Personal information updated successfully!'})
         except Exception as e:
-            print(f"Error updating personal info: {e}")
+            logger.error(f"Error updating personal info: {e}")
             return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
     return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=400)
@@ -1241,5 +1267,5 @@ def contact_and_save(request):
 @login_required
 def interactive_maps(request):
     events = Event.objects.all()  # Fetch all events from the database
-    return render(request, 'interactive_maps.html', {'events': events})
+    return render(request, 'events/interactive_maps.html', {'events': events})
 

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         /* General Styles */
         body {
@@ -15,22 +16,71 @@
         }
 
         /* Navigation Bar */
-        .navbar {
-            background-color: #2C6E6E; /* Deep teal navbar */
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .navbar-brand, .nav-link {
-            color: #ffffff !important; /* White text */
-            font-weight: 500;
-            margin: 0 15px;
-            text-decoration: none;
-        }
-        .navbar-brand:hover, .nav-link:hover {
-            text-decoration: underline;
-        }
+/* Navbar Styles */
+.navbar {
+    background-color: #2C6E6E; /* Deep teal navbar */
+    padding: 15px; /* Reduced padding for better height management */
+    display: flex;
+    justify-content: space-between; /* Space between brand and links */
+    align-items: center; /* Vertically center items */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar Brand Style */
+.navbar-brand {
+    color: #ffffff !important; /* White text for brand */
+    font-weight: bold; /* Bold text for emphasis */
+    font-size: 1.5rem; /* Larger font size for brand */
+    letter-spacing: 1px; /* Slight spacing for aesthetic */
+}
+
+/* Navbar Links Style */
+.nav-link {
+    color: #e0f7fa !important; /* Light blue text for nav links */
+    font-weight: 500;
+    margin: 0 15px;
+    text-decoration: none;
+    font-size: 1.2rem; /* Normal font size for links */
+    padding: 10px 15px; /* Padding around links for better click area */
+    border-radius: 5px; /* Rounded corners for a softer look */
+    transition: background-color 0.3s; /* Smooth background color transition */
+    
+}
+
+/* Navbar links hover effect */
+.navbar-brand:hover {
+    text-decoration: underline; /* Underline effect for brand */
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Light background on hover */
+    color: #ffffff !important; /* Change text color on hover */
+}
+
+/* Toggle button styles */
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1); /* Light border for toggle */
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30' fill='white'%3E%3Cpath stroke='white' stroke-width='2' d='M 5 7 H 25 M 5 15 H 25 M 5 23 H 25'/%3E%3C/svg%3E"); /* White hamburger icon */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column; /* Stack items vertically on small screens */
+        padding: 10px; /* Adjust padding */
+    }
+    .navbar-nav {
+        flex-direction: column; /* Stack nav items vertically */
+        width: 100%; /* Full width on mobile */
+        text-align: center; /* Center align text */
+    }
+    .nav-item {
+        margin: 10px 0; /* Margin between items */
+    }
+}
 
         /* Main Container */
         .container {
@@ -185,15 +235,32 @@
 <body>
 
     <!-- Navigation Bar -->
-    <nav class="navbar">
+    <nav class="navbar navbar-expand-lg">
         <a class="navbar-brand" href="#">InterfaithConnect</a>
-        <a class="nav-link" href="index.html">Home</a>
-        <a class="nav-link" href="#">Profile</a>
-        <a class="nav-link" href="#">Volunteer History</a>
-        <a class="nav-link" href="#">Settings</a>
-        <a class="nav-link" href="#">Logout</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'volunteer_opportunities' %}">Volunteer History</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'settings' %}">Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
     </nav>
-
+    
     <!-- Header -->
     <header>
         <h1>Edit Your Profile</h1>
@@ -216,42 +283,55 @@
         <!-- Personal Information Section -->
         <section>
             <h2>Personal Information</h2>
-            <form method="post" id="personalInfoForm">
+            <form method="post" id="personalInfoForm" onsubmit="updatePersonalInfo(event)">
                 {% csrf_token %}
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" value="{{ user.username }}" required>
-    
+        
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" required>            
+        
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" value="{{ user_profile.first_name }}" required>
+        
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" value="{{ user_profile.last_name }}" required>
+        
+                <label for="bio">Bio:</label>
+                <textarea id="bio" name="bio" rows="4" placeholder="Tell us about yourself...">{{ user_profile.bio }}</textarea>
+        
                 <label for="location">Location:</label>
                 <input type="text" id="location" name="location" value="{{ user_profile.location }}">
-    
+        
                 <label for="country">Country:</label>
                 <input type="text" id="country" name="country" value="{{ user_profile.country }}">
-    
+        
                 <label for="state">State:</label>
                 <input type="text" id="state" name="state" value="{{ user_profile.state }}">
-    
+        
                 <label for="faith_background">Faith Background:</label>
                 <input type="text" id="faith_background" name="faith_background" value="{{ user_profile.faith_background }}">
-    
+        
                 <label for="language">Language:</label>
                 <input type="text" id="language" name="language" value="{{ user_profile.language }}">
-    
+        
                 <label for="dob">Date of Birth:</label>
-                <input type="date" id="dob" name="dob" value="{{ user_profile.dob }}">
-    
+                <input type="date" id="dob" name="dob" value="{{ user_profile.dob|date:'Y-m-d' }}" required>
+        
                 <label for="gender">Gender:</label>
-                <select id="gender" name="gender">
+                <select id="gender" name="gender" required>
                     <option value="" {% if user_profile.gender == "" %}selected{% endif %}>Select</option>
                     <option value="male" {% if user_profile.gender == "male" %}selected{% endif %}>Male</option>
                     <option value="female" {% if user_profile.gender == "female" %}selected{% endif %}>Female</option>
                     <option value="other" {% if user_profile.gender == "other" %}selected{% endif %}>Other</option>
                 </select>
-    
-                <button type="submit" onclick="updatePersonalInfo(event)">Save Changes</button>
+        
+                <button type="submit">Save Changes</button>
             </form>
         </section>
-    </div>
-
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+                                
     <script>
         // Function to update profile picture preview
         document.getElementById('profile_picture').addEventListener('change', function (event) {
@@ -285,21 +365,17 @@
             .catch(error => console.error("Error updating profile picture:", error));
         }
 
-        // Update Personal Information
         function updatePersonalInfo(event) {
     event.preventDefault(); // Prevent default form submission
 
     const form = document.getElementById('personalInfoForm'); // Get form element
     const formData = new FormData(form); // Create FormData object
 
-    // Get the CSRF token from the hidden input field
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
     fetch("{% url 'update_personal_info' %}", {
         method: 'POST',
         body: formData, // Include form data
         headers: {
-            'X-CSRFToken': csrfToken, // Include CSRF token
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // Include CSRF token
         }
     })
     .then(response => {
@@ -311,6 +387,7 @@
     .then(data => {
         if (data.success) {
             alert("Personal information updated successfully!"); // Success message
+            // Optionally, refresh the page or update the displayed data without a full reload
         } else {
             alert("Failed to update personal information: " + (data.message || 'Unknown error.')); // Error message
         }

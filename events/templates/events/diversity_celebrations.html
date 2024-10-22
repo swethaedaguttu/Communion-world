@@ -20,7 +20,7 @@
         }
 
         .container {
-            width: 80%;
+            width: 90%;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -30,11 +30,15 @@
             background: #007bff;
             color: white;
             padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         h1 {
             text-align: center;
             font-size: 2.5em;
+            margin-bottom: 10px;
         }
 
         nav {
@@ -55,10 +59,13 @@
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
+            padding: 10px 15px;
         }
 
         nav a:hover {
             color: #ffc107;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
         }
 
         /* Main Styles */
@@ -79,6 +86,7 @@
             border-bottom: 2px solid #007bff;
             padding-bottom: 10px;
             margin-bottom: 20px;
+            font-size: 2em;
         }
 
         /* Cultural Celebrations Card Styles */
@@ -96,6 +104,13 @@
             overflow: hidden;
             width: calc(30% - 20px);
             transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
         }
 
         .card:hover {
@@ -107,16 +122,78 @@
             padding: 15px;
             background: #007bff;
             color: white;
+            margin: 0;
         }
 
         .card p {
             padding: 15px;
         }
 
+        /* Calendar Styles */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .month {
+            grid-column: span 7;
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .day {
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            position: relative;
+            text-align: center;
+        }
+
+        .day:hover {
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .festival-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        .festival-notification {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
         /* Form Styles */
         form {
             display: flex;
             flex-direction: column;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
         }
 
         input, textarea {
@@ -154,6 +231,10 @@
             background: #f1f1f1;
         }
 
+        footer p {
+            margin: 5px 0;
+        }
+
         /* Animation */
         @keyframes fadeIn {
             from {
@@ -170,6 +251,11 @@
             .card {
                 width: calc(100% - 20px);
             }
+
+            nav ul li {
+                display: block;
+                margin: 10px 0;
+            }
         }
     </style>
 </head>
@@ -182,6 +268,7 @@
                     <li><a href="#cultural-celebrations">Cultural Celebrations</a></li>
                     <li><a href="#significance">Significance</a></li>
                     <li><a href="#participate">How to Participate</a></li>
+                    <li><a href="#calendar">Festival Calendar</a></li>
                     <li><a href="#contact">Contact Us</a></li>
                 </ul>
             </nav>
@@ -193,22 +280,27 @@
             <h2>Cultural Celebrations Around the World</h2>
             <div class="cards">
                 <div class="card">
+                    <img src="https://via.placeholder.com/300x150?text=Diwali" alt="Diwali">
                     <h3>Diwali</h3>
                     <p>The Festival of Lights celebrated by Hindus, Sikhs, and Jains, symbolizing the victory of light over darkness.</p>
                 </div>
                 <div class="card">
+                    <img src="https://via.placeholder.com/300x150?text=Holi" alt="Holi">
                     <h3>Holi</h3>
                     <p>The Festival of Colors celebrated in India, marking the arrival of spring and love.</p>
                 </div>
                 <div class="card">
+                    <img src="https://via.placeholder.com/300x150?text=Chinese+New+Year" alt="Chinese New Year">
                     <h3>Chinese New Year</h3>
                     <p>A festival that celebrates the beginning of the new year in the lunar calendar, featuring family reunions and feasts.</p>
                 </div>
                 <div class="card">
+                    <img src="https://via.placeholder.com/300x150?text=Ramadan" alt="Ramadan">
                     <h3>Ramadan</h3>
                     <p>A holy month of fasting and prayer for Muslims, culminating in Eid al-Fitr, a celebration of breaking the fast.</p>
                 </div>
                 <div class="card">
+                    <img src="https://via.placeholder.com/300x150?text=Thanksgiving" alt="Thanksgiving">
                     <h3>Thanksgiving</h3>
                     <p>A harvest festival celebrated in the United States and Canada, expressing gratitude for the year's blessings.</p>
                 </div>
@@ -217,9 +309,9 @@
 
         <section id="significance">
             <h2>Significance of Diversity Celebrations</h2>
-            <p>Diversity celebrations are essential for fostering understanding and respect among different cultures. They promote:</p>
+            <p>Diversity celebrations are essential for fostering understanding and acceptance among different cultures. They promote:</p>
             <ul>
-                <li><strong>Awareness:</strong> Increased knowledge about different cultures and traditions.</li>
+                <li><strong>Cultural Awareness:</strong> Increased knowledge about different cultures and traditions.</li>
                 <li><strong>Inclusivity:</strong> Encouragement of acceptance and appreciation for all backgrounds.</li>
                 <li><strong>Community Building:</strong> Strengthening community bonds through shared experiences and celebrations.</li>
                 <li><strong>Cultural Preservation:</strong> Maintaining and passing on cultural practices and traditions.</li>
@@ -238,12 +330,23 @@
             </ul>
         </section>
 
+        <section id="calendar">
+            <h2>Festival Calendar</h2>
+            <div class="calendar" id="festival-calendar"></div>
+        </section>
+
         <section id="contact">
             <h2>Contact Us</h2>
             <form id="contact-form">
-                <input type="text" id="contact-name" placeholder="Your Name" required>
-                <input type="email" id="contact-email" placeholder="Your Email" required>
-                <textarea id="contact-message" placeholder="Your Message" required></textarea>
+                <label for="contact-name">Your Name</label>
+                <input type="text" id="contact-name" placeholder="Enter your name" required>
+                
+                <label for="contact-email">Your Email</label>
+                <input type="email" id="contact-email" placeholder="Enter your email" required>
+                
+                <label for="contact-message">Your Message</label>
+                <textarea id="contact-message" placeholder="Type your message here" required></textarea>
+                
                 <button type="submit">Send Message</button>
             </form>
         </section>
@@ -253,6 +356,63 @@
         <p>&copy; 2024 InterfaithConnect</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        const festivals = [
+            { date: '2024-10-24', name: 'Diwali', community: 'Hindu', icon: 'https://via.placeholder.com/20?text=✨' },
+            { date: '2024-10-29', name: 'Holi', community: 'Hindu', icon: 'https://via.placeholder.com/20?text=🌈' },
+            { date: '2024-12-05', name: 'Eid al-Fitr', community: 'Muslim', icon: 'https://via.placeholder.com/20?text=🌙' },
+            { date: '2024-11-26', name: 'Thanksgiving', community: 'American', icon: 'https://via.placeholder.com/20?text=🦃' },
+            { date: '2024-01-22', name: 'Chinese New Year', community: 'Chinese', icon: 'https://via.placeholder.com/20?text=🐉' },
+            // Add more festivals here
+        ];
+
+        const calendarElement = document.getElementById('festival-calendar');
+        const today = new Date();
+
+        // Create a complete year calendar
+        for (let month = 0; month < 12; month++) {
+            const monthElement = document.createElement('div');
+            monthElement.className = 'month';
+            monthElement.innerText = new Date(today.getFullYear(), month).toLocaleString('default', { month: 'long' });
+            calendarElement.appendChild(monthElement);
+
+            const daysInMonth = new Date(today.getFullYear(), month + 1, 0).getDate();
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                const date = new Date(today.getFullYear(), month, day);
+                const dateString = date.toISOString().split('T')[0];
+
+                dayElement.innerText = day;
+
+                const festivalToday = festivals.find(festival => festival.date === dateString);
+                if (festivalToday) {
+                    const notification = document.createElement('div');
+                    notification.className = 'festival-notification';
+                    notification.innerText = '!';
+                    dayElement.appendChild(notification);
+
+                    const icon = document.createElement('img');
+                    icon.src = festivalToday.icon;
+                    icon.className = 'festival-icon';
+                    dayElement.appendChild(icon);
+                    
+                    dayElement.title = `${festivalToday.name} (${festivalToday.community})`;
+                }
+
+                calendarElement.appendChild(dayElement);
+            }
+        }
+
+        // Daily notification reminder
+        setInterval(() => {
+            const currentDate = new Date().toISOString().split('T')[0];
+            const festivalToday = festivals.find(festival => festival.date === currentDate);
+            if (festivalToday) {
+                alert(`Today is ${festivalToday.name}, celebrated by the ${festivalToday.community} community!`);
+            }
+        }, 86400000); // Notify once every day
+    </script>
 </body>
 </html>

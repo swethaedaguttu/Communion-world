@@ -186,10 +186,47 @@ class CommentForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Add a comment...', 'rows': 3}),
         }
 
+from django import forms
+from .models import UserProfile
+
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['first_name', 'last_name', 'profile_picture','initiative']  # Include fields you want to update
+        fields = [
+            'first_name',
+            'last_name',
+            'email',  # Including email for updates
+            'bio',
+            'location',
+            'faith_background',
+            'interests',
+            'social_links',
+            'profile_picture',
+            'phone_number',
+            'email_verified',  # Track if the user's email is verified
+            'is_2fa_enabled',  # Two-factor authentication option
+            'email_notifications',
+            'sms_notifications',
+            'push_notifications',
+            'community',
+            'country',
+            'state',
+            'volunteering_details',
+            'interfaith_interests',
+            'initiative',
+            'language',
+            'dob',
+            'gender',
+        ]
+        widgets = {
+            'bio': forms.Textarea(attrs={'rows': 3}),
+            'social_links': forms.URLInput(attrs={'placeholder': 'Enter your social link'}),
+            'profile_picture': forms.ClearableFileInput(attrs={'class': 'custom-file-input'}),
+            'phone_number': forms.TextInput(attrs={'placeholder': 'Enter your phone number'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Enter your email'}),
+            'first_name': forms.TextInput(attrs={'placeholder': 'First Name'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name'}),
+        }
 
 class VolunteerOpportunityForm(forms.ModelForm):
     class Meta:

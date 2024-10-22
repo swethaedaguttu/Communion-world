@@ -341,10 +341,10 @@ footer p {
                 </ul>
                 <!-- Profile Section -->
                 <div class="d-flex flex-column align-items-center profile-section">
-                    <a href="{% url 'profile_edit' %}">
+                    <a href="{% url 'profile' %}">
                         <img src="{{ user_profile.profile_picture.url }}" alt="Profile" class="rounded-circle profile-pic">
                     </a>
-                    <span class="mt-1">{{ user.username }}</span>
+                    <span class="mt-1" style="color: white;">{{ user.username }}</span>
                 </div>
                              
             

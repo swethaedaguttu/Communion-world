@@ -116,8 +116,10 @@
             <img class="profile-picture" src="{{ user_profile.profile_picture.url }}" alt="{{ profile.user.username }}'s Profile Picture">
             <div class="profile-info">
                 <h1>{{ user.username }}</h1>
-                <p><strong>Bio:</strong> {{ profile.bio }}</p>
-                <p><strong>Community:</strong> {{ profile.community }}</p>
+                <p><strong>First_name:</strong>{{ user_profile.first_name }}</p>
+                <p><strong>Last_name:</strong> {{ user_profile.last_name }}</p>
+                <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
+                <p><strong>Faith Background:</strong> {{ user_profile.faith_background }}</p>
                 <p><strong>Location:</strong> {{ user_profile.location }}</p>
                 <p><strong>Country:</strong> {{ user_profile.country }}</p>
                 <p><strong>Volunteering Details:</strong> {{ profile.volunteering_details }}</p>
@@ -152,6 +154,8 @@
                 <li class="resource-item">No upcoming events or resources.</li>
             {% endfor %}
         </ul>
+        <a href="{% url 'index' %}" class="edit-button">Home</a>
+
     </div>
 </body>
 </html>
