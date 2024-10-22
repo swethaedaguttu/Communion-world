@@ -50,7 +50,8 @@ from events.views import (
     prayer_feed,
     submit_reply, gamification_elements_view, share_culture, list_cultural_stories, thank_you, admin_approve_story,
     charitable_initiatives, add_charity, join_initiative,
-    contact_and_save, resources_view, interactive_maps,
+    contact_and_save, resources_view, interactive_maps, DiversityCelebrationsView,
+
 
 )
 
@@ -130,6 +131,7 @@ urlpatterns = [
     path('contact_and_save/', contact_and_save, name='contact_and_save'),
     path('resource_directory/', resources_view, name='resource_directory'),
     path('interactive_maps/', interactive_maps, name='interactive_maps'),
+    path('diversity-celebrations/', DiversityCelebrationsView.as_view(), name='diversity_celebrations'),
 
 
 ]

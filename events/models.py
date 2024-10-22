@@ -274,8 +274,12 @@ class HelpRequest(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     description = models.TextField()
     user_name = models.CharField(max_length=100, null=True, blank=True)  # Allow null values
+    contact_info = models.CharField(max_length=255)  # Contact information
+    address = models.CharField(max_length=255, null=True, blank=True)  # New address field
+    email = models.EmailField(max_length=255, null=True, blank=True)  # New email field
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)  # True if fulfilled, False otherwise
+
 
     def __str__(self):
         return f"{self.category}: {self.description[:50]}..."

@@ -89,7 +89,6 @@
 
         /* Expanded content styles */
         .expanded-content {
-            display: none;
             margin-top: 10px;
             background-color: #f9f9f9;
             padding: 10px;
@@ -186,17 +185,28 @@
                         <label for="description">Description of Help Needed:</label>
                         <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
                     </div>
-
+                    
                     <div class="form-group">
                         <label for="user_name">Your Name:</label>
                         <input type="text" class="form-control" id="user_name" name="user_name" required>
                     </div>
-
+                    
                     <div class="form-group">
-                        <label for="contact_info">Contact Information (Phone/Email/Address):</label>
+                        <label for="contact_info">Contact Information:</label>
+                        <small class="form-text text-muted">You can enter your phone number, email address, or physical address.</small>
                         <input type="text" class="form-control" id="contact_info" name="contact_info" placeholder="Enter your phone number or email or address" required>
                     </div>
-
+                    
+                    <div class="form-group">
+                        <label for="address">Address:</label>
+                        <input type="text" class="form-control" id="address" name="address" placeholder="Enter your address (optional)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email (optional)">
+                    </div>
+                    
                     <button type="submit" class="btn btn-success btn-block">Submit Request</button>
                 </form>
             </div>
@@ -209,20 +219,18 @@
             <div class="requested-messages">
                 <ul class="list-group">
                     {% for request in help_requests %}
-                        <li class="list-group-item" data-toggle="collapse" data-target="#message-{{ forloop.counter }}"
-                            aria-expanded="false" aria-controls="message-{{ forloop.counter }}">
-                            <strong>{{ request.user_name }}</strong>: {{ request.description|truncatechars:50 }}<br>
-                            <em>Category: {{ request.category }}</em><br>
-                            <strong>Contact Info:</strong> {{ request.contact_info }}<br>
-                            <strong>Status:</strong> {{ request.status }}
-                            <div class="expanded-content collapse" id="message-{{ forloop.counter }}">
-                                <hr>
-                                <strong>Full Description:</strong>
-                                <p>{{ request.description }}</p>
-                            </div>
-                        </li>
+                    <li class="list-group-item" data-toggle="collapse" data-target="#request{{ forloop.counter }}" aria-expanded="false" aria-controls="request{{ forloop.counter }}">
+                        <strong>Category:</strong> {{ request.category }} <span class="badge badge-primary float-right">Details</span>
+                    </li>
+                    <div class="collapse expanded-content" id="request{{ forloop.counter }}">
+                        <p><strong>Description:</strong> {{ request.description }}</p>
+                        <p><strong>User Name:</strong> {{ request.user_name }}</p>
+                        <p><strong>Contact Info:</strong> {{ request.contact_info }}</p>
+                        <p><strong>Address:</strong> {{ request.address }}</p>
+                        <p><strong>Email:</strong> {{ request.email }}</p>
+                    </div>
                     {% empty %}
-                        <li class="list-group-item">No help requests found.</li>
+                    <li class="list-group-item">No help requests available at the moment.</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -231,24 +239,13 @@
 
     <footer>
         <div class="container">
-            <p>&copy; {{ current_year }} InterfaithConnect. All Rights Reserved.</p>
+            <p>&copy; 2024 InterfaithConnect. All Rights Reserved.</p>
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        function editRequest(id) {
-            // Add your edit functionality here
-            alert('Edit request with ID: ' + id);
-        }
-
-        function deleteRequest(id) {
-            // Add your delete functionality here
-            alert('Delete request with ID: ' + id);
-        }
-    </script>
 </body>
 
 </html>

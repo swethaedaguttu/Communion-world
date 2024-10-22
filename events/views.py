@@ -23,7 +23,7 @@ from .models import (
     VolunteerHistory,
     HelpRequest, 
     Thread,
-    VolunteerOpportunity, SignUp, PrayerRequest, Reply, CulturalStory, Charity, InitiativeJoin,
+    VolunteerOpportunity, SignUp, PrayerRequest, Reply, CulturalStory, Charity, InitiativeJoin, Festival,
  # Import your UserProfile model correctly
 )
 
@@ -49,6 +49,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
+from rest_framework import generics
 
 from django.http import JsonResponse
 import json
@@ -395,29 +396,6 @@ def event_delete_view(request, event_id):
     return render(request, 'events/event_confirm_delete.html', {'event': event})
 
 @login_required
-def ai_response(prompt):
-    try:
-        openai.api_key = 'your_openai_api_key'  # Use environment variables for sensitive data
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt,
-            max_tokens=150,
-            temperature=0.7
-        )
-        return response.choices[0].text.strip()
-    except openai.error.OpenAIError as e:
-        return "AI is currently unavailable. Please try again later."
-
-@login_required
-def ai_chat_view(request):
-    if request.method == 'POST':
-        user_input = request.POST.get('user_input')
-        ai_reply = ai_response(user_input)
-        return render(request, 'events/ai_chat.html', {'ai_reply': ai_reply, 'user_input': user_input})
-
-    return render(request, 'events/ai_chat.html')
-
-@login_required
 def feedback_list_view(request):
     feedbacks = Feedback.objects.all()
     return render(request, 'events/feedback_list.html', {'feedbacks': feedbacks})
@@ -481,6 +459,12 @@ class RequestHelpView(View):
         category = request.POST.get('category', '').strip()
         description = request.POST.get('description', '').strip()
         user_name = request.POST.get('user_name', '').strip()
+        contact_info = request.POST.get('contact_info', '').strip()
+        address = request.POST.get('address', '').strip()
+        email = request.POST.get('email', '').strip()
+         
+        # Log the received data for debugging
+        print(f"Category: {category}, Description: {description}, User Name: {user_name}, Contact Info: {contact_info}, Address: {address}, Email: {email}")
 
         # Validate the form data
         if not category or not description or not user_name:
@@ -488,7 +472,14 @@ class RequestHelpView(View):
             return redirect('request_help')  # Redirect to the same page to display the error
 
         # Process the form data and save to the database
-        HelpRequest.objects.create(category=category, description=description, user_name=user_name)
+        HelpRequest.objects.create(
+            category=category,
+            description=description,
+            user_name=user_name,
+            contact_info=contact_info,
+            address=address,
+            email=email
+        )
 
         # Display success message
         messages.success(request, 'Your help request has been submitted successfully!')
@@ -563,7 +554,20 @@ class OfferHelpCategoryView(View):
 
 class RequestHelpCategory1View(View):
     def get(self, request):
-        return render(request, 'events/request_help_category_1.html')
+        # Query to get all help requests in the 'mental_health' category
+        mental_health_requests = HelpRequest.objects.filter(category='mental_health')
+        
+        # Count of requests in this category
+        mental_health_count = mental_health_requests.count()
+
+        # Prepare context data to pass to the template
+        context = {
+            'mental_health_count': mental_health_count,
+            'mental_health_requests': mental_health_requests,  # Pass the query results
+        }
+
+        return render(request, 'events/request_help_category_1.html', context)
+
 
 
 class RequestHelpCategory2View(View):
@@ -1269,3 +1273,12 @@ def interactive_maps(request):
     events = Event.objects.all()  # Fetch all events from the database
     return render(request, 'events/interactive_maps.html', {'events': events})
 
+class DiversityCelebrationsView(View):
+    def get(self, request):
+        # You can pass context data to your template if needed
+        context = {
+            # Add any data you want to pass to the template here
+            'title': 'Diversity Celebrations',
+            # You can add more context variables if needed
+        }
+        return render(request, 'events\diversity_celebrations.html', context)  # Replace with your actual template name

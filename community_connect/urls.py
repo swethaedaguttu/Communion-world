@@ -27,6 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('events.urls')),  # Include the app's URL patterns at the root
     path('accounts/', include('allauth.urls')),
+    path('api/', include('events.urls')),  # Include the events app URLs
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
