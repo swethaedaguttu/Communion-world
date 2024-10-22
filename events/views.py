@@ -459,12 +459,8 @@ class RequestHelpView(View):
         category = request.POST.get('category', '').strip()
         description = request.POST.get('description', '').strip()
         user_name = request.POST.get('user_name', '').strip()
-        contact_info = request.POST.get('contact_info', '').strip()
-        address = request.POST.get('address', '').strip()
         email = request.POST.get('email', '').strip()
-         
-        # Log the received data for debugging
-        print(f"Category: {category}, Description: {description}, User Name: {user_name}, Contact Info: {contact_info}, Address: {address}, Email: {email}")
+
 
         # Validate the form data
         if not category or not description or not user_name:
@@ -476,8 +472,6 @@ class RequestHelpView(View):
             category=category,
             description=description,
             user_name=user_name,
-            contact_info=contact_info,
-            address=address,
             email=email
         )
 
@@ -572,17 +566,55 @@ class RequestHelpCategory1View(View):
 
 class RequestHelpCategory2View(View):
     def get(self, request):
-        return render(request, 'events/request_help_category_2.html')
+        # Query to get all help requests in the 'food_assistance' category
+        food_assistance_requests = HelpRequest.objects.filter(category='food_assistance')
+        
+        # Count of requests in this category
+        food_assistance_count = food_assistance_requests.count()
+
+        # Prepare context data to pass to the template
+        context = {
+            'food_assistance_count': food_assistance_count,
+            'food_assistance_requests': food_assistance_requests,  # Pass the query results
+        }
+
+        return render(request, 'events/request_help_category_2.html', context)
 
 
 class RequestHelpCategory3View(View):
     def get(self, request):
-        return render(request, 'events/request_help_category_3.html')
+        # Query to get all help requests in the 'shelter_services' category
+        shelter_services_requests = HelpRequest.objects.filter(category='shelter_services')
+        
+        # Count of requests in this category
+        shelter_services_count = shelter_services_requests.count()
+
+        # Prepare context data to pass to the template
+        context = {
+            'shelter_services_count': shelter_services_count,
+            'shelter_services_requests': shelter_services_requests,  # Pass the query results
+        }
+
+        return render(request, 'events/request_help_category_3.html', context)
+
+
 
 
 class RequestHelpCategory4View(View):
     def get(self, request):
-        return render(request, 'events/request_help_category_4.html')
+        # Query to get all help requests in the 'educational_support' category
+        educational_support_requests = HelpRequest.objects.filter(category='educational_support')
+        
+        # Count of requests in this category
+        educational_support_count = educational_support_requests.count()
+
+        # Prepare context data to pass to the template
+        context = {
+            'educational_support_count': educational_support_count,
+            'educational_support_requests': educational_support_requests,  # Pass the query results
+        }
+
+        return render(request, 'events/request_help_category_4.html', context)
 
 @login_required
 def community_networking(request):

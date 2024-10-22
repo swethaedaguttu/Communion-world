@@ -191,16 +191,7 @@
                         <input type="text" class="form-control" id="user_name" name="user_name" required>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="contact_info">Contact Information:</label>
-                        <small class="form-text text-muted">You can enter your phone number, email address, or physical address.</small>
-                        <input type="text" class="form-control" id="contact_info" name="contact_info" placeholder="Enter your phone number or email or address" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="address">Address:</label>
-                        <input type="text" class="form-control" id="address" name="address" placeholder="Enter your address (optional)">
-                    </div>
+                   
                     
                     <div class="form-group">
                         <label for="email">Email:</label>
@@ -225,9 +216,9 @@
                     <div class="collapse expanded-content" id="request{{ forloop.counter }}">
                         <p><strong>Description:</strong> {{ request.description }}</p>
                         <p><strong>User Name:</strong> {{ request.user_name }}</p>
-                        <p><strong>Contact Info:</strong> {{ request.contact_info }}</p>
-                        <p><strong>Address:</strong> {{ request.address }}</p>
                         <p><strong>Email:</strong> {{ request.email }}</p>
+                        <p><strong>Status:</strong> {{ request.status }}</p>
+
                     </div>
                     {% empty %}
                     <li class="list-group-item">No help requests available at the moment.</li>

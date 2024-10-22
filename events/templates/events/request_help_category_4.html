@@ -1,4 +1,3 @@
-<!-- request_help_category_4.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,6 +6,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Educational Support - Request Help</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #F9F6ED; /* Soft beige background */
+            color: #2C3E50; /* Dark slate gray text */
+            margin: 0;
+            padding: 0;
+        }
+
+        .bg-warning {
+            background-color: #2C6E6E; /* Warning color for header */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto; /* Increased top margin */
+            padding: 20px;
+            background: #ffffff; /* White background for content area */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        .alert-info {
+            background-color: #A7D5D5; /* Light teal for info alerts */
+            color: #2C3E50; /* Dark text for alerts */
+        }
+
+        .list-group-item {
+            background-color: #ffffff; /* White background for list items */
+        }
+
+        .help-request {
+            background-color: #e3ebeb; /* Light gray for help requests */
+            border: 1px solid #dee2e6; /* Light border for help requests */
+        }
+
+        footer {
+            background-color: #2C6E6E; /* Light footer */
+            color: #eef0f3; /* Dark text for footer */
+        }
+
+        a {
+            color: #e7ebee; /* Dark text for footer links */
+        }
+    </style>
 </head>
 
 <body>
@@ -23,17 +67,33 @@
         <div class="alert alert-info">
             <p>Welcome to the Educational Support Request Help page. Here you can find resources and request help related to education.</p>
         </div>
+
         <h2>How to Request Help</h2>
         <p>If you or someone you know needs educational support, please reach out to the following resources:</p>
-        <ul class="list-group">
+        <ul class="list-group mb-4">
             <li class="list-group-item">Resource 1: Contact details for educational support service 1.</li>
             <li class="list-group-item">Resource 2: Contact details for educational support service 2.</li>
             <li class="list-group-item">Resource 3: Contact details for educational support service 3.</li>
         </ul>
+
+        <h2>Educational Support Help Requests</h2>
+        <p>Total Requests: <strong>{{ educational_support_count }}</strong></p>
+
+        <div class="help-requests">
+            {% for request in educational_support_requests %}
+                <div class="help-request border rounded p-3 mb-3">
+                    <strong>{{ request.user_name }}</strong>: {{ request.description|truncatechars:50 }}<br>
+                    <strong>Email Info:</strong> {{ request.email }}<br>
+                    <strong>Status:</strong> {{ request.status }}
+                </div>
+            {% empty %}
+                <div class="alert alert-warning">No requests available for educational support at this time.</div>
+            {% endfor %}
+        </div>
     </main>
 
-    <footer class="text-center py-3 bg-light">
-        <p>&copy; 2024 Your Organization | <a href="{% url 'index' %}">Home</a></p>
+    <footer class="text-center py-3">
+        <p>&copy; 2024 InterfaithConnect | <a href="{% url 'index' %}">Home</a></p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
