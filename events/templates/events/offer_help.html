@@ -102,6 +102,10 @@
                 <input type="text" class="form-control" id="user_name" name="user_name" required>
             </div>
             <div class="form-group">
+                <label for="email">Your Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
                 <label for="category">Select Help Category:</label>
                 <select class="form-control" id="category" name="category" required>
                     <option value="">Choose a category...</option>
@@ -121,10 +125,10 @@
         <hr>
         <h4>Available Help Categories</h4>
         <ul class="list-group">
-            <li class="list-group-item">Mental Health Support</li>
-            <li class="list-group-item">Food Assistance</li>
-            <li class="list-group-item">Shelter Services</li>
-            <li class="list-group-item">Educational Support</li>
+            <li class="list-group-item">Mental Health Support ({{ help_offers_count.mental_health }})</li>
+            <li class="list-group-item">Food Assistance ({{ help_offers_count.food_assistance }})</li>
+            <li class="list-group-item">Shelter Services ({{ help_offers_count.shelter_services }})</li>
+            <li class="list-group-item">Educational Support ({{ help_offers_count.educational_support }})</li>
         </ul>
 
         <hr>
@@ -133,6 +137,7 @@
             {% for offer in help_offers %}
                 <li class="list-group-item">
                     <strong>{{ offer.user_name }}</strong> - {{ offer.category }}<br>
+                    <small>Email: {{ offer.email }}</small><br>
                     <small>{{ offer.description }}</small>
                 </li>
             {% empty %}

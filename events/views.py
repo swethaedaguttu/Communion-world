@@ -22,6 +22,7 @@ from .models import (
     ResourceRequest,
     VolunteerHistory,
     HelpRequest, 
+    OfferHelp,
     Thread,
     VolunteerOpportunity, SignUp, PrayerRequest, Reply, CulturalStory, Charity, InitiativeJoin, Festival,
  # Import your UserProfile model correctly
@@ -227,10 +228,14 @@ def community_create_view(request):
             community.created_by = request.user  # Assign the logged-in user
             community.save()
             messages.success(request, f'Community "{community.name}" created successfully!')
-            return redirect('community_detail', community_id=community.id)
+            return redirect('interfaith_collaboration', community_id=community.id)
     else:
         form = CommunityForm()
-    return render(request, 'events/community_form.html', {'form': form})
+    return render(request, 'events/community_create.html', {'form': form})
+
+def interfaith_collaboration_view(request):
+    community_profiles = Community.objects.filter(is_interfaith=True)  # Adjust filter as needed
+    return render(request, 'events/interfaith_collaboration.html', {'community_profiles': community_profiles})
 
 @login_required
 def create_community_profile(request):
@@ -411,11 +416,26 @@ def resources_view(request):
     return render(request, 'events/resources_directory.html', {'resources': resources})
 
 
+from django.views import View
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import OfferHelp
+
+# Main view for displaying all help offers
 class OfferHelpView(View):
     def get(self, request):
         # Retrieve all previous help offers from the database
+        help_offers = OfferHelp.objects.all()
+        help_offers_count = {
+            'mental_health': help_offers.filter(category='mental_health').count(),
+            'food_assistance': help_offers.filter(category='food_assistance').count(),
+            'shelter_services': help_offers.filter(category='shelter_services').count(),
+            'educational_support': help_offers.filter(category='educational_support').count(),
+        }
 
         return render(request, 'events/offer_help.html', {
+            'help_offers': help_offers,
+            'help_offers_count': help_offers_count,
         })
 
     def post(self, request):
@@ -423,22 +443,93 @@ class OfferHelpView(View):
         user_name = request.POST.get('user_name', '').strip()
         category = request.POST.get('category', '').strip()
         description = request.POST.get('description', '').strip()
+        email = request.POST.get('email', '').strip()
 
         # Validate form data
-        if not user_name or not category or not description:
+        if not user_name or not category or not description or not email:
             messages.error(request, 'All fields are required.')
-            return redirect('offer_help')  # Redirect back to the same page with an error
+            return redirect('offer_help')
 
         # Save the new offer to the database
-        OfferHelp.objects.create(user_name=user_name, category=category, description=description)
+        OfferHelp.objects.create(user_name=user_name, category=category, description=description, email=email)
 
         # Show success message
         messages.success(request, 'Your help offer has been submitted successfully!')
 
-        # Redirect to the same page after form submission
         return redirect('offer_help')
 
-      
+
+# Category 1: Mental Health
+class OfferHelpCategory1View(View):
+    def get(self, request):
+        # Query to get all help requests in the 'mental_health' category
+        mental_health_requests = OfferHelp.objects.filter(category='mental_health')
+        
+        # Count of requests in this category
+        mental_health_count = mental_health_requests.count()
+
+        # Prepare context data to pass to the template
+        context = {
+            'mental_health_count': mental_health_count,
+            'mental_health_requests': mental_health_requests,
+        }
+
+        return render(request, 'events/offer_help_category_1.html', context)
+
+
+# Category 2: Food Assistance
+class OfferHelpCategory2View(View):
+    def get(self, request):
+        # Query to get all help requests in the 'food_assistance' category
+        food_assistance_requests = OfferHelp.objects.filter(category='food_assistance')
+        
+        # Count of requests in this category
+        food_assistance_count = food_assistance_requests.count()
+
+        # Prepare context data to pass to the template
+        context = {
+            'food_assistance_count': food_assistance_count,
+            'food_assistance_requests': food_assistance_requests,
+        }
+
+        return render(request, 'events/offer_help_category_2.html', context)
+
+
+# Category 3: Shelter Services
+class OfferHelpCategory3View(View):
+    def get(self, request):
+        # Query to get all help requests in the 'shelter_services' category
+        shelter_services_requests = OfferHelp.objects.filter(category='shelter_services')
+        
+        # Count of requests in this category
+        shelter_services_count = shelter_services_requests.count()
+
+        # Prepare context data to pass to the template
+        context = {
+            'shelter_services_count': shelter_services_count,
+            'shelter_services_requests': shelter_services_requests,
+        }
+
+        return render(request, 'events/offer_help_category_3.html', context)
+
+
+# Category 4: Educational Support
+class OfferHelpCategory4View(View):
+    def get(self, request):
+        # Query to get all help requests in the 'educational_support' category
+        educational_support_requests = OfferHelp.objects.filter(category='educational_support')
+        
+        # Count of requests in this category
+        educational_support_count = educational_support_requests.count()
+
+        # Prepare context data to pass to the template
+        context = {
+            'educational_support_count': educational_support_count,
+            'educational_support_requests': educational_support_requests,
+        }
+
+        return render(request, 'events/offer_help_category_4.html', context)
+
 class RequestHelpView(View):
     def get(self, request):
         help_requests = HelpRequest.objects.all()  # Get all help requests
@@ -535,17 +626,7 @@ def edit_request_view(request, request_id):
 
     return render(request, 'edit_request.html', {'form': form})  # Adjust template name accordingly
 
-          
-class OfferHelpCategoryView(View):
-    template_name = 'events/offer_help_category.html'  # Use a common template for all categories
-
-    def get(self, request, category):
-        context = {
-            'category': category,
-        }
-        return render(request, self.template_name, context)
-
-
+        
 class RequestHelpCategory1View(View):
     def get(self, request):
         # Query to get all help requests in the 'mental_health' category

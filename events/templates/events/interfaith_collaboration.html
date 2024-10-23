@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interfaith Collaboration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to top, rgba(135, 206, 250, 0.8), rgba(255, 255, 255, 0.9)),
+                        url('https://cdn.pixabay.com/photo/2016/05/01/11/10/clouds-1421806_1280.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        header, footer {
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #801155;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        small {
+            color: #666;
+        }
+
+        .footer-text {
+            margin-top: 20px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Community Profiles</h1>
+    </header>
+
+    <main>
+        <h2>All Community Profiles</h2>
+        <ul>
+            {% for profile in community_profiles %}
+                <li>
+                    <strong>{{ profile.name }}</strong><br>
+                    <small>Email: {{ profile.contact_email }}</small><br>
+                    <small>Phone: {{ profile.contact_phone }}</small><br>
+                    <small>Location: {{ profile.location }}</small><br>
+                    <p>Description: {{ profile.description }}</p>
+                    {% if profile.profile_image %}
+                        <img src="{{ profile.profile_image.url }}" alt="{{ profile.name }} Profile Image" style="max-width: 100%; height: auto;">
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li>No community profiles available.</li>
+            {% endfor %}
+        </ul>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 InterfaithConnect</p>
+    </footer>
+</body>
+</html>

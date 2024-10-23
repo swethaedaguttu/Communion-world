@@ -15,8 +15,11 @@ from events.views import (
     about_us,
     contact,
     OfferHelpView,
+    OfferHelpCategory1View,
+    OfferHelpCategory2View,
+    OfferHelpCategory3View,
+    OfferHelpCategory4View,
     RequestHelpView,
-    OfferHelpCategoryView,
     RequestHelpCategory1View,
     RequestHelpCategory2View,
     RequestHelpCategory3View,
@@ -50,7 +53,7 @@ from events.views import (
     prayer_feed,
     submit_reply, gamification_elements_view, share_culture, list_cultural_stories, thank_you, admin_approve_story,
     charitable_initiatives, add_charity, join_initiative,
-    contact_and_save, resources_view, interactive_maps, DiversityCelebrationsView,
+    contact_and_save, resources_view, interactive_maps, DiversityCelebrationsView, interfaith_collaboration_view,
 
 
 )
@@ -74,10 +77,10 @@ urlpatterns = [
     path('contact/', contact, name='contact'),
     path('offer_help/', OfferHelpView.as_view(), name='offer_help'),
     path('request_help/', RequestHelpView.as_view(), name='request_help'),
-    path('offer_help_category_1/', OfferHelpCategoryView.as_view(), {'category': 'Mental Health Support'}, name='offer_help_category_1'),
-    path('offer-help/category-2/', OfferHelpCategoryView.as_view(), {'category': 'Food Assistance'}, name='offer_help_category_2'),
-    path('offer-help/category-3/', OfferHelpCategoryView.as_view(), {'category': 'Shelter Services'}, name='offer_help_category_3'),
-    path('offer-help/category-4/', OfferHelpCategoryView.as_view(), {'category': 'Educational Support'}, name='offer_help_category_4'),
+    path('offer-help/mental-health/', OfferHelpCategory1View.as_view(), name='offer_help_category_1'),
+    path('offer-help/food-assistance/', OfferHelpCategory2View.as_view(), name='offer_help_category_2'),
+    path('offer-help/shelter-services/', OfferHelpCategory3View.as_view(), name='offer_help_category_3'),
+    path('offer-help/educational-support/', OfferHelpCategory4View.as_view(), name='offer_help_category_4'),
     path('offer_help/submit/', OfferHelpView.as_view(), name='offer_help_submit'),
     path('request_help_category_1/', RequestHelpCategory1View.as_view(), name='request_help_category_1'),
     path('request-help/category-2/', RequestHelpCategory2View.as_view(), name='request_help_category_2'),
@@ -132,6 +135,7 @@ urlpatterns = [
     path('resource_directory/', resources_view, name='resource_directory'),
     path('interactive_maps/', interactive_maps, name='interactive_maps'),
     path('diversity-celebrations/', DiversityCelebrationsView.as_view(), name='diversity_celebrations'),
+    path('interfaith-collaboration/', interfaith_collaboration_view, name='interfaith_collaboration'),
 
 
 ]

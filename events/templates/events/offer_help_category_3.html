@@ -1,4 +1,3 @@
-<!-- offer_help_category_3.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,16 +5,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shelter Services</title>
-    
+
     <!-- CSS Stylesheets -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #F9F6ED; /* Soft beige background */
+            color: #2C3E50; /* Dark slate gray text */
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #2C6E6E;
+        }
+
+        .bg-teal {
+            background-color: #2C6E6E; /* Deep teal for headers and footer */
+        }
+
+        .nav-link {
+            color: #ffffff !important; /* White text for navbar links */
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto; /* Increased top margin */
+            padding: 20px;
+            background: #ffffff; /* White background for content area */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        .alert-info {
+            background-color: #A7D5D5; /* Light teal for info alerts */
+            color: #2C3E50; /* Dark text for alerts */
+        }
+
+        .list-group-item {
+            background-color: #ffffff; /* White background for list items */
+        }
+
+        .help-request {
+            background-color: #f8f9fa; /* Light gray for help requests */
+            border: 1px solid #dee2e6; /* Light border for help requests */
+        }
+
+        footer {
+            background-color: #2C6E6E; /* Deep teal footer */
+            color: #ffffff; /* White footer text */
+        }
+
+        a {
+            color: #ffffff; /* White text for footer links */
+        }
+    </style>
 </head>
 
 <body>
-    <header class="bg-success text-white text-center py-4">
+    <header class="bg-teal text-white text-center py-4">
         <h1>Shelter Services</h1>
         <nav>
-            <a href="{% url 'offer_support' %}" class="btn btn-light mx-2">Offer Help</a>
+            <a href="{% url 'offer_help' %}" class="btn btn-light mx-2">Offer Help</a>
             <a href="{% url 'request_help' %}" class="btn btn-light mx-2">Request Help</a>
             <a href="{% url 'event_list' %}" class="btn btn-light mx-2">View Upcoming Events</a>
         </nav>
@@ -24,7 +77,9 @@
     <main class="container my-5">
         <div class="alert alert-info">
             <p>Welcome to the Shelter Services page. Here you can find resources and support related to shelter services.</p>
+            <p>There are {{ shelter_services_count }} Shelter Services support offers available.</p>
         </div>
+
         <h2>Resources for Shelter Services</h2>
         <ul class="list-group">
             <li class="list-group-item">Resource 1: Description of shelter service resource 1.</li>
@@ -32,10 +87,27 @@
             <li class="list-group-item">Resource 3: Description of shelter service resource 3.</li>
             <li class="list-group-item">Resource 4: Description of shelter service resource 4.</li>
         </ul>
+
+        <hr>
+
+        <h2>Available Shelter Service Offers</h2>
+        <ul class="list-group">
+            {% if shelter_services_requests %}
+                {% for offer in shelter_services_requests %}
+                    <li class="list-group-item">
+                        <strong>{{ offer.user_name }}</strong><br>
+                        <small>Email: {{ offer.email }}</small><br>
+                        <small>Description: {{ offer.description }}</small>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning">No shelter service offers available at the moment.</div>
+            {% endif %}
+        </ul>
     </main>
 
-    <footer class="text-center py-3 bg-light">
-        <p>&copy; 2024 Your Organization | <a href="{% url 'index' %}">Home</a></p>
+    <footer class="text-center py-3">
+        <p>&copy; 2024 InterfaithConnect | <a href="{% url 'index' %}">Home</a></p>
     </footer>
 
     <!-- JavaScript -->

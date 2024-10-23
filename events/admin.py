@@ -1,7 +1,7 @@
 # events/admin.py
 
 from django.contrib import admin
-from .models import Community, Thread, Comment, VolunteerOpportunity, CulturalStory, Charity, Contact, Donation
+from .models import Community, Thread, Comment, VolunteerOpportunity, CulturalStory, Charity, Contact, Donation, OfferHelp, HelpRequest
 
 
 @admin.register(Community)
@@ -15,6 +15,8 @@ admin.site.register(VolunteerOpportunity)
 admin.site.register(Charity)
 admin.site.register(Contact)
 admin.site.register(Donation)
+admin.site.register(OfferHelp)
+admin.site.register(HelpRequest)
 
 
 @admin.register(CulturalStory)
