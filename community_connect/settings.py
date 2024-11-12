@@ -11,6 +11,10 @@ DEBUG = True # Set to 'False' in production
 
 # Allowed hosts - allows all hosts if DEBUG is True, otherwise, limit to production hosts
 ALLOWED_HOSTS = []
+
+
+
+
 # Installed apps
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -124,10 +128,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'events', 'static'),
 ]
 
-# Media files settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

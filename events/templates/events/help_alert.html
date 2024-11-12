@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
   <link rel="shortcut icon" href="https://r.mobirisesite.com/877954/assets/images/photo-1707146177016-9906a2505a72.jpeg" type="image/x-icon">
   <meta name="description" content="This page allows users to submit help requests and connect directly with those who can assist them. Get the help you need today!">
-  <title>Communion-Settings</title>
+  <title>Help Request Form</title>
   <link rel="stylesheet" href="https://r.mobirisesite.com/877954/assets/web/assets/mobirise-icons2/mobirise2.css?rnd=1731060881019">
   <link rel="stylesheet" href="https://r.mobirisesite.com/877954/assets/bootstrap/css/bootstrap.min.css?rnd=1731060881019">
   <link rel="stylesheet" href="https://r.mobirisesite.com/877954/assets/bootstrap/css/bootstrap-grid.min.css?rnd=1731060881019">
@@ -93,81 +93,6 @@
 .nav-link.dropdown-toggle::after {
     display: none;
 }
-
-        /* General container styling */
-        .account-settings-container {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px 30px;
-            max-width: 800px;
-            margin: auto;
-        }
-
-        /* Title styling */
-        .account-settings-container h1 {
-            color: #343a40;
-            font-size: 2.5rem;
-            font-weight: bold;
-        }
-
-        .account-settings-container h2 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #007bff;
-            margin-top: 20px;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 5px;
-        }
-
-        /* Form styling */
-        .account-settings-container .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .account-settings-container .form-control {
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 1rem;
-        }
-
-        .account-settings-container .btn-primary {
-            background-color: #007bff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 5px;
-        }
-
-        .account-settings-container .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        /* Messages styling */
-        .messages {
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-
-        .messages li {
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 5px;
-            color: #fff;
-        }
-
-        .messages .error {
-            background-color: #dc3545;
-        }
-
-        .messages .success {
-            background-color: #28a745;
-        }
-
-        .messages .info {
-            background-color: #17a2b8;
-        }
 
 @-webkit-keyframes animationBanner { 0% { opacity: 0; top: -8rem; } 75% { opacity: 0; top: -8rem; } 100% { opacity: 1; top: 0; } }
 @-moz-keyframes animationBanner { 0% { opacity: 0; top: -8rem; } 75% { opacity: 0; top: -8rem; } 100% { opacity: 1; top: 0; } }
@@ -295,7 +220,7 @@
 
 				
 				<div class="navbar-buttons mbr-section-btn">
-					<a class="btn btn-primary display-4" href="#">Get Help</a>
+					<a class="btn btn-primary display-4" href="#help-request-form">Get Help</a>
 				</div>
 			</div>
 		</div>
@@ -305,62 +230,337 @@
 <section data-bs-version="5.1" class="header18 cid-utwSmHHwOY mbr-halfscreen" data-bg-video="https://www.youtube.com/embed/sHaBr-Tlm7Q?autoplay=1&amp;loop=1&amp;playlist=sHaBr-Tlm7Q&amp;t=20&amp;mute=1&amp;playsinline=1&amp;controls=0&amp;showinfo=0&amp;autohide=1&amp;allowfullscreen=true&amp;mode=transparent" id="hero-15-utwSmHHwOY">
   
 
-    <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(0, 0, 0);"></div>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="content-wrap col-12 col-md-12">
-          <h1 class="mbr-section-title mbr-fonts-style mbr-white mb-4 display-1">
-            <strong>Settings</strong>
-          </h1>
-          
-          <div class="mbr-section-btn">
-            <a class="btn btn-white-outline display-7" href="#news-1-utwSmHJyLOss">Start Now</a> 
-          </div>
+  <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(0, 0, 0);"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="content-wrap col-12 col-md-12">
+        <h1 class="mbr-section-title mbr-fonts-style mbr-white mb-4 display-1">
+          <strong>Need Help?</strong>
+        </h1>
+        
+        <p class="mbr-fonts-style mbr-text mbr-white mb-4 display-7">We're here to connect you with the right people fast!</p>
+        <div class="mbr-section-btn">
+          <a class="btn btn-white-outline display-7" href="#news-1-utwSmHJyLO">Start Now</a> 
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Help Request Form Section -->
+<section data-bs-version="5.1" class="form cid-utwSmHelpForm" id="help-request-form">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+          <h2 class="mbr-section-title mbr-fonts-style mb-4 display-2">
+            <strong>Submit a Help Request</strong>
+          </h2>
+          <form id="helpForm" method="post" action="{% url 'help_alert' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="username" class="form-label">Your Name</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="needHelp" class="form-label">Need of Help</label>
+                <input type="text" class="form-control" id="needHelp" name="needHelp" placeholder="What do you need help with?" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="5" placeholder="Describe your issue" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="contactDetails" class="form-label">Contact Details</label>
+                <input type="text" class="form-control" id="contactDetails" name="contactDetails" placeholder="Enter your contact details" required>
+            </div>
+            
+            <!-- Image Upload Field -->
+            <div class="form-group">
+                <label for="image" class="form-label">Upload Image (optional)</label>
+                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+            </div>
+        
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary mt-3">Submit Request</button>
+            </div>
+        </form>
+                
         </div>
       </div>
     </div>
   </section>
+  <!-- End of Help Request Form Section -->
   
 
-<!-- Help Request Form Section -->
-<section data-bs-version="5.1" class="form cid-utwSmHelpForm" id="news-1-utwSmHJyLOss">
-    <div class="container mt-4 account-settings-container">
-        <h1 class="text-center">Account Settings</h1>
+<section data-bs-version="5.1" class="features10 cid-utwSmHHWHR" id="metrics-2-utwSmHHWHR">
   
-        <!-- Alert for feedback messages -->
-        {% if messages %}
-          <ul class="messages" style="list-style-type: none; padding: 0;">
-            {% for message in messages %}
-              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
+
   
-        <!-- Password Change Form -->
-        <form method="POST" class="mb-4">
-          {% csrf_token %}
-          <input type="hidden" name="change_password" value="1">
-          <h2>Change Password</h2>
-          <div class="form-group">
-            {{ password_form.as_p }}
+  
+  <div class="container">
+    
+    <div class="row justify-content-center">
+      <div class="item features-without-image col-12 col-md-6 col-lg-4">
+        <div class="item-wrapper">
+          <div class="card-box align-left">
+            
+            <p class="card-title mbr-fonts-style mb-3 display-1">
+              <strong>100+</strong>
+            </p>
+            <p class="card-text mbr-fonts-style mb-3 display-7">Requests Daily</p>
+            
           </div>
-          <button type="submit" class="btn btn-primary">Change Password</button>
-        </form>
-  
-        <!-- Notification Preferences Form -->
-        <form method="POST" class="mb-4">
-          {% csrf_token %}
-          <input type="hidden" name="update_notifications" value="1">
-          <h2>Notification Preferences</h2>
-          <div class="form-group">
-            {{ notification_form.as_p }}
-          </div>
-          <button type="submit" class="btn btn-primary">Update Preferences</button>
-        </form>
+        </div>
       </div>
-  </section>
+      <div class="item features-without-image col-12 col-md-6 col-lg-4">
+        <div class="item-wrapper">
+          <div class="card-box align-left">
+            
+            <p class="card-title mbr-fonts-style mb-3 display-1">
+              <strong>50+</strong>
+            </p>
+            <p class="card-text mbr-fonts-style mb-3 display-7">Experts Available</p>
+            
+          </div>
+        </div>
+      </div>
+      <div class="item features-without-image col-12 col-md-6 col-lg-4">
+        <div class="item-wrapper">
+          <div class="card-box align-left">
+            
+            <p class="card-title mbr-fonts-style mb-3 display-1">
+              <strong>24/7</strong>
+            </p>
+            <p class="card-text mbr-fonts-style mb-3 display-7">Support Guaranteed</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section data-bs-version="5.1" class="gallery07 cid-utwSmHIY3i" id="gallery-16-utwSmHIY3i">
+  
+  
+  <div class="container-fluid gallery-wrapper">
+    <div class="row justify-content-center">
+      <div class="col-12 content-head">
+        <div class="mbr-section-head mb-5">
+          <h4 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+            <strong>Help Requests Gallery</strong>
+          </h4>
+          
+        </div>
+      </div>
+    </div>
+    <div class="grid-container">
+      <div class="grid-container-3 moving-left" style="transform: translate3d(-200px, 0px, 0px);">
+        <div class="grid-item">
+          <img src="https://r.mobirisesite.com/877954/assets/images/photo-1634839593004-667d278bac49.jpeg" alt="">
+        </div>
+        <div class="grid-item">
+          <img src="https://r.mobirisesite.com/877954/assets/images/photo-1723433892471-62f113c8c9a0.jpeg" alt="">
+        </div>
+        <div class="grid-item">
+          <img src="https://r.mobirisesite.com/877954/assets/images/photo-1724995872846-6b52f7e81691.jpeg" alt="">
+        </div>
+        <div class="grid-item">
+          <img src="https://r.mobirisesite.com/877954/assets/images/photo-1579966434689-366396b4963c.jpeg" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-bs-version="5.1" class="people04 cid-utwSmHI0OQ" id="testimonials-4-utwSmHI0OQ">
+	
+	
+	<div class="container">
+		<div class="row mb-5 justify-content-center">
+			<div class="col-12 mb-0 content-head">
+				<h3 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+					<strong>Cheers!</strong>
+				</h3>
+				
+			</div>
+		</div>
+		<div class="row mbr-masonry" data-masonry="{&quot;percentPosition&quot;: true }">
+			<div class="item features-without-image col-12 col-md-6 col-lg-4 active">
+				<div class="item-wrapper">
+					<div class="card-box align-left">
+						<p class="card-text mbr-fonts-style display-7">This site saved my life!</p>
+						<div class="img-wrapper mt-4 mb-3">
+							<img src="https://r.mobirisesite.com/877954/assets/images/photo-1677520338280-664ae23816eb.jpeg" data-slide-to="0" data-bs-slide-to="0" alt="">
+						</div>
+						<h5 class="card-title mbr-fonts-style display-7">
+							<strong>Emily Johnson</strong>
+						</h5>
+					</div>
+				</div>
+			</div>
+			<div class="item features-without-image col-12 col-md-6 col-lg-4">
+				<div class="item-wrapper">
+					<div class="card-box align-left">
+						<p class="card-text mbr-fonts-style display-7">I got help faster than I expected!</p>
+						<div class="img-wrapper mt-4 mb-3">
+							<img src="https://r.mobirisesite.com/877954/assets/images/photo-1586185018558-ea8f4b4c514f.jpeg" data-slide-to="4" data-bs-slide-to="4" alt="">
+						</div>
+						<h5 class="card-title mbr-fonts-style display-7">
+							<strong>Michael Smith</strong>
+						</h5>
+					</div>
+				</div>
+			</div>
+			<div class="item features-without-image col-12 col-md-6 col-lg-4">
+				<div class="item-wrapper">
+					<div class="card-box align-left">
+						<p class="card-text mbr-fonts-style display-7">Best help request platform ever!</p>
+						<div class="img-wrapper mt-4 mb-3">
+							<img src="https://r.mobirisesite.com/877954/assets/images/photo-1676385901160-31e1b9e1c0c7.jpeg" data-slide-to="5" data-bs-slide-to="5" alt="">
+						</div>
+						<h5 class="card-title mbr-fonts-style display-7">
+							<strong>Sarah Connor</strong>
+						</h5>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section data-bs-version="5.1" class="gallery10 cid-utwSmHJqhu" id="features-61-utwSmHJqhu">
   
 
+
+  <div class="container-fluid">
+
+      <div class="loop-container">
+        <div class="item display-1" data-linewords="Instant Help * User Friendly * Chat Directly * 24/7 Support * Fast Responses * Community Driven *" data-direction="-1" data-speed="0.05">☁️ Best offers ☁️ Free delivery ☁️ Perfect design ☁️ Comfort ☁️ Support 24/7 ☁️ Vibes</div>
+
+        <div class="item display-1" data-linewords="Instant Help * User Friendly * Chat Directly * 24/7 Support * Fast Responses * Community Driven *" data-direction="-1" data-speed="0.05">☁️ Best offers ☁️ Free delivery ☁️ Perfect design ☁️ Comfort ☁️ Support 24/7 ☁️ Vibes</div>
+      </div>
+    
+  </div>
+</section>
+
+<section data-bs-version="5.1" class="header09 cid-utwSmHJFOk" id="call-to-action-7-utwSmHJFOk">
+    
+    
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-8">
+                <h1 class="mbr-section-title mbr-fonts-style mb-4 display-1">
+                    <strong>Need Help? Get Started Now!</strong>
+                </h1>
+                <p class="mbr-fonts-style mbr-text mb-4 display-7">Join our community and get the help you deserve!</p>
+                <div class="mbr-section-btn"><a class="btn btn-primary display-7" href="#help-request-form">Submit Your Request</a> 
+                    <a class="btn btn-secondary display-7" href="#news-1-utwSmHJyLO">Browse Help Requests</a></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section data-bs-version="5.1" class="list05 cid-utwSmHJR5i" id="faq-3-utwSmHJR5i">
+    
+    <div class="container">
+        <div class="col-12 mb-5 content-head">
+            <h3 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+                <strong>Help Request FAQs</strong>
+            </h3>
+            
+        </div>
+        <div class="row justify-content-center ">
+            <div class="col-12 col-lg-8">
+                <div class="item features-without-image col-12 active">
+                    <div class="item-wrapper">
+                        <h5 class="mbr-card-title mbr-fonts-style mt-0 mb-3 display-5">
+                            <strong>What is a help request?</strong></h5>
+                        <p class="mbr-text mbr-fonts-style mt-0 mb-3 display-7">A help request is a plea for assistance!</p>
+                    </div>
+                </div>
+                <div class="item features-without-image col-12">
+                    <div class="item-wrapper">
+                        <h5 class="mbr-card-title mbr-fonts-style mt-0 mb-3 display-5">
+                            <strong>How do I submit a request?</strong></h5>
+                        <p class="mbr-text mbr-fonts-style mt-0 mb-3 display-7">Fill out the form and hit submit!</p>
+                    </div>
+                </div>
+                <div class="item features-without-image col-12">
+                    <div class="item-wrapper">
+                        <h5 class="mbr-card-title mbr-fonts-style mt-0 mb-3 display-5">
+                            <strong>Can I chat with helpers?</strong></h5>
+                        <p class="mbr-text mbr-fonts-style mt-0 mb-3 display-7">Absolutely! Connect directly with helpers!</p>
+                    </div>
+                </div>
+                <div class="item features-without-image col-12">
+                  <div class="item-wrapper">
+                      <h5 class="mbr-card-title mbr-fonts-style mt-0 mb-3 display-5">
+                          <strong>Is my information secure?</strong></h5>
+                      <p class="mbr-text mbr-fonts-style mt-0 mb-3 display-7">Yes, we prioritize your privacy!</p>
+                  </div>
+              </div>
+              <div class="item features-without-image col-12">
+                <div class="item-wrapper">
+                    <h5 class="mbr-card-title mbr-fonts-style mt-0 mb-3 display-5">
+                        <strong>What if I need urgent help?</strong></h5>
+                    <p class="mbr-text mbr-fonts-style mt-0 mb-3 display-7">Mark it urgent and get quick responses!</p>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section data-bs-version="5.1" class="features03 cid-utwSmHJyLO" id="news-1-utwSmHJyLO">
+    <div class="container-fluid">
+      <div class="row justify-content-center mb-5">
+        <div class="col-12 content-head">
+          <div class="mbr-section-head">
+            <h4 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+              <strong>Latest Help Requests</strong>
+            </h4>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        {% for request in help_requests %}
+        <div class="item features-image col-12 col-md-6 col-lg-3 {% if forloop.first %}active{% endif %}">
+          <div class="item-wrapper">
+            <div class="item-img mb-3">
+              {% if request.image %}
+                <img src="{{ request.image.url }}" alt="Uploaded Image" class="img-thumbnail" style="max-width: 500px;">
+              {% else %}
+                <img src="https://r.mobirisesite.com/877954/assets/images/default-placeholder.png" alt="Default Image" title="">
+              {% endif %}
+            </div>
+            <div class="item-content align-left">
+              <h5 class="item-title mbr-fonts-style mt-0 mb-2 display-5">
+                <strong>{{ request.need_help }}</strong>
+              </h5>
+              <p class="mbr-text mbr-fonts-style mb-3 display-7">{{ request.created_at|date:"F d, Y" }}</p>
+              <p class="mbr-text mbr-fonts-style mb-3 display-7">{{ request.description }}</p>
+              <div class="mbr-section-btn item-footer">
+                <a href="{% url 'help_alert_details' id=request.id %}" class="btn item-btn btn-primary display-7">Help</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <p>No help requests available.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
   
 <section data-bs-version="5.1" class="social4 cid-utwSmHKS6N" id="follow-us-1-utwSmHKS6N">
     
@@ -493,68 +693,54 @@
   <script src="https://r.mobirisesite.com/877954/assets/imagesloaded/imagesloaded.pkgd.min.js?rnd=1731060881019"></script>
   <script src="https://r.mobirisesite.com/877954/assets/theme/js/script.js?rnd=1731060881019"></script>
   <script src="https://r.mobirisesite.com/877954/assets/formoid.min.js?rnd=1731060881019"></script>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  
   <script>
-      // Function to show alerts
-      function showAlert(type, message) {
-          const alertBox = type === 'success' ? $('#success-alert') : $('#error-alert');
-          alertBox.text(message).show();
-          setTimeout(() => {
-              alertBox.fadeOut();
-          }, 3000);
-      }
+    const notification = document.getElementById("notification");
 
-      $(document).ready(function() {
-          function handleFormSubmit(formSelector, successMessage, errorMessage) {
-              $(formSelector).on('submit', function(e) {
-                  e.preventDefault();
-                  
-                  // Validate password match for password change
-                  if (formSelector === '#password-change-form') {
-                      const newPassword = $('#new_password').val();
-                      const confirmPassword = $('#confirm_password').val();
-                      if (newPassword !== confirmPassword) {
-                          showAlert('error', 'New password and confirm password do not match.');
-                          return;
-                      }
-                  }
-                  
-                  // Submit the form data using AJAX
-                  $.ajax({
-                      type: 'POST',
-                      url: $(this).attr('action'),
-                      data: $(this).serialize(),
-                      success: function(response) {
-                          showAlert('success', successMessage);
-                      },
-                      error: function(response) {
-                          showAlert('error', errorMessage);
-                      }
-                  });
-              });
-          }
+    document.getElementById("helpForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        fetch("{% url 'help_alert' %}", { // Ensure this is pointing to the correct URL
+            method: "POST",
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                // Show notification
+                notification.classList.remove("hidden");
 
-          handleFormSubmit('#password-change-form', 'Password changed successfully!', 'Failed to change password.');
-          handleFormSubmit('#notification-preferences-form', 'Notification preferences updated!', 'Failed to update preferences.');
+                // Append new submission to the list
+                const newSubmission = document.createElement('div');
+                newSubmission.className = 'submission-item';
+                newSubmission.innerHTML = `
+                    <p><strong>Username:</strong> ${data.request.username}</p>
+                    <p><strong>Need of Help:</strong> ${data.request.need_help}</p>
+                    <p><strong>Description:</strong> ${data.request.description}</p>
+                    <p><strong>Contact Details:</strong> ${data.request.contact_details}</p>
+                    <p><strong>Submitted On:</strong> ${data.request.created_at}</p>
+                `;
+                document.getElementById('submissionList').appendChild(newSubmission);
+                this.reset(); // Reset the form
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            // Optionally show an error notification
+        });
+    });
 
-          // Toggle password visibility
-          const togglePasswordVisibility = (inputId, iconId) => {
-              $(iconId).on('click', function() {
-                  const input = $(inputId);
-                  input.attr('type', input.attr('type') === 'password' ? 'text' : 'password');
-                  $(this).toggleClass('fa-eye fa-eye-slash');
-              });
-          };
-
-          togglePasswordVisibility('#current_password', '#toggleCurrentPassword');
-          togglePasswordVisibility('#new_password', '#toggleNewPassword');
-          togglePasswordVisibility('#confirm_password', '#toggleConfirmPassword');
-      });
-      
-  </script>
+    // Optional: Show notification for a few seconds
+    if (notification) {
+        setTimeout(() => {
+            notification.classList.add("hidden");
+        }, 3000);
+    }
+</script>
 
   
   

@@ -3,32 +3,20 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
+from django.core.files.storage import FileSystemStorage
 from django.core.management.base import BaseCommand
 from .models import (
-    Community,
     Event,
-    UnifiedNight,
-    Activity,
-    Partnership,
-    SupportRequest,
-    Resource,
     Notification,
-    Feedback,
     UserProfile,
-    Poll,
-    ConnectionRequest,
-    DiscussionThread,
-    Comment,
-    ResourceRequest,
-    VolunteerHistory,
-    HelpRequest, 
-    OfferHelp,
-    Thread,
-    VolunteerOpportunity, SignUp, PrayerRequest, Reply, CulturalStory, Charity, InitiativeJoin, Festival,
+    Donation, HelpAlert,  CommunityLeader, SocialIssuesGroup, GroupConversation, Message, Attachment
+
+
  # Import your UserProfile model correctly
 )
 
-from .forms import CommunityForm, EventForm, UserRegistrationForm, PartnershipForm, SupportForm, FeedbackForm, PollForm, ConnectionRequestForm, ProfileUpdateForm, ProfileEditForm, PasswordUpdateForm, NotificationPreferencesForm, ProfilePictureForm, CommunityProfileForm, ThreadForm, VolunteerOpportunityForm, SignUpForm, CulturalStoryForm, CharityForm, InitiativeJoinForm,ContactForm, DonationForm
+from .forms import  EventForm, UserRegistrationForm,  ProfileUpdateForm, ProfileEditForm, PasswordUpdateForm, NotificationPreferencesForm, ProfilePictureForm, DonationForm, CommunityLeaderForm, SocialIssuesGroupForm, GroupConversationForm
+
 
  # Import your forms
 from django.contrib.auth import authenticate, login, logout
@@ -51,6 +39,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from rest_framework import generics
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 from django.http import JsonResponse
 import json
@@ -63,59 +53,29 @@ logger = logging.getLogger(__name__)
 import openai  # Assuming OpenAI API is used for AI-powered features
 import random
 
-def send_otp(email, otp):
-    subject = 'Your OTP Code'
-    message = f'Your OTP code is: {otp}'
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 
-
-def verify_otp(request):
-    if request.method == 'POST':
-        user_otp = request.POST.get('otp')
-        stored_otp = request.session.get('otp')
-        username = request.session.get('username')
-
-        if user_otp and stored_otp and int(user_otp) == int(stored_otp):
-            # If OTP is valid, log the user in
-            user = authenticate(request, username=username)
-            if user:
-                login(request, user)
-                messages.success(request, f'Welcome back, {username}!')
-                del request.session['otp']  # Remove OTP from session
-                del request.session['username']  # Remove username from session
-                return redirect('index')  # Redirect to home
-            else:
-                messages.error(request, 'Authentication failed.')
-        else:
-            messages.error(request, 'Invalid OTP. Please try again.')
-
-    return render(request, 'events/verify_otp.html')
-
-@login_required
 def index(request):
     user_profile = get_object_or_404(UserProfile, user=request.user)
-    communities = Community.objects.all()
-    unified_nights = UnifiedNight.objects.all()
-    events = Event.objects.all()
-    activities = Activity.objects.all()
+    events = Event.objects.all()[:4]
+    leaders = CommunityLeader.objects.all()[:4]
+    groups = SocialIssuesGroup.objects.all()[:4]
+    help_alerts = HelpAlert.objects.all().order_by('-created_at')[:4]  # Optional: Order by creation date
 
     search_query = request.GET.get('search', '')
     if search_query:
-        # Ensure you're filtering events using the correct field
         communities = communities.filter(name__icontains=search_query)
         events = events.filter(title__icontains=search_query)
 
+
     context = {
-        'communities': communities,
-        'unified_nights': unified_nights,
         'events': events,
-        'activities': activities,
-        'search_query': search_query,  # Include the search query in the context
         'user_profile': user_profile,
+        'leaders': leaders,
+        'groups': groups,
+        'help_alerts': help_alerts,
 
     }
     return render(request, 'events/index.html', context)
-
 
 # Authentication Views
 
@@ -206,104 +166,65 @@ def profile(request):
     return render(request, 'profile.html')  # Make sure this template exists
 
  # Ensure only logged-in users can create communities
-@login_required
-def community_list_view(request):
-    communities = Community.objects.all()
-    return render(request, 'events/community_list.html', {'communities': communities})
-
- # Ensure only logged-in users can view community details
-@login_required
-def community_details_view(request, community_id):
-    community = get_object_or_404(Community, id=community_id)
-    events = Event.objects.filter(community=community)
-    return render(request, 'events/community_details.html', {'community': community, 'events': events})
-
- # Ensure only logged-in users can create communities
-@login_required
-def community_create_view(request):
-    if request.method == 'POST':
-        form = CommunityForm(request.POST)
-        if form.is_valid():
-            community = form.save(commit=False)
-            community.created_by = request.user  # Assign the logged-in user
-            community.save()
-            messages.success(request, f'Community "{community.name}" created successfully!')
-            return redirect('interfaith_collaboration', community_id=community.id)
-    else:
-        form = CommunityForm()
-    return render(request, 'events/community_create.html', {'form': form})
-
-def interfaith_collaboration_view(request):
-    community_profiles = Community.objects.filter(is_interfaith=True)  # Adjust filter as needed
-    return render(request, 'events/interfaith_collaboration.html', {'community_profiles': community_profiles})
-
-@login_required
-def create_community_profile(request):
-    if request.method == 'POST':
-        form = CommunityProfileForm(request.POST, request.FILES)
-        if form.is_valid():
-            community = form.save(commit=False)
-            community.save()
-            messages.success(request, f'Community profile for {community.name} has been created successfully.')
-            return redirect('community_list')  # Redirect to the community list after saving
-        else:
-            messages.error(request, 'There was an error creating the community profile. Please try again.')
-    else:
-        form = CommunityProfileForm()
-
-    # Fetch all communities for the dropdown list in the template
-    communities = Community.objects.all()
-
-    return render(request, 'events/community_form.html', {
-        'form': form,
-        'communities': communities,
-    })
-
 # Event Views
 
   # Ensure only logged-in users can view events
-@login_required
+# View to list all events
 def event_list_view(request):
-    events = Event.objects.all()
+    events = Event.objects.all()  # Get all events
     return render(request, 'events/event_list.html', {'events': events})
 
-  # Ensure only logged-in users can view event details
-@login_required
+# View to show event details
 def event_details_view(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
+    event = get_object_or_404(Event, id=event_id)  # Get the event or return 404
     return render(request, 'events/event_details.html', {'event': event})
 
-  # Ensure only logged-in users can create events
-@login_required
+def join_event(request, event_id):
+    # Get the event by ID
+    event = get_object_or_404(Event, id=event_id)
+
+    # Check if there is space for more participants
+    if event.members_count < event.max_participants:
+        # Increment the member count
+        event.members_count += 1
+        event.save()
+        messages.success(request, f'You have successfully joined the event: {event.title}')
+    else:
+        messages.error(request, 'Sorry, this event is full.')
+
+    # Redirect to the event details page or any other page
+    return redirect('event_details', event_id=event.id)
+
+
+# View to create a new event
 def event_create_view(request):
     if request.method == 'POST':
-        form = EventForm(request.POST)
+        form = EventForm(request.POST)  # Create form instance with POST data only
         if form.is_valid():
-            event = form.save(commit=False)
+            event = form.save(commit=False)  # Create event instance but don't save to DB yet
             event.created_by = request.user  # Assign the logged-in user
-            event.save()
-            messages.success(request, f'Event "{event.title}" created successfully!')
-            return redirect('event_detail', event_id=event.id)
+
+            # Ensure image URL is provided if it’s required
+            if not event.image_url:
+                form.add_error('image_url', 'Please provide a valid image URL.')
+            else:
+                try:
+                    event.clean()  # Call the clean method to validate
+                    event.save()  # Save the event to the database
+                    messages.success(request, f'Event "{event.title}" created successfully!')
+                    return redirect('event_list')  # Redirect to event list after creation
+                except ValidationError as e:
+                    form.add_error(None, e)  # Add validation error to form
+                except Exception as e:
+                    messages.error(request, 'An unexpected error occurred. Please try again.')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+
     else:
-        form = EventForm()
-    return render(request, 'events/event_form.html', {'form': form})
+        form = EventForm()  # Create an empty form for GET request
 
-@login_required
-def interfaith_networking(request):
-    # Fetch communities involved in interfaith activities
-    communities = Community.objects.filter(is_interfaith=True)  # Filter communities based on some criteria
-    # Fetch upcoming events related to interfaith networking
-    events = Event.objects.filter(type='interfaith').order_by('date')  # Assuming you have a 'type' field
-
-    context = {
-        'title': 'Interfaith Networking',
-        'description': 'Connect with people from different religious backgrounds to share experiences and insights.',
-        'communities': communities,
-        'events': events,
-    }
-    
-    return render(request, 'events/interfaith_networking.html', context)
-
+    return render(request, 'events/event_form.html', {'form': form})  # Render the form for creating events
+            
 @login_required
 def create_event_view(request):
     communities = Community.objects.all()  # Fetch all communities
@@ -340,502 +261,6 @@ def create_event_view(request):
 
     return render(request, 'events/create_event.html', {'communities': communities})
 
-@login_required
-def partnership_create_view(request):
-    if request.method == 'POST':
-        form = PartnershipForm(request.POST)
-        if form.is_valid():
-            partnership = form.save(commit=False)
-            partnership.created_by = request.user  # Assign the logged-in user
-            partnership.save()
-            messages.success(request, 'Partnership created successfully!')
-            return redirect('partnership_detail', partnership_id=partnership.id)
-    else:
-        form = PartnershipForm()
-    return render(request, 'events/partnership_form.html', {'form': form})
-
-@login_required
-def support_request_view(request):
-    if request.method == 'POST':
-        form = SupportForm(request.POST)
-        if form.is_valid():
-            support_request = form.save(commit=False)
-            support_request.created_by = request.user  # Assign the logged-in user
-            support_request.save()
-            messages.success(request, 'Support request submitted successfully!')
-            return redirect('support_request_detail', support_request_id=support_request.id)
-    else:
-        form = SupportForm()
-    return render(request, 'events/support_request_form.html', {'form': form})
-
-@login_required
-def feedback_view(request):
-    if request.method == 'POST':
-        form = FeedbackForm(request.POST)
-        if form.is_valid():
-            feedback = form.save(commit=False)
-            feedback.user = request.user  # Assign the logged-in user
-            feedback.save()
-            messages.success(request, 'Feedback submitted successfully!')
-            return redirect('index')
-    else:
-        form = FeedbackForm()
-    return render(request, 'events/feedback_form.html', {'form': form})
-
-@login_required
-def community_delete_view(request, community_id):
-    community = get_object_or_404(Community, id=community_id)
-    if request.method == 'POST':
-        community.delete()
-        messages.success(request, 'Community deleted successfully!')
-        return redirect('community_list')  # Adjust the redirect as needed
-    return render(request, 'events/community_confirm_delete.html', {'community': community})
-
-@login_required
-def event_delete_view(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    if request.method == 'POST':
-        event.delete()
-        messages.success(request, 'Event deleted successfully!')
-        return redirect('event_list')  # Adjust the redirect as needed
-    return render(request, 'events/event_confirm_delete.html', {'event': event})
-
-@login_required
-def feedback_list_view(request):
-    feedbacks = Feedback.objects.all()
-    return render(request, 'events/feedback_list.html', {'feedbacks': feedbacks})
-
-@login_required
-def notification_list_view(request):
-    notifications = Notification.objects.filter(user=request.user)  # Adjust as per your notification model
-    return render(request, 'events/notification_list.html', {'notifications': notifications})
-
-@login_required
-def resources_view(request):
-    resources = Resource.objects.all()
-    return render(request, 'events/resources_directory.html', {'resources': resources})
-
-
-from django.views import View
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .models import OfferHelp
-
-# Main view for displaying all help offers
-class OfferHelpView(View):
-    def get(self, request):
-        # Retrieve all previous help offers from the database
-        help_offers = OfferHelp.objects.all()
-        help_offers_count = {
-            'mental_health': help_offers.filter(category='mental_health').count(),
-            'food_assistance': help_offers.filter(category='food_assistance').count(),
-            'shelter_services': help_offers.filter(category='shelter_services').count(),
-            'educational_support': help_offers.filter(category='educational_support').count(),
-        }
-
-        return render(request, 'events/offer_help.html', {
-            'help_offers': help_offers,
-            'help_offers_count': help_offers_count,
-        })
-
-    def post(self, request):
-        # Get form data
-        user_name = request.POST.get('user_name', '').strip()
-        category = request.POST.get('category', '').strip()
-        description = request.POST.get('description', '').strip()
-        email = request.POST.get('email', '').strip()
-
-        # Validate form data
-        if not user_name or not category or not description or not email:
-            messages.error(request, 'All fields are required.')
-            return redirect('offer_help')
-
-        # Save the new offer to the database
-        OfferHelp.objects.create(user_name=user_name, category=category, description=description, email=email)
-
-        # Show success message
-        messages.success(request, 'Your help offer has been submitted successfully!')
-
-        return redirect('offer_help')
-
-
-# Category 1: Mental Health
-class OfferHelpCategory1View(View):
-    def get(self, request):
-        # Query to get all help requests in the 'mental_health' category
-        mental_health_requests = OfferHelp.objects.filter(category='mental_health')
-        
-        # Count of requests in this category
-        mental_health_count = mental_health_requests.count()
-
-        # Prepare context data to pass to the template
-        context = {
-            'mental_health_count': mental_health_count,
-            'mental_health_requests': mental_health_requests,
-        }
-
-        return render(request, 'events/offer_help_category_1.html', context)
-
-
-# Category 2: Food Assistance
-class OfferHelpCategory2View(View):
-    def get(self, request):
-        # Query to get all help requests in the 'food_assistance' category
-        food_assistance_requests = OfferHelp.objects.filter(category='food_assistance')
-        
-        # Count of requests in this category
-        food_assistance_count = food_assistance_requests.count()
-
-        # Prepare context data to pass to the template
-        context = {
-            'food_assistance_count': food_assistance_count,
-            'food_assistance_requests': food_assistance_requests,
-        }
-
-        return render(request, 'events/offer_help_category_2.html', context)
-
-
-# Category 3: Shelter Services
-class OfferHelpCategory3View(View):
-    def get(self, request):
-        # Query to get all help requests in the 'shelter_services' category
-        shelter_services_requests = OfferHelp.objects.filter(category='shelter_services')
-        
-        # Count of requests in this category
-        shelter_services_count = shelter_services_requests.count()
-
-        # Prepare context data to pass to the template
-        context = {
-            'shelter_services_count': shelter_services_count,
-            'shelter_services_requests': shelter_services_requests,
-        }
-
-        return render(request, 'events/offer_help_category_3.html', context)
-
-
-# Category 4: Educational Support
-class OfferHelpCategory4View(View):
-    def get(self, request):
-        # Query to get all help requests in the 'educational_support' category
-        educational_support_requests = OfferHelp.objects.filter(category='educational_support')
-        
-        # Count of requests in this category
-        educational_support_count = educational_support_requests.count()
-
-        # Prepare context data to pass to the template
-        context = {
-            'educational_support_count': educational_support_count,
-            'educational_support_requests': educational_support_requests,
-        }
-
-        return render(request, 'events/offer_help_category_4.html', context)
-
-class RequestHelpView(View):
-    def get(self, request):
-        help_requests = HelpRequest.objects.all()  # Get all help requests
-        help_requests_count = {
-            'mental_health': HelpRequest.objects.filter(category='mental_health').count(),
-            'food_assistance': HelpRequest.objects.filter(category='food_assistance').count(),
-            'shelter_services': HelpRequest.objects.filter(category='shelter_services').count(),
-            'educational_support': HelpRequest.objects.filter(category='educational_support').count(),
-        }
-
-        return render(request, 'events/request_help.html', {
-            'help_requests': help_requests,
-            'help_requests_count': help_requests_count,
-        })
-
-    def post(self, request):
-        # Get form data
-        category = request.POST.get('category', '').strip()
-        description = request.POST.get('description', '').strip()
-        user_name = request.POST.get('user_name', '').strip()
-        email = request.POST.get('email', '').strip()
-
-
-        # Validate the form data
-        if not category or not description or not user_name:
-            messages.error(request, 'All fields are required.')
-            return redirect('request_help')  # Redirect to the same page to display the error
-
-        # Process the form data and save to the database
-        HelpRequest.objects.create(
-            category=category,
-            description=description,
-            user_name=user_name,
-            email=email
-        )
-
-        # Display success message
-        messages.success(request, 'Your help request has been submitted successfully!')
-
-        # Redirect to the same page after successful submission
-        return redirect('request_help')
-
-@login_required
-def update_status(request, request_id):
-    help_request = get_object_or_404(HelpRequest, id=request_id)
-    if request.method == "POST":
-        help_request.status = not help_request.status  # Toggle the status
-        help_request.save()
-        messages.success(request, "Help request status updated.")
-        return redirect('request_help')
-
-    return render(request, 'update_status.html', {'help_request': help_request})
-
-
-def view_request_details(request, request_id):
-    help_request = get_object_or_404(HelpRequest, id=request_id)
-    return render(request, 'request_details.html', {'help_request': help_request})
-
-
-def request_help_view(request):
-    # Get all help requests from the database
-    help_requests = HelpRequest.objects.all()  # Adjust the queryset as necessary
-
-    # Process any form submissions if necessary
-    if request.method == 'POST':
-        # Handle the POST request to create a new help request
-        pass
-
-    # Render the template with the help requests
-    return render(request, 'request_help.html', {
-        'help_requests': help_requests,
-        'help_requests_count': help_requests.count(),  # Pass the total count
-        'messages': get_messages(request),  # If you are using messages framework
-    })
-
-
-def delete_request_view(request, request_id):
-    request_to_delete = get_object_or_404(HelpRequest, id=request_id)
-    request_to_delete.delete()
-    return redirect('request_help')  # Redirect to the request help page or another page after deletion
-
-
-def edit_request_view(request, request_id):
-    request_to_edit = get_object_or_404(HelpRequest, id=request_id)
-    
-    if request.method == 'POST':
-        # Handle form submission and update logic here
-        form = YourForm(request.POST, instance=request_to_edit)  # Replace YourForm with your actual form class
-        if form.is_valid():
-            form.save()
-            return redirect('request_help')
-    else:
-        form = YourForm(instance=request_to_edit)
-
-    return render(request, 'edit_request.html', {'form': form})  # Adjust template name accordingly
-
-        
-class RequestHelpCategory1View(View):
-    def get(self, request):
-        # Query to get all help requests in the 'mental_health' category
-        mental_health_requests = HelpRequest.objects.filter(category='mental_health')
-        
-        # Count of requests in this category
-        mental_health_count = mental_health_requests.count()
-
-        # Prepare context data to pass to the template
-        context = {
-            'mental_health_count': mental_health_count,
-            'mental_health_requests': mental_health_requests,  # Pass the query results
-        }
-
-        return render(request, 'events/request_help_category_1.html', context)
-
-
-
-class RequestHelpCategory2View(View):
-    def get(self, request):
-        # Query to get all help requests in the 'food_assistance' category
-        food_assistance_requests = HelpRequest.objects.filter(category='food_assistance')
-        
-        # Count of requests in this category
-        food_assistance_count = food_assistance_requests.count()
-
-        # Prepare context data to pass to the template
-        context = {
-            'food_assistance_count': food_assistance_count,
-            'food_assistance_requests': food_assistance_requests,  # Pass the query results
-        }
-
-        return render(request, 'events/request_help_category_2.html', context)
-
-
-class RequestHelpCategory3View(View):
-    def get(self, request):
-        # Query to get all help requests in the 'shelter_services' category
-        shelter_services_requests = HelpRequest.objects.filter(category='shelter_services')
-        
-        # Count of requests in this category
-        shelter_services_count = shelter_services_requests.count()
-
-        # Prepare context data to pass to the template
-        context = {
-            'shelter_services_count': shelter_services_count,
-            'shelter_services_requests': shelter_services_requests,  # Pass the query results
-        }
-
-        return render(request, 'events/request_help_category_3.html', context)
-
-
-
-
-class RequestHelpCategory4View(View):
-    def get(self, request):
-        # Query to get all help requests in the 'educational_support' category
-        educational_support_requests = HelpRequest.objects.filter(category='educational_support')
-        
-        # Count of requests in this category
-        educational_support_count = educational_support_requests.count()
-
-        # Prepare context data to pass to the template
-        context = {
-            'educational_support_count': educational_support_count,
-            'educational_support_requests': educational_support_requests,  # Pass the query results
-        }
-
-        return render(request, 'events/request_help_category_4.html', context)
-
-@login_required
-def community_networking(request):
-    # Retrieve all users in the community excluding the current user
-    try:
-        users = UserProfile.objects.exclude(user=request.user)
-    except UserProfile.DoesNotExist:
-        users = []  # Handle case if no UserProfiles are found
-
-    # Retrieve all discussion threads
-    threads = Thread.objects.all()  # Assuming you have a Thread model defined
-
-    if request.method == "POST":
-        # Handle connection request
-        connection_request_form = ConnectionRequestForm(request.POST, user=request.user)  # Pass the user here
-        if connection_request_form.is_valid():
-            connection_request_form.save()
-            return redirect('community_networking')
-
-    # Instantiate form if request is not POST, also pass the user
-    connection_request_form = ConnectionRequestForm(user=request.user)  # Pass the user here
-
-    # Pass necessary context to the template
-    context = {
-        'users': users,
-        'threads': threads,  # Add threads to the context
-        'connection_request_form': connection_request_form,
-    }
-
-    return render(request, 'events/community_networking.html', context)
-@login_required
-def search_users(request):
-    if 'q' in request.GET:
-        query = request.GET['q']
-        users = UserProfile.objects.filter(user__username__icontains=query)
-        return render(request, 'search_results.html', {'users': users})
-    return JsonResponse([], safe=False)
-
-@login_required
-def create_poll(request):
-    if request.method == "POST":
-        form = PollForm(request.POST)
-        if form.is_valid():
-            poll = form.save(commit=False)
-            poll.creator = request.user
-            poll.save()
-            return redirect('community_networking')
-
-    form = PollForm()
-    return render(request, 'create_poll.html', {'form': form})
-
-@login_required
-def respond_to_poll(request, poll_id):
-    poll = get_object_or_404(Poll, id=poll_id)
-    if request.method == "POST":
-        # Handle poll response (e.g., saving the user's vote)
-        response = request.POST.get('response')
-        poll.votes.create(user=request.user, response=response)
-        return redirect('community_networking')
-
-    return render(request, 'respond_to_poll.html', {'poll': poll})
-
-@login_required
-def send_connection_request(request, user_id):
-    if request.method == "POST":
-        user_to_connect = get_object_or_404(UserProfile, id=user_id)
-        connection_request = ConnectionRequest(sender=request.user, receiver=user_to_connect.user)
-        connection_request.save()
-        return JsonResponse({'success': True})
-
-    return JsonResponse({'success': False}, status=400)
-
-# View for the discussion forums page
-@login_required
-def discussion_forums(request):
-    threads = DiscussionThread.objects.all()
-    return render(request, 'events/discussion_forums.html', {'threads': threads})
-
-# View for creating a new discussion thread
-@login_required
-def create_thread(request):
-    if request.method == 'POST':
-        form = ThreadForm(request.POST)
-        if form.is_valid():
-            thread = form.save(commit=False)
-            thread.author = request.user  # Set the author to the current user
-            thread.save()
-            return redirect('view_thread', thread_id=thread.id)  # Redirect to the thread's detail page
-    else:
-        form = ThreadForm()
-    return render(request, 'create_thread.html', {'form': form})
-
-  # Ensure the user is logged in
-@login_required
-def view_thread(request, thread_id):
-    thread = get_object_or_404(Thread, id=thread_id)
-    comments = thread.comments.all()  # Get all comments related to the thread
-
-    if request.method == 'POST':
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            comment.thread = thread  # Associate comment with the thread
-            comment.author = request.user  # Set the author to the current user
-            comment.save()
-            return redirect('view_thread', thread_id=thread.id)  # Redirect to the thread's detail page
-    else:
-        comment_form = CommentForm()
-
-    return render(request, 'view_thread.html', {
-        'thread': thread,
-        'comments': comments,
-        'comment_form': comment_form,
-    })
-
-  # Ensure the user is logged in
-@login_required
-def add_comment(request):
-    if request.method == 'POST':
-        thread_id = request.POST.get('thread_id')
-        thread = get_object_or_404(Thread, id=thread_id)  # Handle thread not found
-        comment_form = CommentForm(request.POST)
-
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            comment.thread = thread
-            comment.author = request.user  # Set the author to the current user
-            comment.save()
-            return JsonResponse({'status': 'success'})
-    return JsonResponse({'status': 'fail'})
-
-  # Ensure the user is logged in
-def request_resource(request):
-    if request.method == 'POST':
-        resource_name = request.POST.get('resource_name')
-        resource_details = request.POST.get('resource_details')
-        new_request = ResourceRequest(name=resource_name, details=resource_details)
-        new_request.save()
-        return JsonResponse({'status': 'success'})
-    return JsonResponse({'status': 'fail'})
 
 @login_required
 def profile_edit(request):
@@ -950,104 +375,57 @@ def delete_notification(request, notification_id):
         return JsonResponse({'status': 'error', 'message': 'Notification not found'}, status=404)
 
 
+@login_required
 def settings_view(request):
-    user = request.user
-    profile, created = UserProfile.objects.get_or_create(user=user)
-    user_profile = get_object_or_404(UserProfile, user=request.user)
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    # Initialize forms for rendering
+    password_form = PasswordChangeForm(request.user)
+    notification_form = NotificationPreferencesForm(instance=user_profile)
 
     if request.method == 'POST':
-        # Check if the request is for account deletion
-        if 'delete_account' in request.POST:
-            user.delete()
-            messages.success(request, 'Your account has been deleted.')
-            return redirect('index')  # Redirect to the home page after deletion
+        # Check which form was submitted based on a specific identifier
+        if 'change_password' in request.POST:
+            password_form = PasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)  # Keep the user logged in
+                messages.success(request, 'Password changed successfully!')
+                return redirect('settings')  # Redirect to refresh the page
+            else:
+                # Collect all error messages from the password change form
+                for error in password_form.errors.values():
+                    messages.error(request, ' '.join(error))
 
-        # Handle profile update
-        profile_form = ProfileEditForm(request.POST, instance=profile)
-        profile_picture_form = ProfilePictureForm(request.POST, request.FILES, instance=profile)
-        notification_form = NotificationPreferencesForm(request.POST)
+        elif 'update_notifications' in request.POST:
+            notification_form = NotificationPreferencesForm(request.POST, instance=user_profile)
+            if notification_form.is_valid():
+                # Check if SMS notifications are enabled and if the phone number is provided
+                if notification_form.cleaned_data['sms_notifications'] and not notification_form.cleaned_data['phone_number']:
+                    messages.error(request, 'Please add a phone number to receive SMS notifications.')
+                else:
+                    notification_form.save()
+                    messages.success(request, 'Notification preferences updated!')
+                    return redirect('settings')  # Redirect to refresh the page
+            else:
+                # Collect all error messages from the notification preferences form
+                for error in notification_form.errors.values():
+                    messages.error(request, ' '.join(error))
 
-        if profile_form.is_valid() and profile_picture_form.is_valid() and notification_form.is_valid():
-            profile_form.save()
-            profile_picture_form.save()
-            notification_form.save(user=user)  # Pass user when saving notification preferences
-
-            messages.success(request, 'Profile updated successfully.')
-            return redirect('settings')  # Redirect to the settings page after updating
-
-    else:
-        profile_form = ProfileEditForm(instance=profile)
-        profile_picture_form = ProfilePictureForm(instance=profile)
-        notification_form = NotificationPreferencesForm(initial={
-            'email_notifications': profile.email_notifications,
-            'sms_notifications': profile.sms_notifications,
-            'push_notifications': profile.push_notifications,
-        })
-
-    context = {
-        'user': user,
-        'profile_form': profile_form,
-        'profile_picture_form': profile_picture_form,
-        'notification_form': notification_form,
+    # Render the settings page with the forms
+    return render(request, 'events/settings.html', {
         'user_profile': user_profile,
-
-    }
-    return render(request, 'events/settings.html', context)
-
-
-def volunteer_opportunities(request):
-    opportunities = VolunteerOpportunity.objects.all()
-
-    # Handle Add Opportunity Form
-    if request.method == 'POST' and 'add_opportunity' in request.POST:
-        add_form = VolunteerOpportunityForm(request.POST)
-        if add_form.is_valid():
-            add_form.save()
-            return redirect('opportunities_list')
-    else:
-        add_form = VolunteerOpportunityForm()
-
-    # Handle Feedback Form
-    if request.method == 'POST' and 'feedback' in request.POST:
-        # Process feedback form logic here
-        return JsonResponse({'success': True})
-
-    # Initialize SignUpForm for rendering
-    sign_up_form = SignUpForm()
-
-    return render(request, 'events/volunteer_opportunities.html', {
-        'opportunities': opportunities,
-        'add_form': add_form,
-        'sign_up_form': sign_up_form,
+        'password_form': password_form,
+        'notification_form': notification_form
     })
 
-def sign_up(request, opportunity_id):
-    opportunity = get_object_or_404(VolunteerOpportunity, id=opportunity_id)
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            signup = form.save(commit=False)
-            signup.opportunity = opportunity
-            signup.save()
-            opportunity.attendees += 1
-            opportunity.save()
-            return JsonResponse({'success': True})
-    else:
-        form = SignUpForm()
-
-    return render(request, 'volunteer/sign_up.html', {
-        'form': form, 
-        'opportunity': opportunity
-    })
 
 @login_required
 def profile_view(request):
     user_profile = get_object_or_404(UserProfile, user=request.user)
-    volunteer_history = VolunteerHistory.objects.filter(user=request.user).order_by('-date')
 
     context = {
         'user_profile': user_profile,
-        'volunteer_history': volunteer_history,
     }
 
     return render(request, 'events/profile.html', context)
@@ -1057,341 +435,248 @@ def profile_view(request):
 
 
 # View for adding an activity
-@login_required
-def add_activity(request):
+# Function to validate UPI ID format
+def validate_upi(upi_id):
+    return re.match(r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+$', upi_id)
+
+@login_required  # Ensure the user is logged in
+def donation_page(request):
     if request.method == 'POST':
-        form = ActivityForm(request.POST)
+        form = DonationForm(request.POST, request.FILES)
+
         if form.is_valid():
-            activity = form.save(commit=False)
-            activity.user = request.user
-            activity.save()
-            return redirect('profile_view')
+            payment_method = form.cleaned_data['payment_method']
+            payment_details = form.cleaned_data['payment_details']
+
+            # Validate UPI ID format if payment method is UPI
+            if payment_method == 'upi' and not validate_upi(payment_details):
+                return JsonResponse({'success': False, 'message': 'Invalid UPI ID format.'}, status=400)
+
+            # Handle identity proof file upload securely
+            identity_proof = request.FILES.get('identity_proof')
+            if identity_proof:
+                fs = FileSystemStorage()
+                filename = fs.save(identity_proof.name, identity_proof)
+                uploaded_file_url = fs.url(filename)
+
+                # Create the donation request instance
+                donation = Donation(
+                    name=form.cleaned_data['name'],
+                    email=form.cleaned_data['email'],
+                    phone_number=form.cleaned_data['phone_number'],
+                    street_address=form.cleaned_data['street_address'],
+                    city=form.cleaned_data['city'],
+                    state=form.cleaned_data['state'],
+                    zip_code=form.cleaned_data['zip_code'],
+                    payment_method=payment_method,
+                    payment_details=payment_details,
+                    identity_proof=uploaded_file_url,
+                    user=request.user,  # Associate with authenticated user
+                    status='pending'
+                )
+                donation.save()  # Save the donation request to the database
+
+                # Respond with success message and donation ID for AJAX
+                return JsonResponse({'success': True, 'message': 'Donation request submitted successfully!', 'donation_id': donation.id})
+
+            else:
+                return JsonResponse({'success': False, 'message': 'Please upload an identity proof.'}, status=400)
+
     else:
-        form = ActivityForm()
-    return render(request, 'add_activity.html', {'form': form})
+        form = DonationForm()
 
-# View for listing resources
-def resource_list(request):
-    resources = Resource.objects.all()
-    return render(request, 'events/resource_details.html', {'resources': resources})
-
-# View for adding a resource
-@login_required
-def add_resource(request):
-    if request.method == 'POST':
-        form = ResourceForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('resource_details')
-    else:
-        form = ResourceForm()
-    return render(request, 'events/resource_directory.html', {'form': form})
-
-# Example of a view for enabling 2FA (if you decide to implement it)
-@login_required
-def enable_2fa(request):
-    user_profile = get_object_or_404(UserProfile, user=request.user)
-    if request.method == 'POST':
-        user_profile.is_2fa_enabled = True
-        user_profile.save()
-        return redirect('profile_view')
-    return render(request, 'enable_2fa.html', {'user_profile': user_profile})
-
-
-def shared_prayer_requests(request):
-    return render(request, 'events/shared_prayer_requests.html')  # Adjust the template name as needed
-
-@csrf_exempt  # Remove this in production for security
-def submit_prayer(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            prayer_request = PrayerRequest.objects.create(
-                prayer_message=data.get('message'),  # Adjust to match your AJAX data
-                faith_tradition=data.get('faith_tradition'),  # Adjust to match your AJAX data
-                language=data.get('language'),
-                is_anonymous=data.get('is_anonymous')  # Adjust to match your AJAX data
-            )
-            logger.info(f"Prayer created successfully: {prayer_request.id}")
-            return JsonResponse({'status': 'success', 'prayer_id': prayer_request.id})
-
-        except json.JSONDecodeError:
-            logger.error("Invalid JSON format in the request body.")
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
-        except Exception as e:
-            logger.error(f"Error submitting prayer: {str(e)}")
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
-
-# View to retrieve all prayer requests
-def prayer_feed(request):
-    if request.method == 'GET':
-        try:
-            prayers = PrayerRequest.objects.all().order_by('-created_at')
-            prayers_data = [
-                {
-                    'name': prayer.name if not prayer.is_anonymous else 'Anonymous',
-                    'message': prayer.prayer_message,
-                    'faith_tradition': prayer.faith_tradition,
-                }
-                for prayer in prayers
-            ]
-            return JsonResponse({'prayers': prayers_data}, status=200)
-
-        except Exception as e:
-            logger.error(f"Error retrieving prayers: {str(e)}")
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
-
-@csrf_exempt  # Remove in production for security
-def submit_reply(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            prayer_id = data.get('prayer_id')
-            reply_message = data.get('reply')  # Ensure this matches your AJAX data
-
-            # Validate input
-            if not prayer_id:
-                return JsonResponse({'status': 'error', 'message': 'Prayer ID is required'}, status=400)
-            if not reply_message:
-                return JsonResponse({'status': 'error', 'message': 'Reply message is required'}, status=400)
-
-            # Retrieve the prayer request
-            try:
-                prayer_request = PrayerRequest.objects.get(id=prayer_id)
-            except PrayerRequest.DoesNotExist:
-                return JsonResponse({'status': 'error', 'message': 'Prayer request not found'}, status=404)
-
-            # Create the reply
-            reply = Reply.objects.create(
-                prayer_request=prayer_request,
-                message=reply_message
-            )
-            logger.info(f"Reply created successfully: {reply.id} for prayer ID: {prayer_id}")
-
-            return JsonResponse({'status': 'success', 'reply_id': reply.id}, status=201)
-
-        except json.JSONDecodeError:
-            logger.error("Invalid JSON format in the request body.")
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
-        except Exception as e:
-            logger.error(f"Error sending reply: {str(e)}")
-            return JsonResponse({'status': 'error', 'message': 'An unexpected error occurred'}, status=500)
-
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+    # Render the donation form for GET requests
+    return render(request, 'events/donation_page.html', {'form': form})
 
 @login_required
-def gamification_elements_view(request):
-    # Get the leaderboard sorted by points in descending order
-    leaderboard = UserProfile.objects.order_by('-points')[:10]  # Top 10 users
-    # Retrieve achievements/badges for the logged-in user
-    user_profile = UserProfile.objects.get(user=request.user)
+def donation_success(request, donation_id):
+    try:
+        donation = Donation.objects.get(id=donation_id)  # Retrieve the donation request details
+    except Donation.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Donation request not found.'}, status=404)
 
-    # You can add any specific achievements or badges logic here
-    achievements = []  # Populate this list based on your logic
+    return render(request, 'events\donation_success.html', {'donation': donation})  # Render a success template with donation request details
 
-    return render(request, 'events\gamification_elements.html', {
-        'leaderboard': leaderboard,
-        'user_profile': user_profile,
-        'achievements': achievements,  # This should contain the user's achievements
-    })
-
-def share_culture(request):
-    thank_you = False
-    if request.method == 'POST':
-        form = CulturalStoryForm(request.POST, request.FILES)
-        if form.is_valid():
-            story = form.save(commit=False)
-            story.is_approved = False  # Story needs admin approval
-            story.save()
-            thank_you = True  # Indicate that the user should see a thank-you message
-    else:
-        form = CulturalStoryForm()
-
-    # Get all stories (both approved and unapproved)
-    stories = CulturalStory.objects.all()  # Modify if you want to filter differently
-
-    return render(request, 'events/cultural_exchange.html', {
-        'form': form,
-        'stories': stories,
-        'thank_you': thank_you
-    })
-
-def list_cultural_stories(request):
-    # Only show approved stories
-    stories = CulturalStory.objects.filter(is_approved=True)
-    return render(request, 'cultural_stories.html', {'stories': stories})
-
-def thank_you(request):
-    return render(request, 'thank_you.html')
-
-def admin_approve_story(request, story_id):
-    story = get_object_or_404(CulturalStory, id=story_id)
-    story.is_approved = True
-    story.save()
-    return render(request, 'approval_success.html', {'story': story})
+@login_required
+def donation_list(request):
+    donations = Donation.objects.filter(user=request.user)  # Fetch donation requests for the logged-in user
+    return render(request, 'events\donation_list.html', {'donations': donations})  # Render the donation list template
 
 # View to handle all charitable initiatives
-@login_required
-def charitable_initiatives(request, user_id):
-    user_profile = get_object_or_404(UserProfile, id=user_id)
-    charities = Charity.objects.all()
-    contact_form = ContactForm()
-    donation_form = DonationForm()
+
+@csrf_exempt  # Only if you are sure about CSRF token handling
+def help_alert(request):
+    if request.method == "POST":
+        # Handle form submission, including image upload
+        image = request.FILES.get('image')  # Retrieve the uploaded image
+        help_request = HelpAlert.objects.create(  # Corrected model name
+            username=request.POST['username'],
+            need_help=request.POST['needHelp'],
+            description=request.POST['description'],
+            contact_details=request.POST['contactDetails'],
+            image=image  # Make sure the image file is included
+        )
+        
+        # Return JSON response with the new help request data
+        return JsonResponse({
+            'status': 'success',
+            'request': {
+                'username': help_request.username,
+                'need_help': help_request.need_help,
+                'description': help_request.description,
+                'contact_details': help_request.contact_details,
+                'created_at': help_request.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                'image_url': help_request.image.url if help_request.image else None  # Provide image URL if available
+            }
+        })
+
+    # For GET requests, render the existing help requests
+    help_requests = HelpAlert.objects.all()  # Ensure the correct model is used
+    return render(request, 'events/help_alert.html', {'help_requests': help_requests})
+
+# Display a specific help alert's details
+def help_alert_details(request, id):
+    help_alert = get_object_or_404(HelpAlert, id=id)  # Get the specific help alert or 404 if not found
+    context = {
+        'help_alert': help_alert
+    }
+    return render(request, 'events/help_alert_deatils.html', context)  # Corrected template name
+
+
+
+
+def submit_help_alert(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data['username']
+        need_help = data['needHelp']
+        description = data['description']
+        contact_details = data['contactDetails']
+
+        # Create a new help request
+        help_alert = HelpAlert.objects.create(
+            username=username,
+            need_help=need_help,
+            description=description,
+            contact_details=contact_details
+        )
+
+        # Create notification message
+        notification_message = f"{username} needs help: {need_help}. Description: {description}."
+
+        # Notify other users
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            'notifications_group',  # Same group name used in the consumer
+            {
+                'type': 'send_notification',
+                'message': notification_message
+            }
+        )
+
+        return JsonResponse({'status': 'success', 'message': 'Help Alert submitted.'})
+    
+    return JsonResponse({'status': 'error', 'message': 'Invalid request.'}, status=400)
+
+# Function to generate a unique identity symbol
+def generate_identity_symbol(name, prefix="LEADER_"):
+    """
+    Generates an identity symbol for a community leader.
+    The identity symbol will be the prefix followed by the leader's name formatted as uppercase
+    and with spaces replaced by underscores. If the name is not provided, a default symbol is returned.
+    """
+    if not name:  # Return a default symbol if no name is provided
+        return "LEADER_DEFAULT"
+    
+    base_symbol = name.replace(" ", "_").upper()  # Format the name
+    return f"{prefix}{base_symbol}"
+
+# View for listing community leaders
+def community_leaders_list(request):
+    leaders = CommunityLeader.objects.all()  # Fetch all leaders
+    return render(request, 'events/community_leaders_list.html', {'leaders': leaders})
+
+# View for creating a new leader
+def create_community_leader(request):
+    if request.method == 'POST':
+        form = CommunityLeaderForm(request.POST)
+        if form.is_valid():  # Validate form data
+            form.save()  # Save data to the database
+            return redirect('community_leaders_list')
+    else:
+        form = CommunityLeaderForm()
+    return render(request, 'events/create_community_leader.html', {'form': form})
+
+# View for leader details
+def community_leader_detail(request, identity_symbol):
+    leader = get_object_or_404(CommunityLeader, identity_symbol=identity_symbol)
+    return render(request, 'events/community_leader_detail.html', {'leader': leader})
+
+# View for listing social issues groups
+def social_issues_groups_list(request):
+    groups = SocialIssuesGroup.objects.all()  # Fetch all groups
+    return render(request, 'events/social_issues_groups_list.html', {'groups': groups})
+
+# View for creating a new discussion group
+def create_social_issues_group(request):
+    if request.method == 'POST':
+        form = SocialIssuesGroupForm(request.POST)
+        if form.is_valid():  # Validate form data
+            form.save()  # Save data to the database
+            return redirect('social_issues_groups_list')
+    else:
+        form = SocialIssuesGroupForm()
+    return render(request, 'events/create_social_issues_group.html', {'form': form})
+
+# View for group conversation details
+def group_conversation_detail(request, group_id):
+    # Fetch the group and related conversations
+    group = get_object_or_404(SocialIssuesGroup, id=group_id)
+    conversations = group.conversations.all()
+    user_profile = request.user.userprofile
 
     if request.method == 'POST':
-        # Handle new charity creation
-        if 'create_charity' in request.POST:
-            charity_name = request.POST.get('charity_name')
-            charity_description = request.POST.get('charity_description')
-            charity_location = request.POST.get('charity_location')
-            founder_name = request.POST.get('founder_name')
-            founder_email = request.POST.get('founder_email')
+        form = GroupConversationForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Save the conversation with additional fields
+            conversation = form.save(commit=False)
+            conversation.group = group
+            conversation.user_profile = user_profile
+            conversation.save()
 
-            # Simple validation before saving to the database
-            if not all([charity_name, charity_description, charity_location, founder_name, founder_email]):
-                return JsonResponse({'success': False, 'message': 'All fields are required.'}, status=400)
+            # Handle attachments if uploaded
+            attachments = request.FILES.getlist('attachment')
+            if attachments:
+                for file in attachments:
+                    Attachment.objects.create(conversation=conversation, file=file)
 
-            # Create the new Charity
-            charity = Charity.objects.create(
-                name=charity_name,
-                description=charity_description,
-                location=charity_location,
-                founder_name=founder_name,
-                founder_email=founder_email
-            )
-            return JsonResponse({'success': True, 'message': 'Charity created successfully!'})
-
-        # Handle linking charity to user profile
-        elif 'link_charity' in request.POST:
-            charity_id = request.POST.get('initiative')
-            charity = get_object_or_404(Charity, id=charity_id)
-
-            # Link the charity to the user's profile
-            user_profile.initiative = charity
-            user_profile.save()
-            return JsonResponse({'success': True, 'message': 'Charity linked successfully!'})
-
-        # Handle joining initiatives
-        elif 'join_initiative' in request.POST:
-            name = request.POST.get('name')
-            email = request.POST.get('email')
-            message = request.POST.get('message')
-
-            # Basic validation for joining an initiative
-            if not all([name, email, message]):
-                return JsonResponse({'success': False, 'message': 'Please fill out all the fields.'}, status=400)
-
-            # Save join request in the Contact model
-            Contact.objects.create(
-                name=name,
-                email=email,
-                message=message,
-                initiative=user_profile.initiative
-            )
-            return JsonResponse({'success': True, 'message': f'Thank you for joining! {name}'})
-
-        # Handle donations
-        elif 'make_donation' in request.POST:
-            donation_form = DonationForm(request.POST)
-            if donation_form.is_valid():
-                donation_form.save()
-                return JsonResponse({'success': True, 'message': 'Donation made successfully!'})
-            else:
-                return JsonResponse({'success': False, 'message': 'Please correct the errors in the donation form.'}, status=400)
-
-    # Handle GET request, return the forms and existing charities
+            messages.success(request, 'Your message has been sent successfully!')
+            return redirect('group_conversation_detail', group_id=group.id)
+        else:
+            messages.error(request, 'There was an error sending your message. Please try again.')
     else:
-        form = CharityForm()
+        form = GroupConversationForm()
 
-    return render(request, 'events/charitable_initiatives.html', {
-        'charities': charities,
-        'form': form,
-        'contact_form': contact_form,
-        'donation_form': donation_form,
-        'user_profile': user_profile
+    # Render the conversation page with form and data
+    return render(request, 'events/group_conversation_detail.html', {
+        'group': group,
+        'conversations': conversations,
+        'form': form
     })
 
-# View to add a new charity (via POST request)
-@csrf_exempt  # For testing purposes; ensure proper CSRF handling in production
-def add_charity(request):
+def send_message(request, leader_id):
     if request.method == 'POST':
-        charity_name = request.POST.get('name')
-        charity_description = request.POST.get('description')
-        charity_location = request.POST.get('location')
-        founder_name = request.POST.get('founder')
-        founder_email = request.POST.get('founder_email')
+        message_content = request.POST.get('message')  # Get the message content from the request
+        leader = get_object_or_404(CommunityLeader, id=leader_id)  # Get the community leader instance
 
-        # Validate that all required fields are provided
-        if not all([charity_name, charity_description, charity_location, founder_name, founder_email]):
-            return JsonResponse({'success': False, 'message': 'All fields are required.'}, status=400)
+        # Create a new message
+        Message.objects.create(content=message_content, leader=leader, sender=request.user)  # Set the sender to the current user
 
-        # Create and save the new Charity
-        charity = Charity.objects.create(
-            name=charity_name,
-            description=charity_description,
-            location=charity_location,
-            founder_name=founder_name,
-            founder_email=founder_email
-        )
+        # Add a success message
+        messages.success(request, 'Message sent successfully!')  # Add success message
 
-        return JsonResponse({'success': True, 'message': 'Charity added successfully!'})
+        # Return a success response
+        return JsonResponse({'success': True, 'message': 'Message sent successfully!'})
 
-    return JsonResponse({'success': False, 'message': 'Invalid request method. Use POST to add charity.'}, status=400)
+    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
 
-# View to handle joining a charitable initiative
-@login_required
-def join_initiative(request, user_id):
-    user_profile = get_object_or_404(UserProfile, id=user_id)
-    
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        message = request.POST.get('message')
-
-        # Basic validation
-        if not all([name, email, message]):
-            return JsonResponse({'success': False, 'message': 'Please fill out all the fields.'}, status=400)
-
-        # Save the join request in the Contact model
-        Contact.objects.create(
-            name=name,
-            email=email,
-            message=message,
-            initiative=user_profile.initiative
-        )
-        return JsonResponse({'success': True, 'message': f'Thank you for joining! {name}'})
-    
-    return JsonResponse({'success': False, 'message': 'Invalid request method. Use POST to join an initiative.'}, status=400)
-
-# Contact Form handling to save and store user data
-@login_required
-def contact_and_save(request):
-    if request.method == 'POST':
-        contact_form = ContactForm(request.POST)
-
-        if contact_form.is_valid():
-            contact_form.save()  # Save the contact details in the database
-            return JsonResponse({'success': True, 'message': 'Contact information saved successfully!'})
-        else:
-            return JsonResponse({'success': False, 'message': 'Invalid form data.'}, status=400)
-
-    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
-
-@login_required
-def interactive_maps(request):
-    events = Event.objects.all()  # Fetch all events from the database
-    return render(request, 'events/interactive_maps.html', {'events': events})
-
-class DiversityCelebrationsView(View):
-    def get(self, request):
-        # You can pass context data to your template if needed
-        context = {
-            # Add any data you want to pass to the template here
-            'title': 'Diversity Celebrations',
-            # You can add more context variables if needed
-        }
-        return render(request, 'events\diversity_celebrations.html', context)  # Replace with your actual template name

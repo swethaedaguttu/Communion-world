@@ -4,57 +4,30 @@ from events.views import (
     register,
     user_login,
     user_logout,
-    community_list_view,
-    community_details_view,
-    community_create_view,
     event_list_view,
-    event_details_view,
     event_create_view,
-    interfaith_networking,
+    event_details_view,
+    join_event,
     CustomLoginView,
     about_us,
     contact,
-    OfferHelpView,
-    OfferHelpCategory1View,
-    OfferHelpCategory2View,
-    OfferHelpCategory3View,
-    OfferHelpCategory4View,
-    RequestHelpView,
-    RequestHelpCategory1View,
-    RequestHelpCategory2View,
-    RequestHelpCategory3View,
-    RequestHelpCategory4View,
-    community_networking,
-    search_users,
-    create_poll,
-    respond_to_poll,
-    send_connection_request,
-    discussion_forums,
-    create_thread,
-    add_comment,
-    request_resource,
+    help_alert,
+    profile_view,
     profile_edit,
+    submit_help_alert,
     notification_center,
     mark_as_read,
     delete_notification,
     settings_view,
-    delete_request_view,
-    edit_request_view,
-    create_community_profile,
-    view_thread, volunteer_opportunities, sign_up, profile_view,
-    add_activity,
-    resource_list,
-    add_resource,
-    enable_2fa,
     update_profile_picture, 
     update_personal_info,
-    shared_prayer_requests,
-    submit_prayer, 
-    prayer_feed,
-    submit_reply, gamification_elements_view, share_culture, list_cultural_stories, thank_you, admin_approve_story,
-    charitable_initiatives, add_charity, join_initiative,
-    contact_and_save, resources_view, interactive_maps, DiversityCelebrationsView, interfaith_collaboration_view,
-
+    community_leaders_list,
+    create_community_leader,
+    community_leader_detail,
+    social_issues_groups_list,
+    create_social_issues_group,
+    group_conversation_detail,
+    donation_page, donation_success, donation_list, send_message, help_alert_details, 
 
 )
 
@@ -65,77 +38,43 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('login/', CustomLoginView.as_view(), name='login'),  # Keep the login path here
     path('logout/', user_logout, name='logout'),
-    path('communities/', community_list_view, name='community_list'),
-    path('communities/<int:community_id>/', community_details_view, name='community_details'),
-    path('communities/create/', community_create_view, name='community_create'),
-    path('create-community/', create_community_profile, name='community_form'),
     path('events/', event_list_view, name='event_list'),
-    path('events/<int:event_id>/', event_details_view, name='event_details'),
+    path('event/<int:event_id>/', event_details_view, name='event_details'),
     path('events/create/', event_create_view, name='event_create'),
-    path('interfaith_networking/', interfaith_networking, name='interfaith_networking'),
     path('about/', about_us, name='about_us'),
     path('contact/', contact, name='contact'),
-    path('offer_help/', OfferHelpView.as_view(), name='offer_help'),
-    path('request_help/', RequestHelpView.as_view(), name='request_help'),
-    path('offer-help/mental-health/', OfferHelpCategory1View.as_view(), name='offer_help_category_1'),
-    path('offer-help/food-assistance/', OfferHelpCategory2View.as_view(), name='offer_help_category_2'),
-    path('offer-help/shelter-services/', OfferHelpCategory3View.as_view(), name='offer_help_category_3'),
-    path('offer-help/educational-support/', OfferHelpCategory4View.as_view(), name='offer_help_category_4'),
-    path('offer_help/submit/', OfferHelpView.as_view(), name='offer_help_submit'),
-    path('request_help_category_1/', RequestHelpCategory1View.as_view(), name='request_help_category_1'),
-    path('request-help/category-2/', RequestHelpCategory2View.as_view(), name='request_help_category_2'),
-    path('request-help/category-3/', RequestHelpCategory3View.as_view(), name='request_help_category_3'),
-    path('request-help/category-4/', RequestHelpCategory4View.as_view(), name='request_help_category_4'),
-    path('request_help/submit/', RequestHelpView.as_view(), name='request_help_submit'),
-    path('community/', community_networking, name='community_networking'),
-    path('search/', search_users, name='search_users'),
-    path('poll/create/', create_poll, name='create_poll'),
-    path('poll/respond/<int:poll_id>/', respond_to_poll, name='respond_to_poll'),
-    path('connect/<int:user_id>/', send_connection_request, name='send_connection_request'),
-    path('forums/', discussion_forums, name='discussion_forums'),
-    path('forums/create_thread/', create_thread, name='create_thread'),
-    path('forums/add_comment/', add_comment, name='add_comment'),
-    path('forums/request_resource/', request_resource, name='request_resource'),
     path('profile/edit/', profile_edit, name='profile_edit'),
     path('notifications/', notification_center, name='notification_center'),
     path('notifications/mark_as_read/<int:notification_id>/', mark_as_read, name='mark_as_read'),
     path('notifications/delete/<int:notification_id>/', delete_notification, name='delete_notification'),
     path('settings/', settings_view, name='settings'),
-    path('delete_request/<int:request_id>/', delete_request_view, name='delete_request'),
-    path('edit_request/<int:request_id>/', edit_request_view, name='edit_request'),
-    path('thread/<int:thread_id>/', view_thread, name='view_thread'),
-    path('create-thread/', create_thread, name='create_thread'),
-    path('events/thread/<int:thread_id>/', view_thread, name='view_thread'),
-    path('events/thread/<int:thread_id>/add_comment/', add_comment, name='add_comment'),
-    path('volunteer-opportunities/', volunteer_opportunities, name='volunteer_opportunities'),
-    path('sign-up/<int:opportunity_id>/', sign_up, name='sign_up'),  # Sign-up page for a specific opportunity
     path('profile/', profile_view, name='profile_view'),  # View user profile
-    path('activity/add/', add_activity, name='add_activity'),  # Add an activity
-    path('resources/', resource_list, name='resource_list'),  # List resources
-    path('resources/add/', add_resource, name='add_resource'),  # Add a resource
-    path('2fa/enable/', enable_2fa, name='enable_2fa'),  # Enable two-factor authentication
     path('update_profile_picture/', update_profile_picture, name='update_profile_picture'),
     path('update_personal_info/', update_personal_info, name='update_personal_info'),
     path('profile/', profile_view, name='profile'),  # Ensure this line is present
-    path('api/submit-prayer/', submit_prayer, name='submit_prayer'),  # API endpoint for submitting prayers
-    path('api/get-prayers/', prayer_feed, name='prayer_feed'),  # API endpoint for retrieving prayers
-    path('shared-prayer-requests/', shared_prayer_requests, name='shared_prayer_requests'),
-    path('api/submit-reply/', submit_reply, name='submit_reply'),  # New endpoint
-    path('gamification/', gamification_elements_view, name='gamification_elements'),
-    path('share_culture', share_culture, name='cultural_exchange'),
-    path('thank-you/', thank_you, name='thank_you'),
-    path('stories/', list_cultural_stories, name='list_stories'),
-    
     # Admin URLs for approving stories
-    path('admin/approve/<int:story_id>/', admin_approve_story, name='admin_approve_story'),
-    path('charitable_initiatives/<int:user_id>/', charitable_initiatives, name='charitable_initiatives'),
-    path('add-charity/', add_charity, name='add_charity'),
-    path('join_initiative/<int:user_id>/', join_initiative, name='join_initiative'),
-    path('contact_and_save/', contact_and_save, name='contact_and_save'),
-    path('resource_directory/', resources_view, name='resource_directory'),
-    path('interactive_maps/', interactive_maps, name='interactive_maps'),
-    path('diversity-celebrations/', DiversityCelebrationsView.as_view(), name='diversity_celebrations'),
-    path('interfaith-collaboration/', interfaith_collaboration_view, name='interfaith_collaboration'),
+    path('donation/request/', donation_page, name='donation_page'),  # URL to request a donation
+    path('donation/success/<int:donation_id>/', donation_success, name='donation_success'),  # URL to view success page
+    path('donation/list/', donation_list, name='donation_list'),  # URL to view user's donation requests
+    path('help-alert/', help_alert, name='help_alert'),
+    path('submit-help/', submit_help_alert, name='submit_help'),
+    # Community Leaders URLs
+    path('leaders/', community_leaders_list, name='community_leaders_list'),  # List of community leaders
+    path('leaders/create/', create_community_leader, name='create_community_leader'),  # Create a new leader
+    path('leaders/<str:identity_symbol>/', community_leader_detail, name='community_leader_detail'),  # Leader details
+
+    # Social Issues Groups URLs
+    path('groups/', social_issues_groups_list, name='social_issues_groups_list'),  # List of groups
+    path('groups/create/', create_social_issues_group, name='create_social_issues_group'),  # Create a new group
+    path('groups/<int:group_id>/', group_conversation_detail, name='group_conversation_detail'),  # Group conversation details
+    
+    # Unified view URLs
+    path('leaders/<int:leader_id>/send_message/', send_message, name='send_message'),
+    path('event/join/<int:event_id>/', join_event, name='join_event'),
+    path('help-alert/<int:id>/', help_alert_details, name='help_alert_details'),
 
 
 ]
+
+
+

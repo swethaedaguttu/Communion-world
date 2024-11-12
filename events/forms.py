@@ -1,12 +1,11 @@
 from django import forms
 from django.contrib.auth.models import User  # Import User model
 from django.contrib.auth.forms import UserCreationForm 
+from django.core.validators import EmailValidator, RegexValidator
 
 from .models import (
-    Community, Event, UnifiedNight, Activity, Partnership, SupportRequest,
-    Resource, Notification, Feedback, UserProfile, Poll, ConnectionRequest,
-    DiscussionThread, Comment, ResourceRequest, VolunteerHistory, Thread, Comment, VolunteerOpportunity, SignUp, CulturalStory, Charity,
-    InitiativeJoin, Contact, Donation,
+    Event,  Notification,  UserProfile, Donation, CommunityLeader, SocialIssuesGroup, GroupConversation, 
+
 )
 from django.contrib.auth.forms import PasswordChangeForm
 class PasswordUpdateForm(PasswordChangeForm):
@@ -16,18 +15,12 @@ class PasswordUpdateForm(PasswordChangeForm):
 
 
 
-class CommunityForm(forms.ModelForm):
-    class Meta:
-        model = Community
-        fields = ['name', 'description', 'created_by']
 
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = [
-            'community', 'title', 'date', 'location', 'description',
-            'organizer', 'max_participants', 'rsvp_deadline'
-        ]
+        fields = ['title', 'date', 'location', 'description', 'organizer','image_url', 'max_participants', 'rsvp_deadline', 'type']
+
 
 class UserRegistrationForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
@@ -55,73 +48,12 @@ class UserRegistrationForm(forms.ModelForm):
         return user
 
 
-class PartnershipForm(forms.ModelForm):
-    class Meta:
-        model = Partnership
-        fields = ['community', 'partner_name', 'partnership_date', 'description']
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': 4}),
-            'partnership_date': forms.DateInput(attrs={'type': 'date'}),
-        }
 
-    def __init__(self, *args, **kwargs):
-        super(PartnershipForm, self).__init__(*args, **kwargs)
-        self.fields['partner_name'].widget.attrs.update({'placeholder': 'Enter partner name'})
-        self.fields['description'].widget.attrs.update({'placeholder': 'Enter description'})
-
-class SupportForm(forms.ModelForm):
-    class Meta:
-        model = SupportRequest
-        fields = ['community', 'user_name', 'request_details']
-        widgets = {
-            'request_details': forms.Textarea(attrs={'rows': 4}),
-        }
-
-class FeedbackForm(forms.ModelForm):
-    class Meta:
-        model = Feedback
-        fields = ['community', 'user_name', 'feedback_text']
-        widgets = {
-            'feedback_text': forms.Textarea(attrs={'rows': 4}),
-        }
-
-class PollForm(forms.ModelForm):
-    class Meta:
-        model = Poll
-        fields = ['question', 'options']
-        widgets = {
-            'options': forms.Textarea(attrs={'placeholder': 'Enter options as JSON, e.g. ["Option 1", "Option 2"]'}),
-        }
-
-    def clean_options(self):
-        options = self.cleaned_data['options']
-        try:
-            import json
-            options = json.loads(options)
-        except json.JSONDecodeError:
-            raise forms.ValidationError("Options must be valid JSON.")
-        return options
-
-class ConnectionRequestForm(forms.ModelForm):
-    class Meta:
-        model = ConnectionRequest
-        fields = ['receiver']
-
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')  # Get the current user
-        super().__init__(*args, **kwargs)
-        self.fields['receiver'].queryset = User.objects.exclude(id=user.id)  # Exclude the current user from the receiver options
-
-    def clean_receiver(self):
-        receiver = self.cleaned_data['receiver']
-        if receiver == self.instance.sender:
-            raise forms.ValidationError("You cannot send a connection request to yourself.")
-        return receiver
 
 class ProfileEditForm(forms.ModelForm):  # This should be correct
     class Meta:
         model = UserProfile
-        fields = ['location', 'faith_background', 'interests', 'social_links']
+        fields = ['location', 'interests']
 
 class ProfilePictureForm(forms.ModelForm):
     class Meta:
@@ -151,43 +83,24 @@ class NotificationPreferencesForm(forms.ModelForm):
     email_notifications = forms.BooleanField(required=False, label="Receive email notifications")
     sms_notifications = forms.BooleanField(required=False, label="Receive SMS notifications")
     push_notifications = forms.BooleanField(required=False, label="Receive push notifications")
+    phone_number = forms.CharField(max_length=15, required=False, label="Phone Number")  # Include phone number
 
     class Meta:
-        model = UserProfile  # Specify the correct model
-        fields = ['email_notifications', 'sms_notifications', 'push_notifications']
+        model = UserProfile
+        fields = ['email_notifications', 'sms_notifications', 'push_notifications', 'phone_number']  # Add phone number to fields
 
-    def save(self, user):
-        user.profile.email_notifications = self.cleaned_data['email_notifications']
-        user.profile.sms_notifications = self.cleaned_data['sms_notifications']
-        user.profile.push_notifications = self.cleaned_data['push_notifications']
-        user.profile.save()
+    def save(self, commit=True):
+        user_profile = super().save(commit=False)  # Save but don't commit to the database yet
+        user_profile.email_notifications = self.cleaned_data['email_notifications']
+        user_profile.sms_notifications = self.cleaned_data['sms_notifications']
+        user_profile.push_notifications = self.cleaned_data['push_notifications']
+        user_profile.phone_number = self.cleaned_data['phone_number']  # Save the phone number
+        
+        if commit:
+            user_profile.save()  # Commit to the database
+        return user_profile  # Return the saved instance
 
-class CommunityProfileForm(forms.ModelForm):
-    class Meta:
-        model = Community
-        fields = ['name', 'description', 'contact_email', 'contact_phone', 'location', 'worship_house_name',
-                  'map_location', 'members', 'suggest_members', 'worship_details', 'community_type',
-                  'profile_image', 'facebook_link', 'twitter_link', 'instagram_link', 'is_interfaith']
 
-class ThreadForm(forms.ModelForm):
-    class Meta:
-        model = Thread
-        fields = ['title', 'content']  # Fields to include in the form
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter thread title'}),
-            'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your message here...', 'rows': 5}),
-        }
-
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ['content']  # Field to include in the comment form
-        widgets = {
-            'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Add a comment...', 'rows': 3}),
-        }
-
-from django import forms
-from .models import UserProfile
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
@@ -198,29 +111,21 @@ class UserProfileForm(forms.ModelForm):
             'email',  # Including email for updates
             'bio',
             'location',
-            'faith_background',
             'interests',
-            'social_links',
             'profile_picture',
             'phone_number',
             'email_verified',  # Track if the user's email is verified
-            'is_2fa_enabled',  # Two-factor authentication option
             'email_notifications',
             'sms_notifications',
             'push_notifications',
-            'community',
             'country',
             'state',
-            'volunteering_details',
-            'interfaith_interests',
-            'initiative',
             'language',
             'dob',
             'gender',
         ]
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 3}),
-            'social_links': forms.URLInput(attrs={'placeholder': 'Enter your social link'}),
             'profile_picture': forms.ClearableFileInput(attrs={'class': 'custom-file-input'}),
             'phone_number': forms.TextInput(attrs={'placeholder': 'Enter your phone number'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Enter your email'}),
@@ -228,64 +133,144 @@ class UserProfileForm(forms.ModelForm):
             'last_name': forms.TextInput(attrs={'placeholder': 'Last Name'}),
         }
 
-class VolunteerOpportunityForm(forms.ModelForm):
-    class Meta:
-        model = VolunteerOpportunity
-        fields = ['title', 'description', 'location', 'age_requirement', 'contact_info']
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter title'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter description'}),
-            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter location'}),
-            'age_requirement': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter age requirement'}),
-            'contact_info': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter contact info'}),
-        }
 
-class SignUpForm(forms.ModelForm):
-    class Meta:
-        model = SignUp
-        fields = ['name', 'email']  # Use 'name' instead of 'first_name' and 'last_name'
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter full name'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter email'}),
-        }
+class DonationForm(forms.Form):
+    # The name of the donor
+    name = forms.CharField(
+        max_length=100, 
+        required=True, 
+        widget=forms.TextInput(attrs={'placeholder': 'Enter your name'})
+    )
 
-class CulturalStoryForm(forms.ModelForm):
-    class Meta:
-        model = CulturalStory
-        fields = ['title', 'description', 'image']
+    # The email of the donor
+    email = forms.EmailField(
+        required=True, 
+        widget=forms.EmailInput(attrs={'placeholder': 'Enter your email'})
+    )
 
-class CharityForm(forms.ModelForm):
-    class Meta:
-        model = Charity
-        fields = ['name', 'description', 'location', 'founder_name', 'founder_email']
+    # The phone number of the donor
+    phone_number = forms.CharField(
+        max_length=15, 
+        required=False,
+        validators=[RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Enter a valid phone number.")],
+        widget=forms.TextInput(attrs={'placeholder': 'Enter your phone number'})
+    )
 
-class InitiativeJoinForm(forms.ModelForm):
-    class Meta:
-        model = InitiativeJoin
-        fields = ['charity', 'name', 'email', 'message']
+    # The street address of the donor
+    street_address = forms.CharField(
+        max_length=255, 
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Street Address'})
+    )
 
-class ContactForm(forms.ModelForm):
+    # The city where the donor resides
+    city = forms.CharField(
+        max_length=100, 
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'City'})
+    )
+
+    # The state of the donor
+    state = forms.CharField(
+        max_length=100, 
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'State'})
+    )
+
+    # The zip code for the donor's address
+    zip_code = forms.CharField(
+        max_length=10, 
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'ZIP Code'})
+    )
+
+    # The payment method chosen by the donor
+    payment_method = forms.ChoiceField(
+        choices=[
+            ('upi', 'UPI'),
+            ('bank_transfer', 'Bank Transfer'),
+            # Add more payment methods as needed
+        ], 
+        required=True,
+        widget=forms.Select(attrs={'placeholder': 'Select Payment Method'})
+    )
+
+    # The payment details (e.g., UPI ID, bank account number)
+    payment_details = forms.CharField(
+        max_length=255, 
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Enter payment details (UPI ID/Account Number)'})
+    )
+
+    # File field for identity proof
+    identity_proof = forms.FileField(
+        required=True,
+        label='Identity Proof',
+        help_text='Upload your identity proof (e.g., Aadhar, Passport).'
+    )
+
+    # Optional field for images related to the donation
+    images = forms.ImageField(
+        required=False, 
+        label='Additional Images',
+        help_text='Upload any additional images (optional).'
+    )
+
+    # Hidden field for username (fetched from User profile)
+    username = forms.CharField(
+        max_length=150, 
+        widget=forms.HiddenInput(), 
+        required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        # This allows you to set the username dynamically
+        username = kwargs.pop('username', None)
+        super(DonationForm, self).__init__(*args, **kwargs)
+        if username:
+            self.fields['username'].initial = username
+
+class CommunityLeaderForm(forms.ModelForm):
     class Meta:
-        model = Contact
-        fields = ['name', 'email', 'message']
-        widgets = {
-            'message': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Your message here...'}),
-        }
+        model = CommunityLeader
+        fields = ['name', 'community', 'description', 'image']  # Included 'image' field
         labels = {
-            'name': 'Your Name',
-            'email': 'Your Email',
-            'message': 'Your Message',
+            'name': 'Leader Name',
+            'community': 'Community Name',
+            'description': 'Description',
+            'image': 'Image URL',
+        }
+        help_texts = {
+            'description': 'Provide a brief description of the leader and their contributions.',
+            'image': 'Optional: Provide an image URL representing the community leader.',
         }
 
-class DonationForm(forms.ModelForm):
+
+class SocialIssuesGroupForm(forms.ModelForm):
     class Meta:
-        model = Donation
-        fields = ['charity', 'donor_name', 'amount']
-        widgets = {
-            'amount': forms.NumberInput(attrs={'placeholder': 'Enter donation amount'}),
-        }
+        model = SocialIssuesGroup
+        fields = ['name', 'topic', 'description', 'image']  # Included 'image' field
         labels = {
-            'charity': 'Select Charity',
-            'donor_name': 'Your Name',
-            'amount': 'Donation Amount',
+            'name': 'Group Name',
+            'topic': 'Topic',
+            'description': 'Description',
+            'image': 'Image URL',
         }
+        help_texts = {
+            'description': 'Provide a brief description of the group and its purpose.',
+            'image': 'Optional: Provide an image URL representing the group.',
+        }
+
+class GroupConversationForm(forms.ModelForm):
+    attachment = forms.FileField(required=False)
+
+    class Meta:
+        model = GroupConversation
+        fields = ['message', 'attachment']  # Include both message and attachment fields
+        
+def clean_attachment(self):
+    file = self.cleaned_data.get('attachment')
+    if file and file.size > 10 * 1024 * 1024:  # 10MB size limit
+        raise forms.ValidationError('File size exceeds 10MB')
+    return file
+
