@@ -93,7 +93,7 @@ packaging==24.1
 pillow==10.4.0
 proglog==0.1.10
 proto-plus==1.24.0
-protobuf==5.28.2
+protobuf>=4.25.3,<5
 psycopg2==2.9.9
 psycopg2-binary==2.9.10
 pyasn1==0.6.1
