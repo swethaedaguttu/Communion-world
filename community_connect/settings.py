@@ -12,7 +12,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Secret key (keep it secret in production)
 SECRET_KEY = os.getenv('SECRET_KEY')
 
+<<<<<<< HEAD
 DEBUG = True  # Set to 'False' in production
+=======
+DEBUG = False  # Set to 'False' in production
+>>>>>>> origin/main
 
 # Allowed hosts (add your production hosts here)
 ALLOWED_HOSTS = []
