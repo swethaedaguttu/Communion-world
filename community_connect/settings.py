@@ -1,16 +1,22 @@
 import os
+import dj_database_url
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Secret key (keep it secret in production)
-SECRET_KEY = 'django-insecure-djcw^76tgoo9l_r1zbqi0s*g!31q!lgi-h=nrwwinh37$i@cpi'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True # Set to 'False' in production
+DEBUG = True  # Set to 'False' in production
 
-# Allowed hosts - allows all hosts if DEBUG is True, otherwise, limit to production hosts
+# Allowed hosts (add your production hosts here)
 ALLOWED_HOSTS = []
+
 # Installed apps
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -19,7 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'events',
+    'events',  # your custom app
     'channels',
     'django.contrib.sites',
     'allauth',
@@ -31,7 +37,6 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_totp',
 ]
 
-# Site ID for django.contrib.sites
 SITE_ID = 1
 
 # Middleware settings
@@ -47,9 +52,6 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-
-
-# URL configuration
 ROOT_URLCONF = 'community_connect.urls'
 
 # Templates configuration
@@ -69,30 +71,26 @@ TEMPLATES = [
     },
 ]
 
-# WSGI application
 WSGI_APPLICATION = 'community_connect.wsgi.application'
-
-# ASGI application (if using Channels)
 ASGI_APPLICATION = 'community_connect.asgi.application'
 
-# Channel layers configuration
+# Channel layers configuration (use Redis in production)
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # Use Redis in production
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [(os.getenv('REDIS_HOST'), int(os.getenv('REDIS_PORT')))],
+        },
     },
 }
 
-# Database configuration
+# Database configuration using dj-database-url
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Change to 'django.db.backends.postgresql' for production
-        'NAME': BASE_DIR / 'db.sqlite3',  # Use environment variables for production databases
-        # If using PostgreSQL, uncomment and use these:
-        # 'USER': os.environ.get('DB_USER'),
-        # 'PASSWORD': os.environ.get('DB_PASSWORD'),
-        # 'HOST': os.environ.get('DB_HOST'),
-        # 'PORT': os.environ.get('DB_PORT'),
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,  # optional, set a max connection age (recommended)
+        ssl_require=True    # optional, ensure SSL connections to your database (recommended for production)
+    )
 }
 
 # Password validators
@@ -111,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Localization settings
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
@@ -120,25 +117,20 @@ USE_TZ = True
 # Static files settings
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'events', 'static'),
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'events', 'static')]
 
-# Media files settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Authentication settings
 LOGIN_URL = '/login/'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 LOGIN_REDIRECT_URL = '/'
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
@@ -172,3 +164,27 @@ LOGGING = {
         },
     },
 }
+
+# SSL settings (for production)
+SECURE_SSL_REDIRECT = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Email configuration (for allauth)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mailtrap.io'  # Use your SMTP provider here
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+# Session settings for security
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+# Security settings
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_HSTS_SECONDS = 3600  # 1 hour
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
