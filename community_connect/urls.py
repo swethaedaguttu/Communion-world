@@ -17,23 +17,22 @@ Including another URLconf
 # community_connect/urls.py
 
 # community_connect/urls.py
-from django.conf import settings
-from django.conf.urls.static import static
+# community_connect/urls.py
 from django.contrib import admin
 from django.urls import path, include
-from events import views  # Import views from the 'events' app
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('events.urls')),  # Include the app's URL patterns at the root
-    path('accounts/', include('allauth.urls')),
-    path('api/', include('events.urls')),  # Include the events app URLs
-
+    path('accounts/', include('allauth.urls')),  # Authentication paths via django-allauth
 ]
+
+# Static and media files should be handled by the web server in production, not Django itself.
+# Hence, this part is only needed during development (DEBUG=True).
 if settings.DEBUG:
+    from django.conf import settings
+    from django.conf.urls.static import static
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
 
 
 
