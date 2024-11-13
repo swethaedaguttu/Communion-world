@@ -172,8 +172,8 @@
                   Events
               </a>
               <ul class="dropdown-menu" aria-labelledby="eventsDropdown">
-                  <li><a class="dropdown-item" href="{% url 'event_list' %}">Upcoming Events</a></li>
-                  <li><a class="dropdown-item" href="{% url 'event_create' %}">Create Events</a></li>
+                  <li><a class="dropdown-item" href="event_list">Upcoming Events</a></li>
+                  <li><a class="dropdown-item" href="event_create">Create Events</a></li>
               </ul>
           </li>
           <li class="nav-item dropdown">
@@ -235,7 +235,7 @@
         
         <p class="mbr-fonts-style mbr-text mbr-white mb-4 display-7">Bridging gaps between faiths with tech and a dash of fun!</p>
         <div class="mbr-section-btn">
-          <a class="btn btn-white-outline display-7" href="{% url 'event_list' %}">Get Started</a>
+          <a class="btn btn-white-outline display-7" href="event_list">Get Started</a>
         </div>
       </div>
     </div>
@@ -379,7 +379,7 @@
 						</h1>
 						<p class="mbr-text mbr-fonts-style mb-4 display-7">Connect, engage, and celebrate diversity like never before!</p>
 						<div class="mbr-section-btn mt-4">
-                            <a class="btn btn-primary display-7" href="{% url 'social_issues_groups_list' %}">Get Started Now!</a>
+                            <a class="btn btn-primary display-7" href="social_issues_groups_list">Get Started Now!</a>
                         </div>
 					</div>
 				</div>
@@ -629,7 +629,7 @@
                 <p class="mbr-text mbr-fonts-style mb-3 display-7">{{ event.date }}</p>
                 <p class="mbr-text mbr-fonts-style mb-3 display-7">{{ event.description }}</p>
                 <div class="mbr-section-btn item-footer">
-                  <a href="{% url 'event_details' event.id %}" class="btn item-btn btn-primary display-7">Join</a>
+                  <a href="event_details event.id" class="btn item-btn btn-primary display-7">Join</a>
                 </div>
               </div>
             </div>
