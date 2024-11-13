@@ -19,7 +19,7 @@ DEBUG = False  # Set to 'False' in production
 >>>>>>> origin/main
 
 # Allowed hosts (add your production hosts here)
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['communion-world-production.up.railway.app']
 
 # Installed apps
 INSTALLED_APPS = [

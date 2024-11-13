@@ -1,1 +1,1 @@
-web: gunicorn community_connect.wsgi --log-file -
+gunicorn community_connect.wsgi --log-file -
