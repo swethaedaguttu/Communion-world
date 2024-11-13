@@ -1,2 +1,5 @@
 [build]
+base_image = "python:3.9"
+
+[deploy]
 start = "gunicorn community_connect.wsgi --log-file -"
