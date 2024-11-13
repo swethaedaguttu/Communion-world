@@ -1,0 +1,2 @@
+[phases]
+start = "gunicorn community_connect.wsgi --log-file -"
