@@ -15,9 +15,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = False  # Set to 'False' in production
 
 # Allowed hosts (add your production hosts here)
-ALLOWED_HOSTS = ['localhost','127.0.0.800','communion-world-production.up.railway.app']
+ALLOWED_HOSTS = ['localhost','127.0.0.800','https://communion-world-production.up.railway.app/']
 
-CSRF_TRUSTED_ORIGINS = ['https://communion-world-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://communion-world-production.up.railway.app/']
 
 # Installed apps
 INSTALLED_APPS = [
