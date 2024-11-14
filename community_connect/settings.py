@@ -58,7 +58,7 @@ ROOT_URLCONF = 'community_connect.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'events', 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'events', 'templates', 'events')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
