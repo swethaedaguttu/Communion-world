@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html >
 <head>
@@ -173,8 +172,8 @@
                   Events
               </a>
               <ul class="dropdown-menu" aria-labelledby="eventsDropdown">
-                  <li><a class="dropdown-item" href="{% url 'event_list' %}">Upcoming Events</a></li>
-                  <li><a class="dropdown-item" href="{% url 'event_create' %}">Create Events</a></li>
+                  <li><a class="dropdown-item" href="event_list">Upcoming Events</a></li>
+                  <li><a class="dropdown-item" href="event_create">Create Events</a></li>
               </ul>
           </li>
           <li class="nav-item dropdown">
@@ -187,7 +186,7 @@
               </ul>
           </li>
           <li class="nav-item dropdown">
-              <a class="nav-link link text-black display-4 dropdown-toggle" href="{% url 'community_leaders_list' %}" id="leadersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link link text-black display-4 dropdown-toggle" href="community_leaders_list" id="leadersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Leaders
               </a>
               <ul class="dropdown-menu" aria-labelledby="leadersDropdown">
@@ -236,7 +235,7 @@
         
         <p class="mbr-fonts-style mbr-text mbr-white mb-4 display-7">Bridging gaps between faiths with tech and a dash of fun!</p>
         <div class="mbr-section-btn">
-          <a class="btn btn-white-outline display-7" href="{% url 'event_list' %}">Get Started</a>
+          <a class="btn btn-white-outline display-7" href="event_list">Get Started</a>
         </div>
       </div>
     </div>
@@ -630,7 +629,7 @@
                 <p class="mbr-text mbr-fonts-style mb-3 display-7">{{ event.date }}</p>
                 <p class="mbr-text mbr-fonts-style mb-3 display-7">{{ event.description }}</p>
                 <div class="mbr-section-btn item-footer">
-                  <a href="{% url 'event_details' event.id %}" class="btn item-btn btn-primary display-7">Join</a>
+                  <a href="event_details event.id" class="btn item-btn btn-primary display-7">Join</a>
                 </div>
               </div>
             </div>
