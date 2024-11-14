@@ -1,0 +1,25 @@
+# Python bytecode
+*.pyc
+*.pyo
+__pycache__/
+
+# Virtual environment
+venv/
+ENV/
+.env
+
+# Django settings and database
+db.sqlite3
+*.log
+
+# PyCharm or VS Code project files
+.idea/
+.vscode/
+
+# Other IDE-specific files
+.DS_Store
+*.swp
+
+# Static and media files (if you're handling them outside the repo)
+static/
+media/
