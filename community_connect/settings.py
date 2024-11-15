@@ -12,12 +12,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Secret key (keep it secret in production)
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = False  # Set to 'False' in production
+DEBUG = True  # Set to 'False' in production
 
 # Allowed hosts (add your production hosts here)
-ALLOWED_HOSTS = ['localhost','127.0.0.800','communion-world-production.up.railway.app']
+ALLOWED_HOSTS = []
 
-CSRF_TRUSTED_ORIGINS = ['https://communion-world-production.up.railway.app/']
 
 # Installed apps
 INSTALLED_APPS = [
@@ -168,9 +167,6 @@ LOGGING = {
 }
 
 # SSL settings (for production)
-SECURE_SSL_REDIRECT = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
 
 # Email configuration (for allauth)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
