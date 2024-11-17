@@ -29,6 +29,637 @@
 
 
 <style>
+/* Override the font size for the entire menu section */
+.menu.menu2.cid-utwSmHFR8Y {
+    font-size: 12px; /* Adjust as needed */
+    background-color: #f8f9fa; /* Example background color */  
+}
+
+/* Navbar brand logo styling */
+.menu.menu2.cid-utwSmHFR8Y .navbar-brand img {
+    height: 5rem; /* Adjust logo size */
+    border-radius: 5px; /* Example: make it slightly rounded */
+}
+
+/* Navbar text and link overrides */
+.menu.menu2.cid-utwSmHFR8Y .navbar-caption {
+    font-family: Arial, sans-serif; /* Example font */
+    font-size: 16px; /* Example size */
+    color: #333 !important; /* Force color */
+}
+
+.menu.menu2.cid-utwSmHFR8Y .nav-link {
+    color: #555 !important; /* Default link color */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease; /* Smooth hover effect */
+}
+
+.menu.menu2.cid-utwSmHFR8Y .nav-link:hover {
+    color: #007bff !important; /* Hover color */
+}
+
+/* Dropdown menu overrides */
+.menu.menu2.cid-utwSmHFR8Y .dropdown-menu {
+    background-color: #fff; /* Example background */
+    border: 1px solid #ddd; /* Example border */
+    border-radius: 5px; /* Rounded corners */
+}
+
+.menu.menu2.cid-utwSmHFR8Y .dropdown-item {
+    color: #444 !important; /* Default dropdown item color */
+    font-size: 14px; /* Example font size */
+    padding: 10px 20px; /* Example spacing */
+}
+
+.menu.menu2.cid-utwSmHFR8Y .dropdown-item:hover {
+    background-color: #f0f0f0; /* Hover background */
+    color: #007bff !important; /* Hover text color */
+}
+
+/* Hamburger menu styling */
+.menu.menu2.cid-utwSmHFR8Y .hamburger span {
+    background-color: #333; /* Example hamburger color */
+    height: 3px; /* Thickness */
+    width: 25px; /* Width */
+}
+
+.menu.menu2.cid-utwSmHFR8Y .hamburger span:hover {
+    background-color: #007bff; /* Hover color */
+}
+
+/* Additional styles added below */
+
+/* Navbar styling for the entire navbar */
+.menu.menu2.cid-utwSmHFR8Y .navbar {
+    padding: 1rem 2rem; /* Add padding for a better layout */
+    background-color: #343a40; /* Dark background for the navbar */
+}
+
+/* Navbar links active state */
+.menu.menu2.cid-utwSmHFR8Y .nav-link.active {
+    color: #fff !important; /* Active link color */
+    background-color: #007bff !important; /* Active background */
+}
+
+/* Styling for the 'Get Help' button */
+.menu.menu2.cid-utwSmHFR8Y .navbar-buttons .btn-primary {
+    background-color: #28a745; /* Green background for button */
+    color: white; /* Button text color */
+    border-radius: 40px; /* Rounded corners */
+    padding: 10px 20px; /* Padding for the button */
+}
+
+/* 'Get Help' button hover effect */
+.menu.menu2.cid-utwSmHFR8Y .navbar-buttons .btn-primary:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Modify the display for collapsed navbar (mobile view) */
+.menu.menu2.cid-utwSmHFR8Y .navbar-nav.nav-dropdown .nav-item {
+    margin-bottom: 10px; /* Add spacing between nav items */
+}
+
+.menu.menu2.cid-utwSmHFR8Y .navbar-nav.nav-dropdown .nav-item a {
+    color: #090909 !important; /* Light color for mobile view */
+    font-size: 16px; /* Font size for mobile */
+}
+
+/* Hover effect for navbar links */
+.menu.menu2.cid-utwSmHFR8Y .navbar-nav.nav-dropdown .nav-item a:hover {
+    color: #007bff !important; /* Blue color on hover */
+}
+
+/* Hamburger icon adjustments */
+.menu.menu2.cid-utwSmHFR8Y .navbar-toggler {
+    border: none; /* Remove border for a clean look */
+}
+
+.menu.menu2.cid-utwSmHFR8Y .navbar-toggler .hamburger span {
+    background-color: #ffffff; /* White color for hamburger icon */
+}
+
+.navbar-fixed-top {
+  top: auto;
+}
+
+/* Header Section */
+.header18.cid-utwSmHHwOY.mbr-halfscreen {
+    position: relative;
+    padding: 100px 0; /* Adjust the padding as needed */
+    color: #fff; /* Text color */
+    text-align: center; /* Centers text horizontally */
+}
+
+/* Overlay Styling */
+.header18.cid-utwSmHHwOY.mbr-halfscreen .mbr-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    z-index: 1; /* Places overlay above background */
+}
+
+/* Title Styling */
+.header18.cid-utwSmHHwOY.mbr-halfscreen .mbr-section-title {
+    font-size: 4rem; /* Adjust the title font size */
+    font-weight: bold;
+    z-index: 2; /* Places title above overlay */
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+/* Button Styling */
+.header18.cid-utwSmHHwOY.mbr-halfscreen .mbr-section-btn {
+    position: relative;
+    z-index: 2; /* Ensures button appears above the overlay */
+    text-align: left; /* Keeps the button on the left */
+    margin-top: 20px; /* Adds some space above the button */
+}
+
+.header18.cid-utwSmHHwOY.mbr-halfscreen .mbr-section-btn .btn {
+    font-size: 1.5rem; /* Button font size */
+    color: #fff; /* Text color */
+    border: 2px solid #fff; /* White border */
+    background: transparent; /* Transparent background */
+    padding: 12px 24px; /* Adjust padding */
+    border-radius: 30px; /* Rounded corners */
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.header18.cid-utwSmHHwOY.mbr-halfscreen .mbr-section-btn .btn:hover {
+    background-color: #fff; /* White background on hover */
+    color: #333; /* Dark text color on hover */
+}
+
+/* Adjust layout for mobile screens */
+@media (max-width: 768px) {
+    .header18.cid-utwSmHHwOY.mbr-halfscreen .mbr-section-title {
+        font-size: 2.5rem; /* Smaller font size on mobile */
+    }
+
+    .header18.cid-utwSmHHwOY.mbr-halfscreen .mbr-section-btn .btn {
+        font-size: 1.2rem; /* Smaller button size on mobile */
+    }
+}
+
+/* Content Styling */
+.header18.cid-utwSmHHwOY.mbr-halfscreen .content-wrap {
+    position: relative;
+    z-index: 2; /* Ensures content appears above the overlay */
+    text-align: center;
+    color: #fff; /* White text */
+}
+
+/* General Section Styling */
+.form.cid-utwSmHelpForm {
+    background-color: #f4f6f9; /* Light gray background for the entire section */
+    padding: 60px 0; /* Adds more vertical padding */
+    margin-top: 20px;
+}
+
+/* Account Settings Container */
+.account-settings-container {
+    max-width: 900px; /* Increases max width for larger screens */
+    margin: 0 auto; /* Centers the container */
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 12px; /* Slightly larger border-radius for smoother corners */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1); /* Larger shadow for depth */
+    transition: box-shadow 0.3s ease-in-out; /* Smooth transition for shadow */
+}
+
+.account-settings-container:hover {
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15); /* Darker shadow on hover for interactivity */
+}
+
+/* Title Styling */
+.account-settings-container h1 {
+    font-size: 2.6rem; /* Slightly larger font size for the main title */
+    text-align: center;
+    margin-bottom: 40px; /* Increased space below the title */
+    color: #333;
+    font-weight: 600; /* Slightly bolder title */
+}
+
+/* Feedback Message Styling */
+.messages {
+    margin-bottom: 30px; /* Adds more space between messages and form */
+    padding-left: 0;
+    list-style-type: none;
+}
+
+.messages li {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    font-size: 1rem; /* Standard font size for messages */
+    transition: background-color 0.3s ease-in-out;
+}
+
+.messages .error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 6px solid #f5c6cb; /* Adds a left border for emphasis */
+}
+
+.messages .success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 6px solid #c3e6cb;
+}
+
+.messages li:hover {
+    background-color: #f1f1f1; /* Subtle hover effect on messages */
+}
+
+/* Form Styling */
+form {
+    margin-bottom: 50px;
+}
+
+/* Form Header Styling */
+form h2 {
+    font-size: 1.9rem;
+    margin-bottom: 25px;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Form Group Styling */
+.form-group {
+    margin-bottom: 25px; /* More space between form fields */
+}
+
+/* Form Input Styling */
+input[type="password"], input[type="text"], select {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Rounded corners */
+    font-size: 1rem;
+    color: #333;
+    background-color: #fafafa; /* Slightly lighter background */
+    transition: all 0.3s ease-in-out; /* Smooth transition for input focus */
+}
+
+input[type="password"]:focus, input[type="text"]:focus, select:focus {
+    border-color: #007bff;
+    background-color: #fff; /* White background on focus */
+    outline: none;
+}
+
+/* Button Styling */
+button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px; /* Rounded button corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover transition */
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px); /* Adds a hover effect by lifting the button */
+}
+
+button[type="submit"]:active {
+    transform: translateY(1px); /* Button presses down when clicked */
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 992px) {
+    .account-settings-container {
+        padding: 30px; /* Reduces padding on medium screens */
+    }
+
+    .account-settings-container h1 {
+        font-size: 2.2rem;
+    }
+
+    .account-settings-container h2 {
+        font-size: 1.6rem; /* Adjusts sub-heading size */
+    }
+
+    button[type="submit"] {
+        width: 100%; /* Full-width buttons on smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .account-settings-container {
+        padding: 20px; /* Further reduces padding on small screens */
+    }
+
+    .account-settings-container h1 {
+        font-size: 1.8rem; /* Reduces title font size on small screens */
+    }
+
+    .account-settings-container h2 {
+        font-size: 1.5rem; /* Smaller sub-heading font size */
+    }
+
+    button[type="submit"] {
+        padding: 12px 20px; /* Adjust button padding */
+    }
+}
+
+/* General Section Styling */
+.social4.cid-utwSmHKS6N {
+    padding: 60px 0; /* Adds padding for top and bottom */
+}
+
+/* Title Styling */
+.social4 .mbr-section-title {
+    font-size: 2.6rem; /* Larger font size for the section title */
+    text-align: center; /* Centers the title */
+    margin-bottom: 40px; /* Adds space below the title */
+    color: #333; /* Dark color for text */
+    font-weight: 700; /* Bold weight for title */
+}
+
+/* Social Media Container */
+.social-list {
+    display: flex;
+    justify-content: center; /* Center-aligns the icons horizontally */
+    align-items: center; /* Centers icons vertically */
+    flex-wrap: wrap; /* Allows wrapping of icons on smaller screens */
+    gap: 20px; /* Adds spacing between icons */
+}
+
+/* Social Media Icon Wrapper */
+.iconfont-wrapper {
+    width: 50px; /* Defines a fixed width for icons */
+    height: 50px; /* Defines a fixed height for icons */
+    display: flex;
+    justify-content: center; /* Centers the icon horizontally */
+    align-items: center; /* Centers the icon vertically */
+    border-radius: 50%; /* Circular icon container */
+    transition: transform 0.3s ease-in-out; /* Smooth transition for hover effects */
+}
+
+/* Background colors for each social media platform */
+.bg-facebook {
+    background-color: #3b5998; /* Facebook blue */
+}
+
+.bg-twitter {
+    background-color: #1da1f2; /* Twitter blue */
+}
+
+.bg-instagram {
+    background-color: #e4405f; /* Instagram pink */
+}
+
+.bg-tiktok {
+    background-color: #000000; /* TikTok black */
+}
+
+/* Icon Styling */
+.socicon {
+    font-size: 24px; /* Icon size */
+    color: white; /* White color for icons */
+}
+
+/* Hover Effect for Icons */
+.iconfont-wrapper:hover {
+    transform: scale(1.1); /* Slightly enlarge icons on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .social-list {
+        gap: 15px; /* Reduced gap on medium screens */
+    }
+
+    .mbr-section-title {
+        font-size: 2.2rem; /* Adjusts font size for smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .social-list {
+        gap: 10px; /* Further reduces gap on smaller screens */
+    }
+
+    .mbr-section-title {
+        font-size: 1.8rem; /* Reduces font size on small screens */
+    }
+}
+
+/* General Styling for "Get in Touch" Section */
+.contacts03.cid-utwSmHKggv {
+    background-color: #f8f8f8; /* Light background color for the section */
+    padding: 60px 0; /* Padding to give some space around the section */
+}
+
+/* Title Styling */
+.contacts03 .mbr-section-title {
+    font-size: 2.5rem; /* Large font size for the title */
+    font-weight: 700; /* Bold styling for the title */
+    text-align: center; /* Center the title */
+    color: #333; /* Dark text color */
+    margin-bottom: 20px; /* Margin below the title */
+}
+
+/* Subtitle Styling */
+.contacts03 .mbr-section-subtitle {
+    font-size: 1rem; /* Normal font size for the subtitle */
+    color: #555; /* Slightly lighter color for the subtitle */
+    text-align: center; /* Center the subtitle */
+    margin-bottom: 30px; /* Margin at the bottom for spacing */
+}
+
+/* Columns Styling */
+.contacts03 .col-lg-4 {
+    padding: 10px;
+}
+
+/* Google Map Section Styling */
+.contacts03 .side-features {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.contacts03 .google-map iframe {
+    width: 100%;
+    height: 400px; /* Fixed height for the Google map */
+    border-radius: 8px; /* Rounded corners for the map */
+    border: none; /* Remove default border */
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .contacts03 .mbr-section-title {
+        font-size: 2.2rem; /* Slightly smaller font for the title on medium screens */
+    }
+
+    .contacts03 .mbr-section-subtitle {
+        font-size: 0.9rem; /* Adjust subtitle font size */
+    }
+
+    .contacts03 .col-lg-8 {
+        padding: 5px; /* Reduced padding for smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .contacts03 .mbr-section-title {
+        font-size: 1.8rem; /* Adjusts the font size for smaller screens */
+    }
+
+    .contacts03 .mbr-section-subtitle {
+        font-size: 0.85rem; /* Adjusts the font size for mobile devices */
+    }
+
+    .contacts03 .google-map iframe {
+        height: 300px; /* Adjust map height for mobile */
+    }
+
+    .contacts03 .col-lg-4 {
+        padding-bottom: 20px; /* Adds space between sections on smaller devices */
+    }
+}
+
+/* General Section Styling */
+.form5.cid-utwSmHKIPQ {
+    padding: 60px 0; /* Adds padding on top and bottom */
+}
+
+/* Title Styling */
+.form5 .mbr-section-title {
+    font-size: 2.5rem; /* Title font size */
+    font-weight: 700; /* Bold font weight */
+    text-align: center; /* Centers the title */
+    color: #333; /* Dark text color */
+    margin-bottom: 30px; /* Space below the title */
+}
+
+/* Form Container Styling */
+.mbr-form {
+    background-color: #ffffff; /* White background for the form */
+    border-radius: 8px; /* Rounded corners */
+    padding: 30px; /* Padding inside the form */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Input Fields Styling */
+.form-control {
+    border-radius: 4px; /* Rounded corners for input fields */
+    border: 1px solid #ddd; /* Light border for inputs */
+    padding: 15px; /* Padding inside the input fields */
+    font-size: 1rem; /* Font size for input fields */
+    width: 100%; /* Makes input fields span the entire width */
+    margin-bottom: 15px; /* Space below each input */
+}
+
+.form-control:focus {
+    border-color: #007bff; /* Blue border on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Soft blue glow on focus */
+}
+
+/* Textarea Styling */
+textarea.form-control {
+    height: 150px; /* Sets a fixed height for the textarea */
+    resize: vertical; /* Allows vertical resizing only */
+}
+
+/* Submit Button Styling */
+.btn-primary {
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    font-size: 1.1rem; /* Font size for the button */
+    padding: 15px 30px; /* Padding inside the button */
+    border-radius: 4px; /* Rounded corners for the button */
+    border: none; /* Remove border */
+    transition: background-color 0.3s ease; /* Smooth transition for hover */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Success and Error Messages */
+.alert {
+    font-size: 1rem; /* Font size for alert messages */
+    padding: 15px; /* Padding inside the alert box */
+    border-radius: 4px; /* Rounded corners for the alert */
+    margin-bottom: 20px; /* Space below the alert */
+}
+
+.alert-success {
+    background-color: #d4edda; /* Green background for success */
+    color: #155724; /* Dark green text */
+}
+
+.alert-danger {
+    background-color: #f8d7da; /* Red background for error */
+    color: #721c24; /* Dark red text */
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .form5 .mbr-section-title {
+        font-size: 2.2rem; /* Adjusts title font size for medium screens */
+    }
+
+    .mbr-form {
+        padding: 20px; /* Reduces padding on smaller screens */
+    }
+
+    .form-control {
+        padding: 12px; /* Reduces padding in input fields */
+    }
+
+    .btn-primary {
+        padding: 12px 25px; /* Adjusts button padding */
+    }
+}
+
+@media (max-width: 768px) {
+    .form5 .mbr-section-title {
+        font-size: 1.8rem; /* Adjusts title font size for small screens */
+    }
+
+    .mbr-form {
+        padding: 15px; /* Further reduces padding for small screens */
+    }
+
+    .form-control {
+        padding: 10px; /* Further reduces padding in input fields */
+    }
+
+    .btn-primary {
+        padding: 10px 20px; /* Further adjusts button padding */
+    }
+}
+
+/* General Footer Section Styling */
+.footer4.cid-utwSmHMmy5 {
+    background-color: #333; /* Dark background for the footer */
+    padding: 20px 0; /* Padding around the footer */
+}
+
+/* Footer Text Styling */
+.footer4 .mbr-text {
+    font-size: 1rem; /* Standard font size */
+    color: #fff; /* White text color */
+    text-align: center; /* Centers the text */
+    margin-bottom: 0; /* No margin below the text */
+}
+
+/* Responsive Design for Footer */
+@media (max-width: 768px) {
+    .footer4 .mbr-text {
+        font-size: 0.9rem; /* Slightly smaller font size on smaller screens */
+    }
+}
+
 .navbar-fixed-top {
   top: auto;
 }
@@ -94,80 +725,6 @@
     display: none;
 }
 
-        /* General container styling */
-        .account-settings-container {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px 30px;
-            max-width: 800px;
-            margin: auto;
-        }
-
-        /* Title styling */
-        .account-settings-container h1 {
-            color: #343a40;
-            font-size: 2.5rem;
-            font-weight: bold;
-        }
-
-        .account-settings-container h2 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #007bff;
-            margin-top: 20px;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 5px;
-        }
-
-        /* Form styling */
-        .account-settings-container .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .account-settings-container .form-control {
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 1rem;
-        }
-
-        .account-settings-container .btn-primary {
-            background-color: #007bff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 5px;
-        }
-
-        .account-settings-container .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        /* Messages styling */
-        .messages {
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-
-        .messages li {
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 5px;
-            color: #fff;
-        }
-
-        .messages .error {
-            background-color: #dc3545;
-        }
-
-        .messages .success {
-            background-color: #28a745;
-        }
-
-        .messages .info {
-            background-color: #17a2b8;
-        }
 
 @-webkit-keyframes animationBanner { 0% { opacity: 0; top: -8rem; } 75% { opacity: 0; top: -8rem; } 100% { opacity: 1; top: 0; } }
 @-moz-keyframes animationBanner { 0% { opacity: 0; top: -8rem; } 75% { opacity: 0; top: -8rem; } 100% { opacity: 1; top: 0; } }
