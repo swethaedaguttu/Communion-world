@@ -87,13 +87,16 @@ CHANNEL_LAYERS = {
 
 # Database configuration using dj-database-url
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
-        conn_max_age=600,  # optional, set a max connection age (recommended)
-        ssl_require=True    # optional, ensure SSL connections to your database (recommended for production)
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',  # Change to 'django.db.backends.postgresql' for production
+        'NAME': BASE_DIR / 'db.sqlite3',  # Use environment variables for production databases
+        # If using PostgreSQL, uncomment and use these:
+        # 'USER': os.environ.get('DB_USER'),
+        # 'PASSWORD': os.environ.get('DB_PASSWORD'),
+        # 'HOST': os.environ.get('DB_HOST'),
+        # 'PORT': os.environ.get('DB_PORT'),
+    }
 }
-
 # Password validators
 AUTH_PASSWORD_VALIDATORS = [
     {
