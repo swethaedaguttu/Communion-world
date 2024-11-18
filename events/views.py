@@ -53,7 +53,7 @@ logger = logging.getLogger(__name__)
 import openai  # Assuming OpenAI API is used for AI-powered features
 import random
 
-
+@login_required
 def index(request):
     user_profile = get_object_or_404(UserProfile, user=request.user)
     events = Event.objects.all()[:4]

@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True  # Set to 'False' in production
 
 # Allowed hosts (add your production hosts here)
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['communion-world-railway-domain.up.railway.app', 'communion-world.com']
 
 # Installed apps
 INSTALLED_APPS = [
