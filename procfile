@@ -1,1 +1,1 @@
-web: gunicorn community_connect.wsgi:application
+gunicorn community_connect.wsgi:application

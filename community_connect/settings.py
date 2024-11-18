@@ -12,11 +12,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Secret key (keep it secret in production)
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True  # Set to 'False' in production
+DEBUG = False  # Set to 'False' in production
 
 # Allowed hosts (add your production hosts here)
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['communion-world-railway-domain.up.railway.app', 'communion-world.com']
 
 # Installed apps
 INSTALLED_APPS = [
@@ -87,16 +86,13 @@ CHANNEL_LAYERS = {
 
 # Database configuration using dj-database-url
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Change to 'django.db.backends.postgresql' for production
-        'NAME': BASE_DIR / 'db.sqlite3',  # Use environment variables for production databases
-        # If using PostgreSQL, uncomment and use these:
-        # 'USER': os.environ.get('DB_USER'),
-        # 'PASSWORD': os.environ.get('DB_PASSWORD'),
-        # 'HOST': os.environ.get('DB_HOST'),
-        # 'PORT': os.environ.get('DB_PORT'),
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,  # optional, set a max connection age (recommended)
+        ssl_require=True    # optional, ensure SSL connections to your database (recommended for production)
+    )
 }
+
 # Password validators
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -170,6 +166,9 @@ LOGGING = {
 }
 
 # SSL settings (for production)
+SECURE_SSL_REDIRECT = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 # Email configuration (for allauth)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
