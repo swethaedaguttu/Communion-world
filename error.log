@@ -6826,3 +6826,33 @@ Traceback (most recent call last):
   File "C:\Users\sweth\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
 django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+ERROR 2024-11-18 17:44:42,646 exception Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\sweth\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sweth\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sweth\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sweth\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+ERROR 2024-11-18 17:44:42,821 exception Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\sweth\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sweth\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sweth\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sweth\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+You're accessing the development server over HTTPS, but it only supports HTTP.
+You're accessing the development server over HTTPS, but it only supports HTTP.
