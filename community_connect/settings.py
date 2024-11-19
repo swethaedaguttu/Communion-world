@@ -166,6 +166,8 @@ LOGGING = {
 SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 # Email configuration (for allauth)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -177,6 +179,7 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 # Session settings for security
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
 
 # Security settings
 SECURE_BROWSER_XSS_FILTER = True
