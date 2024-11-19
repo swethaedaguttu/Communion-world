@@ -164,8 +164,8 @@ LOGGING = {
 
 # SSL settings (for production)
 SECURE_SSL_REDIRECT = False
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
 
 # Email configuration (for allauth)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
