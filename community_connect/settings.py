@@ -12,10 +12,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Secret key (keep it secret in production)
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True  # Set to 'False' in production
+DEBUG = False  # Set to 'False' in production
 
 # Allowed hosts (add your production hosts here)
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 # Installed apps
 INSTALLED_APPS = [
@@ -163,7 +163,7 @@ LOGGING = {
 }
 
 # SSL settings (for production)
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
