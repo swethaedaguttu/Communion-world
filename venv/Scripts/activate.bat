@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\community_connect\community_connect\venv
+set VIRTUAL_ENV=C:\Communion-2\community_connect - Copy\venv
 
 if not defined PROMPT set PROMPT=$P$G
 
