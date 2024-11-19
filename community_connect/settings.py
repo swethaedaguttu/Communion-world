@@ -163,7 +163,7 @@ LOGGING = {
 }
 
 # SSL settings (for production)
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
