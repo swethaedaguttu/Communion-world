@@ -25,7 +25,6 @@ from django.contrib.auth.decorators import login_required  # Import login_requir
 from django.contrib.auth.views import LoginView
 from django.utils import timezone
 from django.core.paginator import Paginator
-from django_otp.decorators import otp_required
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.db import IntegrityError
@@ -50,7 +49,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-import openai  # Assuming OpenAI API is used for AI-powered features
 import random
 
 @login_required
@@ -495,12 +493,12 @@ def donation_success(request, donation_id):
     except Donation.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'Donation request not found.'}, status=404)
 
-    return render(request, 'events\donation_success.html', {'donation': donation})  # Render a success template with donation request details
+    return render(request, 'events/donation_success.html', {'donation': donation})  # Render a success template with donation request details
 
 @login_required
 def donation_list(request):
     donations = Donation.objects.filter(user=request.user)  # Fetch donation requests for the logged-in user
-    return render(request, 'events\donation_list.html', {'donations': donations})  # Render the donation list template
+    return render(request, 'events/donation_list.html', {'donations': donations})  # Render the donation list template
 
 # View to handle all charitable initiatives
 
