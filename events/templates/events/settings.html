@@ -660,9 +660,7 @@ textarea.form-control {
     }
 }
 
-.navbar-fixed-top {
-  top: auto;
-}
+
 #mobiriseBanner.container-banner {
   height: 8rem;
   opacity: 1;
@@ -725,10 +723,7 @@ textarea.form-control {
     display: none;
 }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 975a9485e667c40dc0b798bf0d94dc82231d02e6
 @-webkit-keyframes animationBanner { 0% { opacity: 0; top: -8rem; } 75% { opacity: 0; top: -8rem; } 100% { opacity: 1; top: 0; } }
 @-moz-keyframes animationBanner { 0% { opacity: 0; top: -8rem; } 75% { opacity: 0; top: -8rem; } 100% { opacity: 1; top: 0; } }
 @-o-keyframes animationBanner { 0% { opacity: 0; top: -8rem; } 75% { opacity: 0; top: -8rem; } 100% { opacity: 1; top: 0; } }
@@ -792,62 +787,62 @@ textarea.form-control {
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
           <li class="nav-item">
-              <a class="nav-link link text-black display-4" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/index.html" id="homeLink">
+              <a class="nav-link link text-black display-4" href="{% url 'index' %}" id="homeLink">
                   Home
               </a>
           </li>
           <li class="nav-item dropdown">
-              <a class="nav-link link text-black display-4 dropdown-toggle" href="help_alert" id="helpDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link link text-black display-4 dropdown-toggle" href="{% url 'help_alert' %}" id="helpDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Help
               </a>
               <ul class="dropdown-menu" aria-labelledby="helpDropdown">
-                  <li><a class="dropdown-item" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/help_alert.html">Help Request form</a></li>
-                  <li><a class="dropdown-item" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/help_alert.html #news-1-utwSmHJyLO">Help Request list</a></li>
+                  <li><a class="dropdown-item" href="{% url 'help_alert' %}">Help Request form</a></li>
+                  <li><a class="dropdown-item" href="{% url 'help_alert' %}#news-1-utwSmHJyLO">Help Request list</a></li>
               </ul>
           </li>
           <li class="nav-item dropdown">
-              <a class="nav-link link text-black display-4 dropdown-toggle" href="event_list" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link link text-black display-4 dropdown-toggle" href="{% url 'event_list' %}" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Events
               </a>
               <ul class="dropdown-menu" aria-labelledby="eventsDropdown">
-                  <li><a class="dropdown-item" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/event_list.html">Upcoming Events</a></li>
-                  <li><a class="dropdown-item" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/event_form.html">Create Events</a></li>
+                  <li><a class="dropdown-item" href="{% url 'event_list' %}">Upcoming Events</a></li>
+                  <li><a class="dropdown-item" href="{% url 'event_create' %}">Create Events</a></li>
               </ul>
           </li>
           <li class="nav-item dropdown">
-              <a class="nav-link link text-black display-4 dropdown-toggle" href="social_issues_groups_list" id="groupsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link link text-black display-4 dropdown-toggle" href="{% url 'social_issues_groups_list' %}" id="groupsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Groups
               </a>
               <ul class="dropdown-menu" aria-labelledby="groupsDropdown">
-                  <li><a class="dropdown-item" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/social_issues_groups_list.html">Discussion Groups</a></li>
-                  <li><a class="dropdown-item" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/create_social_issues_group.html">Create a Discussion Group</a></li>
+                  <li><a class="dropdown-item" href="{% url 'social_issues_groups_list' %}">Discussion Groups</a></li>
+                  <li><a class="dropdown-item" href="{% url 'create_social_issues_group' %}">Create a Discussion Group</a></li>
               </ul>
           </li>
           <li class="nav-item dropdown">
-              <a class="nav-link link text-black display-4 dropdown-toggle" href="community_leaders_list" id="leadersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link link text-black display-4 dropdown-toggle" href="{% url 'community_leaders_list' %}" id="leadersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Leaders
               </a>
               <ul class="dropdown-menu" aria-labelledby="leadersDropdown">
-                  <li><a class="dropdown-item" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/community_leaders_list.html">View Leaders</a></li>
-                  <li><a class="dropdown-item" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/create_community_leader.html">Add Leader</a></li>
+                  <li><a class="dropdown-item" href="{% url 'community_leaders_list' %}">View Leaders</a></li>
+                  <li><a class="dropdown-item" href="{% url 'create_community_leader' %}">Add Leader</a></li>
               </ul>
           </li>
           <li class="nav-item">
-              <a class="nav-link link text-black display-4" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/settings.html" id="settingsLink">
+              <a class="nav-link link text-black display-4" href="{% url 'settings' %}" id="settingsLink">
                   Settings
               </a>
           </li>
           <li class="nav-item dropdown">
-              <a class="nav-link link text-black display-4 dropdown-toggle" href="profile" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link link text-black display-4 dropdown-toggle" href="{% url 'profile' %}" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Profile
               </a>
               <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                  <li><a class="dropdown-item" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/profile.html">View Profile</a></li>
-                  <li><a class="dropdown-item" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/profile_edit.html">Edit Profile</a></li>
+                  <li><a class="dropdown-item" href="{% url 'profile' %}">View Profile</a></li>
+                  <li><a class="dropdown-item" href="{% url 'profile_edit' %}">Edit Profile</a></li>
               </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link link text-black display-4" href="https://swethaedaguttu.github.io/Communion-world/events/templates/events/login.html" id="settingsLink">
+            <a class="nav-link link text-black display-4" href="{% url 'login' %}" id="settingsLink">
                 Login
             </a>
         </li>
@@ -855,7 +850,7 @@ textarea.form-control {
 
 				
 				<div class="navbar-buttons mbr-section-btn">
-					<a class="btn btn-primary display-4" href="#">Get Help</a>
+					<a class="btn btn-primary display-4" href="#contact-form-2-utwSmHKIPQ">Get Help</a>
 				</div>
 			</div>
 		</div>
@@ -1010,8 +1005,8 @@ textarea.form-control {
           </h5>
           <p class="mbr-section-subtitle mbr-fonts-style mt-0 mb-4 display-7">
             Phone: 1-800-555-0199
-            <br>Help Request Form: info@communionapp.com
-            <br>Help Request Form:  India
+            <br>Email: info@communionapp.com
+            <br>Country:  India
             <br>Working Hours: Mon-Fri: 9 AM - 5 PM
           </p> 
 
