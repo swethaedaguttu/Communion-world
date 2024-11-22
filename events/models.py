@@ -12,12 +12,7 @@ class UserProfile(models.Model):
     bio = models.TextField(blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
     interests = models.TextField(blank=True, null=True)
-    profile_picture = models.URLField(
-        max_length=500, 
-        null=True, 
-        blank=True, 
-        default='default.jpg'  # External URL for default image
-    )
+    profile_picture = models.URLField(null=True, blank=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     email_verified = models.BooleanField(default=False)
     email = models.EmailField(max_length=254, unique=True, null=True, blank=True)
@@ -173,12 +168,8 @@ class HelpAlert(models.Model):
     description = models.TextField()
     contact_details = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
-    image = models.URLField(
-        max_length=500, 
-        blank=True, 
-        null=True, 
-        default=None  # External URL for the image
-    )
+    image = models.URLField(null=True, blank=True)
+
 
     def __str__(self):
         return f"{self.username} - {self.need_help}"
@@ -222,7 +213,6 @@ class GroupConversation(models.Model):
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
-
     def __str__(self):
         return f'{self.user_profile.user.username} - {self.group.name}'
 
@@ -232,12 +222,7 @@ class ConversationAttachment(models.Model):
         related_name='conversation_attachments',
         on_delete=models.CASCADE 
     )
-    file = models.URLField(
-        max_length=500, 
-        blank=True, 
-        null=True, 
-        default=None  # External URL for the file
-    )
+    file = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return f"Attachment for conversation {self.conversation.id}"
