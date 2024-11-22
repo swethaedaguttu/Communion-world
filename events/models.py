@@ -215,14 +215,18 @@ class GroupConversation(models.Model):
     def __str__(self):
         return f'{self.user_profile.user.username} - {self.group.name}'
 
-class Attachment(models.Model):
-    conversation = models.ForeignKey(GroupConversation, on_delete=models.CASCADE, related_name='attachments')
-    file = models.FileField(upload_to='attachments/')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+class ConversationAttachment(models.Model):
+    conversation = models.ForeignKey(
+        'GroupConversation', 
+        related_name='conversation_attachments',
+        on_delete=models.CASCADE 
+    )
+    file = models.FileField(
+        upload_to='attachments/'
+    )
 
     def __str__(self):
-        return f'Attachment for {self.conversation}'
-
+        return f"Attachment for conversation {self.conversation.id}"
 
 
 class Message(models.Model):

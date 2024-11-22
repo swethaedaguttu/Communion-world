@@ -104,12 +104,11 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Attachment',
+            name='ConversationAttachment',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('file', models.FileField(upload_to='attachments/')),
-                ('uploaded_at', models.DateTimeField(auto_now_add=True)),
-                ('conversation', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='attachments', to='events.groupconversation')),
+                ('conversation', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='conversation_attachments', to='events.groupconversation')),
             ],
         ),
         migrations.CreateModel(

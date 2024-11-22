@@ -9,7 +9,7 @@ from .models import (
     Event,
     Notification,
     UserProfile,
-    Donation, HelpAlert,  CommunityLeader, SocialIssuesGroup, GroupConversation, Message, Attachment
+    Donation, HelpAlert,  CommunityLeader, SocialIssuesGroup, GroupConversation, Message, ConversationAttachment
 
 
  # Import your UserProfile model correctly
@@ -635,6 +635,7 @@ def group_conversation_detail(request, group_id):
 
     if request.method == 'POST':
         form = GroupConversationForm(request.POST, request.FILES)
+        
         if form.is_valid():
             # Save the conversation with additional fields
             conversation = form.save(commit=False)
@@ -646,7 +647,10 @@ def group_conversation_detail(request, group_id):
             attachments = request.FILES.getlist('attachment')
             if attachments:
                 for file in attachments:
-                    Attachment.objects.create(conversation=conversation, file=file)
+                    # Use the new ConversationAttachment model
+                    ConversationAttachment.objects.create(conversation=conversation, file=file)
+            else:
+                messages.warning(request, 'No attachments were uploaded.')
 
             messages.success(request, 'Your message has been sent successfully!')
             return redirect('group_conversation_detail', group_id=group.id)
