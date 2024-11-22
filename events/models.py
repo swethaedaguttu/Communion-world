@@ -12,7 +12,7 @@ class UserProfile(models.Model):
     bio = models.TextField(blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
     interests = models.TextField(blank=True, null=True)
-    profile_picture = models.URLField(null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', default='default.jpg')
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     email_verified = models.BooleanField(default=False)
     email = models.EmailField(max_length=254, unique=True, null=True, blank=True)
@@ -168,8 +168,7 @@ class HelpAlert(models.Model):
     description = models.TextField()
     contact_details = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
-    image = models.URLField(null=True, blank=True)
-
+    image = models.ImageField(upload_to='help_alerts/', blank=True, null=True)  # Add ImageField
 
     def __str__(self):
         return f"{self.username} - {self.need_help}"
@@ -222,7 +221,9 @@ class ConversationAttachment(models.Model):
         related_name='conversation_attachments',
         on_delete=models.CASCADE 
     )
-    file = models.URLField(null=True, blank=True)
+    file = models.FileField(
+        upload_to='attachments/'
+    )
 
     def __str__(self):
         return f"Attachment for conversation {self.conversation.id}"
