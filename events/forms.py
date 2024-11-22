@@ -62,8 +62,13 @@ class ProfilePictureForm(forms.ModelForm):
 
     def clean_profile_picture(self):
         profile_picture = self.cleaned_data.get('profile_picture')
-        if profile_picture.size > 5 * 1024 * 1024:  # Limit size to 5 MB
-            raise forms.ValidationError("Image file too large ( > 5 MB )")
+        
+        # Validate URL pattern (checking if it's a valid image URL)
+        image_url_pattern = re.compile(r'^(https?://)([a-zA-Z0-9_-]+)([a-zA-Z0-9/._-]+)(\.)(jpg|jpeg|png|gif)$')
+        
+        if profile_picture and not image_url_pattern.match(profile_picture):
+            raise forms.ValidationError("Please provide a valid image URL (jpg, jpeg, png, gif).")
+        
         return profile_picture
 
 class ProfileUpdateForm(forms.ModelForm):
@@ -268,9 +273,20 @@ class GroupConversationForm(forms.ModelForm):
         model = GroupConversation
         fields = ['message', 'attachment']  # Include both message and attachment fields
         
-def clean_attachment(self):
-    file = self.cleaned_data.get('attachment')
-    if file and file.size > 10 * 1024 * 1024:  # 10MB size limit
-        raise forms.ValidationError('File size exceeds 10MB')
-    return file
+    def clean_attachment(self):
+        url = self.cleaned_data.get('attachment')
+        
+        if url:
+            # Optional: Check if the URL is reachable and points to a valid file
+            try:
+                response = requests.head(url, allow_redirects=True)  # Get headers to check URL
+                if response.status_code != 200:
+                    raise ValidationError('The URL does not point to a valid file or the server is down.')
+            except requests.RequestException:
+                raise ValidationError('The URL could not be reached or is invalid.')
 
+            # Optional: Check for specific file extensions if needed
+            if not url.endswith(('.jpg', '.png', '.pdf', '.docx')):  # Example file extensions
+                raise ValidationError('The file must be a valid image or document.')
+
+        return url
