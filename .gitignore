@@ -20,6 +20,8 @@ db.sqlite3
 .DS_Store
 *.swp
 
-# Static and media files (if you're handling them outside the repo)
-static/
-media/
+# Don't ignore static and media files (allow these to be tracked)
+!static/
+!static/**
+!media/
+!media/**
