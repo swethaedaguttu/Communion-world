@@ -1,0 +1,2133 @@
+{% load static %}
+<!DOCTYPE html>
+<html >
+<head>
+  
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <link rel="shortcut icon" href="https://r.mobirisesite.com/881540/assets/images/photo-1551135049-8a33b5883817.jpeg" type="image/x-icon">
+  <meta name="description" content="Join our vibrant discussion room to engage in meaningful conversations on various topics. Share your thoughts, learn from others, and connect with like-minded individuals.">
+  <title>Engage in Conversations</title>
+  <link rel="stylesheet" href="https://r.mobirisesite.com/881540/assets/web/assets/mobirise-icons2/mobirise2.css?rnd=1731155146071">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/881540/assets/bootstrap/css/bootstrap.min.css?rnd=1731155146071">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/881540/assets/bootstrap/css/bootstrap-grid.min.css?rnd=1731155146071">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/881540/assets/bootstrap/css/bootstrap-reboot.min.css?rnd=1731155146071">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/881540/assets/parallax/jarallax.css?rnd=1731155146071">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/881540/assets/dropdown/css/style.css?rnd=1731155146071">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/881540/assets/socicon/css/styles.css?rnd=1731155146071">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/881540/assets/theme/css/style.css?rnd=1731155146071">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/881540/assets/recaptcha.css?rnd=1731155146071">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap"></noscript>
+  <link rel="stylesheet" href="https://r.mobirisesite.com/881540/assets/css/mbr-additional.css?rnd=1731155146071" type="text/css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+  
+  
+  
+
+
+<style>
+/* Menu Section Styling */
+.menu2 {
+    background-color: #fff; /* White background for the menu */
+    padding: 10px 0; /* Vertical padding for spacing */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for a subtle 3D effect */
+}
+
+/* Navbar Styling */
+.menu2 .navbar {
+    padding: 0; /* Remove default padding */
+    border: none; /* Remove any default borders */
+}
+
+/* Navbar Container */
+.menu2 .container {
+    display: flex;
+    justify-content: space-between; /* Space out logo and menu */
+    align-items: center; /* Vertically align the navbar content */
+}
+
+/* Navbar Brand */
+.menu2 .navbar-brand {
+    display: flex;
+    align-items: center; /* Vertically align the logo and caption */
+}
+
+/* Logo Styling */
+.menu2 .navbar-logo img {
+    height: 4.3rem; /* Logo height */
+    width: auto; /* Maintain aspect ratio */
+}
+
+/* Navbar Caption */
+.menu2 .navbar-caption-wrap .navbar-caption {
+    font-size: 1.6rem; /* Adjust size of the navbar caption */
+    font-weight: 600; /* Bold text */
+    margin-left: 10px; /* Add space between logo and caption */
+    color: #000; /* Black color for the caption */
+    text-decoration: none; /* Remove underline */
+}
+
+/* Navbar Toggler (Hamburger Menu) */
+.menu2 .navbar-toggler {
+    background: transparent; /* Transparent background for the hamburger icon */
+    border: none; /* Remove default border */
+}
+
+/* Hamburger Icon */
+.menu2 .navbar-toggler .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+}
+
+.menu2 .navbar-toggler .hamburger span {
+    display: block;
+    height: 3px;
+    background-color: #333; /* Dark color for the hamburger bars */
+    width: 100%;
+}
+
+/* Navbar Menu (Links) */
+.menu2 .navbar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* Navbar Links */
+.menu2 .nav-link {
+    font-size: 1rem; /* Font size for the links */
+    font-weight: 500; /* Slightly bold text */
+    padding: 10px 15px; /* Padding around the links */
+    color: #000; /* Default black color for the links */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease; /* Smooth color change on hover */
+}
+
+/* Navbar Links Hover (Blue Color) */
+.menu2 .nav-link:hover {
+    color: #007bff !important; /* Change text color to blue on hover */
+}
+
+/* Dropdown Menu Styling */
+.menu2 .dropdown-menu {
+    border-radius: 5px; /* Rounded corners for the dropdown */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for dropdown */
+}
+
+/* Dropdown Items */
+.menu2 .dropdown-item {
+    font-size: 1rem;
+    color: #333;
+    padding: 10px 20px; /* Padding for each dropdown item */
+    text-decoration: none;
+    transition: background-color 0.3s ease; /* Smooth background color change */
+}
+
+/* Dropdown Item Hover */
+.menu2 .dropdown-item:hover {
+  background-color: #007bff; /* Blue button color */
+}
+
+/* Buttons in Navbar */
+.menu2 .navbar-buttons .btn {
+    font-size: 1rem; /* Font size for the button */
+    background-color: #007bff; /* Blue button color */
+    color: #fff; /* White text on the button */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Padding inside the button */
+    text-decoration: none; /* Remove underline */
+    transition: background-color 0.3s ease; /* Smooth color change */
+}
+
+/* Button Hover Effect */
+.menu2 .navbar-buttons .btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Responsive Design (Mobile) */
+@media (max-width: 768px) {
+    /* Stack the navbar items vertically on small screens */
+    .menu2 .navbar-nav {
+        flex-direction: column;
+        align-items: center;
+        width: 100%; /* Full width for the menu items */
+    }
+
+    .menu2 .navbar-nav .nav-item {
+        width: 100%; /* Make each nav item take full width */
+        text-align: center; /* Center the text */
+    }
+
+    /* Adjust padding and margins for smaller screens */
+    .menu2 .navbar-caption-wrap .navbar-caption {
+        font-size: 1.4rem; /* Adjust the font size of the caption */
+    }
+
+    .menu2 .navbar-logo img {
+        height: 3.5rem; /* Adjust logo size on small screens */
+    }
+}
+
+.navbar-fixed-top {
+  top: auto;
+}
+
+/* Section Styling */
+#hero-16-utDfZqGEoS {
+    position: relative;
+    overflow: hidden;
+    background: #000; /* Default black background */
+}
+
+/* Overlay Styling */
+#hero-16-utDfZqGEoS .mbr-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+    z-index: 1; /* Place overlay on top of the video */
+}
+
+/* Container Styling */
+#hero-16-utDfZqGEoS .container-fluid {
+    position: relative;
+    z-index: 2; /* Ensure content is above the overlay */
+    padding-top: 150px; /* Adjust padding to center content vertically */
+    text-align: center; /* Center align content */
+}
+
+/* Heading Styling */
+#hero-16-utDfZqGEoS .mbr-section-title {
+    font-size: 3.5rem; /* Large font size for the title */
+    font-weight: bold;
+    color: #fff; /* White color for the title */
+    margin-bottom: 20px; /* Space below the title */
+    text-transform: uppercase; /* Uppercase text for emphasis */
+}
+
+/* Paragraph Text Styling */
+#hero-16-utDfZqGEoS .mbr-text {
+    font-size: 1.5rem; /* Medium font size for the text */
+    color: #fff; /* White text color */
+    margin-bottom: 30px; /* Space below the text */
+    line-height: 1.5; /* Line spacing for better readability */
+}
+
+/* Button Styling */
+#hero-16-utDfZqGEoS .mbr-section-btn .btn {
+    font-size: 1.2rem; /* Font size for the button */
+    color: #fff; /* White text color */
+    border: 2px solid #fff; /* White border for the button */
+    padding: 12px 25px; /* Padding inside the button */
+    border-radius: 25px; /* Rounded corners */
+    text-transform: uppercase; /* Uppercase text on button */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
+}
+
+/* Button Hover Styling */
+#hero-16-utDfZqGEoS .mbr-section-btn .btn:hover {
+    background-color: #fff; /* White background on hover */
+    color: #000; /* Black text color on hover */
+}
+
+/* Video Background Styling */
+#hero-16-utDfZqGEoS iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Place the video behind the content */
+    object-fit: cover; /* Ensure the video covers the section without stretching */
+}
+
+/* Responsive Design (Mobile) */
+@media (max-width: 768px) {
+    #hero-16-utDfZqGEoS .mbr-section-title {
+        font-size: 2.5rem; /* Smaller title font size on mobile */
+    }
+    #hero-16-utDfZqGEoS .mbr-text {
+        font-size: 1.2rem; /* Smaller text size on mobile */
+    }
+}
+
+/* Main Container */
+/* General Container Styling */
+/* Main Layout */
+.discussion-layout {
+    display: flex;
+    gap: 20px;
+    height: 200vh; /* Full viewport height for containers */
+    padding: 20px;
+    background-color: #f8f9fa; /* Light background for better visibility */
+}
+
+/* Left Container Styling */
+.left-container {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    max-width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: 100%; /* Occupy full height */
+    overflow-y: auto; /* Allow scrolling for lengthy content */
+}
+
+.group-image {
+    width: 100%;
+    max-height: 200px; /* Reduced height for better alignment */
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.group-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.group-topic,
+.group-description {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* Right Container Styling */
+.right-container {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    height: 100%; /* Occupy full height */
+}
+
+.messages-heading {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Conversations List */
+.conversations-list {
+    flex: 1;
+    max-height: calc(100% - 80px); /* Dynamic height excluding padding */
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+/* Conversation Card */
+.conversation-card {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f0f8ff;
+    border-radius: 10px;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.username {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.timestamp {
+    font-size: 12px;
+    color: #888;
+}
+
+.message-text {
+    background-color: #e0f7fa;
+    padding: 10px;
+    border-radius: 10px;
+    word-wrap: break-word;
+}
+
+/* Form Styling */
+.form-container {
+    margin-top: 20px;
+}
+
+.message-form {
+    display: flex;
+    gap: 10px;
+}
+
+#message-input {
+    flex: 20; /* Increased flex to make the input box even wider */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    resize: none;
+    font-size: 16px;
+    height: 60px; /* Increased height */
+    width: 100%; /* Ensure it takes up full width of its container */
+}
+
+
+.submit-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Attachment Preview */
+.attachment-preview img {
+    max-width: 50px; /* Reduced size for better appearance */
+    max-height: 50px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    object-fit: cover;
+}
+.new-message {
+  background-color: #f0f8ff; /* Light blue for new messages */
+}
+/* Style for the attachment images */
+.attachment-image {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Style for video attachments */
+.attachment-video {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Style for download links */
+.attachment a {
+  display: inline-block;
+  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.attachment a:hover {
+  text-decoration: underline;
+}
+
+/* Cheers Section Styling */
+.people04 {
+    background-color: #f9f9f9; /* Light background for the section */
+    padding: 50px 0;
+}
+
+.people04 .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.people04 .content-head {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.people04 .content-head h3 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+}
+
+.people04 .content-head h3 strong {
+    color: #007bff; /* Highlighted text color */
+}
+
+.people04 .mbr-masonry {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.people04 .item {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.people04 .item:hover {
+    transform: translateY(-10px);
+}
+
+.people04 .card-box {
+    padding: 20px;
+}
+
+.people04 .card-text {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.people04 .img-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.people04 .img-wrapper img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    object-fit: cover;
+    max-width: 120px;
+}
+
+.people04 .card-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
+.people04 .card-title strong {
+    color: #007bff; /* Highlight name color */
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 992px) {
+    .people04 .item {
+        width: 45%;
+    }
+}
+
+@media (max-width: 768px) {
+    .people04 .item {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .people04 .content-head h3 {
+        font-size: 28px;
+    }
+}
+
+/* Gallery Section Styling */
+.gallery10 {
+    background-color: #f9f9f9; /* Light background color */
+    padding: 50px 0;
+}
+
+.gallery10 .container-fluid {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.loop-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.loop-container .item {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff; /* Bright color for emphasis */
+    white-space: nowrap;
+    margin: 0 10px;
+    animation: loop-animation 15s infinite linear;
+}
+
+
+/* Animation for the loop effect */
+@keyframes loop-animation {
+    0% {
+        transform: translateX(100%);
+    }
+    50% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Responsive Design for smaller screens */
+@media (max-width: 768px) {
+    .gallery10 .container-fluid {
+        padding: 0 20px;
+    }
+
+    .loop-container .item {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 576px) {
+    .loop-container .item {
+        font-size: 16px;
+    }
+}
+
+/* Features Section Styling */
+.features5 {
+    background-color: #f0f0f0; /* Light background */
+    padding: 80px 0;
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
+.features5 .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.features5 .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.features5 .item {
+    margin-bottom: 30px;
+}
+
+.features5 .item-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.features5 .card-box {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    width: 100%;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Hover effect on card */
+.features5 .card-box:hover {
+    transform: translateY(-10px);
+}
+
+.features5 .card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #007bff; /* Primary color */
+}
+
+.features5 .card-text {
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Responsive Design for Medium Screens */
+@media (max-width: 992px) {
+    .features5 .item {
+        flex: 0 0 50%; /* 2 columns on medium screens */
+        max-width: 50%;
+    }
+}
+
+/* Responsive Design for Small Screens */
+@media (max-width: 576px) {
+    .features5 .item {
+        flex: 0 0 100%; /* Full-width items on small screens */
+        max-width: 100%;
+    }
+
+    .features5 .card-title {
+        font-size: 1.3rem; /* Adjust card title size */
+    }
+
+    .features5 .card-text {
+        font-size: 0.9rem; /* Adjust card text size */
+    }
+}
+
+/* Contact Form Section */
+.form5 {
+    padding: 80px 0;
+}
+
+.form5 .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.form5 .mbr-section-head {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.form5 .mbr-section-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Form styling */
+.form5 .mbr-form {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form5 .form-control {
+    border-radius: 5px;
+    box-shadow: none;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    width: 100%;
+    transition: border-color 0.3s ease;
+}
+
+.form5 .form-control:focus {
+    border-color: #007bff; /* Primary color on focus */
+    outline: none;
+}
+
+.form5 .mbr-section-btn {
+    text-align: center;
+}
+
+.form5 .btn-primary {
+    background-color: #007bff; /* Primary button color */
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for submit button */
+.form5 .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Success and Error Alerts */
+.form5 .alert {
+    display: none;
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+.form5 .alert.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.form5 .alert.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .form5 .col-md {
+        max-width: 100%; /* Full-width input fields for medium screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .form5 .mbr-section-title {
+        font-size: 1.5rem; /* Adjust the font size for smaller screens */
+    }
+
+    .form5 .form-control {
+        font-size: 0.9rem; /* Adjust font size for input fields on small screens */
+        padding: 10px 12px; /* Adjust padding */
+    }
+
+    .form5 .btn-primary {
+        padding: 10px 20px; /* Adjust button size */
+    }
+}
+
+/* FAQ Section Styling */
+#faq-1-utDfZqIbot {
+    padding: 60px 0;
+    background-color: #f9f9f9;
+}
+
+#faq-1-utDfZqIbot .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#faq-1-utDfZqIbot .content {
+    text-align: center;
+}
+
+#faq-1-utDfZqIbot .content-head {
+    margin-bottom: 50px;
+}
+
+#faq-1-utDfZqIbot .mbr-section-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+}
+
+#faq-1-utDfZqIbot .accordion .card {
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+}
+
+#faq-1-utDfZqIbot .accordion .card-header {
+    background-color: #fff;
+    padding: 15px;
+    cursor: pointer;
+}
+
+#faq-1-utDfZqIbot .accordion .panel-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#faq-1-utDfZqIbot .accordion .sign {
+    font-size: 20px;
+    transition: transform 0.3s ease;
+}
+
+#faq-1-utDfZqIbot .accordion .panel-title.collapsed .sign {
+    transform: rotate(-180deg);
+}
+
+#faq-1-utDfZqIbot .accordion .panel-body {
+    padding: 20px;
+    font-size: 16px;
+    color: #666;
+    background-color: #fff;
+    border-top: 1px solid #e0e0e0;
+}
+
+#faq-1-utDfZqIbot .panel-text {
+    font-size: 14px;
+    color: #555;
+}
+
+@media (max-width: 768px) {
+    #faq-1-utDfZqIbot .mbr-section-title {
+        font-size: 28px;
+    }
+
+    #faq-1-utDfZqIbot .accordion .card-header {
+        padding: 10px;
+    }
+
+    #faq-1-utDfZqIbot .accordion .panel-title {
+        font-size: 16px;
+    }
+
+    #faq-1-utDfZqIbot .accordion .panel-body {
+        font-size: 14px;
+    }
+}
+
+/* Features Section Styling */
+#metrics-2-utDfZqJZKf {
+    padding: 60px 0;
+    background-color: #f4f4f4;
+}
+
+#metrics-2-utDfZqJZKf .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#metrics-2-utDfZqJZKf .row {
+    display: flex;
+    justify-content: center;
+}
+
+#metrics-2-utDfZqJZKf .item {
+    margin-bottom: 30px;
+}
+
+#metrics-2-utDfZqJZKf .card-box {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#metrics-2-utDfZqJZKf .card-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+#metrics-2-utDfZqJZKf .card-title {
+    font-size: 48px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+#metrics-2-utDfZqJZKf .card-text {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 992px) {
+    #metrics-2-utDfZqJZKf .row {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 768px) {
+    #metrics-2-utDfZqJZKf .card-title {
+        font-size: 36px;
+    }
+
+    #metrics-2-utDfZqJZKf .card-text {
+        font-size: 16px;
+    }
+}
+
+/* Social Media Section Styling */
+#follow-us-1-utDfZqJrW4 {
+    padding: 60px 0;
+}
+
+#follow-us-1-utDfZqJrW4 .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#follow-us-1-utDfZqJrW4 .media-container-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#follow-us-1-utDfZqJrW4 h3 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+#follow-us-1-utDfZqJrW4 .social-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#follow-us-1-utDfZqJrW4 .iconfont-wrapper {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#follow-us-1-utDfZqJrW4 .iconfont-wrapper:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#follow-us-1-utDfZqJrW4 .bg-facebook {
+    background-color: #3b5998;
+    color: white;
+}
+
+#follow-us-1-utDfZqJrW4 .bg-twitter {
+    background-color: #1da1f2;
+    color: white;
+}
+
+#follow-us-1-utDfZqJrW4 .bg-instagram {
+    background-color: #e4405f;
+    color: white;
+}
+
+#follow-us-1-utDfZqJrW4 .bg-tiktok {
+    background-color: #000000;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    #follow-us-1-utDfZqJrW4 h3 {
+        font-size: 28px;
+    }
+
+    #follow-us-1-utDfZqJrW4 .iconfont-wrapper {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+}
+
+/* Contact Us Section Styling */
+#contacts-2-utDfZqJAca {
+    padding: 60px 0;
+    background-color: #f9f9f9;
+}
+
+#contacts-2-utDfZqJAca .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#contacts-2-utDfZqJAca .mbr-section-head {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+#contacts-2-utDfZqJAca .mbr-section-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+}
+
+#contacts-2-utDfZqJAca .card {
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+#contacts-2-utDfZqJAca .card-wrapper {
+    padding: 30px;
+}
+
+#contacts-2-utDfZqJAca .text-wrapper {
+    padding: 0 20px;
+}
+
+#contacts-2-utDfZqJAca .list {
+    list-style: none;
+    padding-left: 0;
+    font-size: 16px;
+    color: #555;
+}
+
+#contacts-2-utDfZqJAca .item-wrap {
+    margin-bottom: 15px;
+}
+
+#contacts-2-utDfZqJAca .item-wrap a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+#contacts-2-utDfZqJAca .item-wrap a:hover {
+    text-decoration: underline;
+}
+
+#contacts-2-utDfZqJAca .map-wrapper {
+    position: relative;
+    padding: 0;
+}
+
+#contacts-2-utDfZqJAca .google-map iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: none;
+}
+
+@media (max-width: 768px) {
+    #contacts-2-utDfZqJAca .row {
+        flex-direction: column;
+    }
+
+    #contacts-2-utDfZqJAca .card {
+        margin-bottom: 20px;
+    }
+
+    #contacts-2-utDfZqJAca .mbr-section-title {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 576px) {
+    #contacts-2-utDfZqJAca .card-wrapper {
+        padding: 20px;
+    }
+
+    #contacts-2-utDfZqJAca .list {
+        font-size: 14px;
+    }
+}
+
+/* Footer Section Styling */
+#footer-3-utDfZqJPAd {
+    background-color: #333;
+    padding: 40px 0;
+    color: #fff;
+}
+
+#footer-3-utDfZqJPAd .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#footer-3-utDfZqJPAd .row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#footer-3-utDfZqJPAd .row-links {
+    margin-bottom: 30px;
+}
+
+#footer-3-utDfZqJPAd .header-menu {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+#footer-3-utDfZqJPAd .header-menu-item {
+    font-size: 18px;
+}
+
+#footer-3-utDfZqJPAd .header-menu-item a {
+    color: #fff;
+    text-decoration: none;
+}
+
+#footer-3-utDfZqJPAd .header-menu-item a:hover {
+    text-decoration: underline;
+}
+
+#footer-3-utDfZqJPAd .social-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+#footer-3-utDfZqJPAd .soc-item a {
+    color: #fff;
+    font-size: 24px;
+    transition: transform 0.3s;
+}
+
+#footer-3-utDfZqJPAd .soc-item a:hover {
+    transform: scale(1.1);
+}
+
+#footer-3-utDfZqJPAd .copyright {
+    text-align: center;
+    font-size: 14px;
+    color: #bbb;
+    margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #footer-3-utDfZqJPAd .header-menu {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #footer-3-utDfZqJPAd .social-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+}
+
+#mobiriseBanner.container-banner {
+  height: 8rem;
+  opacity: 1;
+  -webkit-animation: 4s linear animationHeight;
+  -moz-animation: 4s linear animationHeight;
+    -o-animation: 4s linear animationHeight;
+       animation: 4s linear animationHeight;
+       transition: all  0.5s;
+}
+#mobiriseBanner.container-banner.container-banner-closing {
+  pointer-events: none;
+  height: 0;
+  opacity: 0;
+  -webkit-animation: 0.5s linear animationClosing;
+  -moz-animation:  0.5s linear animationClosing;
+    -o-animation:  0.5s linear animationClosing;
+       animation:  0.5s linear animationClosing;
+}
+#mobiriseBanner .banner {
+  min-height: 8rem;
+  position:fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  padding: 10px;
+  opacity:1;
+  -webkit-animation: 4s linear animationBanner;
+  -moz-animation: 4s linear animationBanner;
+    -o-animation: 4s linear animationBanner;
+       animation: 4s linear animationBanner;
+  z-index: 1031;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#mobiriseBanner .banner p {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  animation: none;
+  visibility: visible;
+}
+#mobiriseBanner .buy-license {
+  text-decoration: underline;
+}
+#mobiriseBanner .banner .btn {
+  margin: 0.3rem 0.5rem;
+  animation: none;
+  visibility: visible;
+}
+.navbar.opened {
+    z-index: 1032;
+}
+.mbr-halfscreen {
+  height: 60vh; /* This will set the section height to 50% of the viewport height */
+}
+/* Remove dropdown arrow */
+.nav-link.dropdown-toggle::after {
+    display: none;
+}
+
+@-webkit-keyframes animationBanner { 0% { opacity: 0; top: -8rem; } 75% { opacity: 0; top: -8rem; } 100% { opacity: 1; top: 0; } }
+@-moz-keyframes animationBanner { 0% { opacity: 0; top: -8rem; } 75% { opacity: 0; top: -8rem; } 100% { opacity: 1; top: 0; } }
+@-o-keyframes animationBanner { 0% { opacity: 0; top: -8rem; } 75% { opacity: 0; top: -8rem; } 100% { opacity: 1; top: 0; } }
+   @keyframes animationBanner { 0% { opacity: 0; top: -8rem; } 75% { opacity: 0; top: -8rem; } 100% { opacity: 1; top: 0; } }
+@-webkit-keyframes animationHeight { 0% { height: 0; } 75% { height: 0; } 100% { height: 8rem; } }
+@-moz-keyframes animationHeight { 0% { height: 0; } 75% { height: 0; } 100% { height: 8rem; } }
+@-o-keyframes animationHeight { 0% { height: 0; } 75% { height: 0; } 100% { height: 8rem; } }
+   @keyframes animationHeight { 0% { height: 0; } 75% { height: 0; } 100% { height: 8rem; } }
+   
+@-webkit-keyframes animationClosing { 0% { height: 8rem; opacity: 1; } 30% { height: 8rem; opacity: 0.5;} 100% { height: 0; opacity: 0;} }
+@-moz-keyframes animationClosing { 0% { height: 8rem; opacity: 1; } 30% { height: 8rem; opacity: 0.5;} 100% { height: 0; opacity: 0;} }
+@-o-keyframes animationClosing { 0% { height: 8rem; opacity: 1; } 30% { height: 8rem; opacity: 0.5;} 100% { height: 0; opacity: 0;} }
+@keyframes animationClosing { 0% { height: 8rem; opacity: 1; } 30% { height: 8rem; opacity: 0.5;} 100% { height: 0; opacity: 0;} }
+
+@media(max-width: 767px) {
+  #mobiriseBanner.container-banner {
+    height: 12rem;
+  }
+  #mobiriseBanner .banner {
+    min-height: 12rem;
+  }
+  @-webkit-keyframes animationBanner { 0% { opacity: 0; top: -12rem; } 75% { opacity: 0; top: -12rem; } 100% { opacity: 1; top: 0; } }
+  @-moz-keyframes animationBanner { 0% { opacity: 0; top: -12rem; } 75% { opacity: 0; top: -12rem; } 100% { opacity: 1; top: 0; } }
+  @-o-keyframes animationBanner { 0% { opacity: 0; top: -12rem; } 75% { opacity: 0; top: -12rem; } 100% { opacity: 1; top: 0; } }
+    @keyframes animationBanner { 0% { opacity: 0; top: -12rem; } 75% { opacity: 0; top: -12rem; } 100% { opacity: 1; top: 0; } }
+  @-webkit-keyframes animationHeight { 0% { height: 0; } 75% { height: 0; } 100% { height: 12rem; } }
+  @-moz-keyframes animationHeight { 0% { height: 0; } 75% { height: 0; } 100% { height: 12rem; } }
+  @-o-keyframes animationHeight { 0% { height: 0; } 75% { height: 0; } 100% { height: 12rem; } }
+    @keyframes animationHeight { 0% { height: 0; } 75% { height: 0; } 100% { height: 12rem; } }
+
+  @-webkit-keyframes animationClosing { 0% { height: 12rem; opacity: 1; } 30% { height: 12rem; opacity: 0.5;} 100% { height: 0; opacity: 0;} }
+  @-moz-keyframes animationClosing { 0% { height: 12rem; opacity: 1; } 30% { height: 12rem; opacity: 0.5;} 100% { height: 0; opacity: 0;} }
+  @-o-keyframes animationClosing { 0% { height: 12rem; opacity: 1; } 30% { height: 12rem; opacity: 0.5;} 100% { height: 0; opacity: 0;} }
+  @keyframes animationClosing { 0% { height: 12rem; opacity: 1; } 30% { height: 12rem; opacity: 0.5;} 100% { height: 0; opacity: 0;} }
+}
+</style>
+</head>
+<body>
+  
+  <section data-bs-version="5.1" class="menu menu2 cid-utDfZqFezR" once="menu" id="menu-5-utDfZqFezR">
+	
+
+	<nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
+		<div class="container">
+			<div class="navbar-brand">
+				<span class="navbar-logo">
+					<a href="#">
+						<img src="https://r.mobirisesite.com/875197/assets/images/g19a635698b1b94ea78769e054825-h_m37du4g9.png" alt="" style="height: 4.3rem;">
+					</a>
+				</span>
+				<span class="navbar-caption-wrap"><a class="navbar-caption text-black display-4" href="#">Communion</a></span>
+			</div>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-bs-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<div class="hamburger">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
+          <li class="nav-item">
+              <a class="nav-link link text-black display-4" href="{% url 'index' %}" id="homeLink">
+                  Home
+              </a>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link link text-black display-4 dropdown-toggle" href="{% url 'help_alert' %}" id="helpDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Help
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="helpDropdown">
+                  <li><a class="dropdown-item" href="{% url 'help_alert' %}">Help Request form</a></li>
+                  <li><a class="dropdown-item" href="{% url 'help_alert' %}#news-1-utwSmHJyLO">Help Request list</a></li>
+              </ul>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link link text-black display-4 dropdown-toggle" href="{% url 'event_list' %}" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Events
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="eventsDropdown">
+                  <li><a class="dropdown-item" href="{% url 'event_list' %}">Upcoming Events</a></li>
+                  <li><a class="dropdown-item" href="{% url 'event_create' %}">Create Events</a></li>
+              </ul>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link link text-black display-4 dropdown-toggle" href="{% url 'social_issues_groups_list' %}" id="groupsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Groups
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="groupsDropdown">
+                  <li><a class="dropdown-item" href="{% url 'social_issues_groups_list' %}">Discussion Groups</a></li>
+                  <li><a class="dropdown-item" href="{% url 'create_social_issues_group' %}">Create a Discussion Group</a></li>
+              </ul>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link link text-black display-4 dropdown-toggle" href="{% url 'community_leaders_list' %}" id="leadersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Leaders
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="leadersDropdown">
+                  <li><a class="dropdown-item" href="{% url 'community_leaders_list' %}">View Leaders</a></li>
+                  <li><a class="dropdown-item" href="{% url 'create_community_leader' %}">Add Leader</a></li>
+              </ul>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link link text-black display-4" href="{% url 'settings' %}" id="settingsLink">
+                  Settings
+              </a>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link link text-black display-4 dropdown-toggle" href="{% url 'profile' %}" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Profile
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                  <li><a class="dropdown-item" href="{% url 'profile' %}">View Profile</a></li>
+                  <li><a class="dropdown-item" href="{% url 'profile_edit' %}">Edit Profile</a></li>
+              </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link link text-black display-4" href="{% url 'login' %}" id="settingsLink">
+                Login
+            </a>
+        </li>
+      </ul>
+				<div class="navbar-buttons mbr-section-btn">
+					<a class="btn btn-primary display-4" href="#">Get Started</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+</section>
+
+<section 
+  data-bs-version="5.1" 
+  class="header18 cid-utDfZqGEoS mbr-halfscreen" 
+  id="hero-16-utDfZqGEoS" 
+  style="background-image: url('{{ group.image }}'); background-size: cover; background-position: center;">
+  
+  <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(0, 0, 0);"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="content-wrap col-12 col-md-12">
+        <h1 class="mbr-section-title mbr-fonts-style mbr-white mb-4 display-1">
+          <strong>{{ group.name }}</strong>
+        </h1>
+        
+        <p class="mbr-fonts-style mbr-text mbr-white mb-4 display-7">
+          Dive into discussions that spark ideas and ignite passions!
+        </p>
+        <div class="mbr-section-btn">
+          <a class="btn btn-white-outline display-7" href="#discussion-section">Join Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="discussion-container" id="discussion-section">
+    <div class="container">
+        <div class="discussion-layout">
+            <!-- Left Container: Group Info -->
+            <div class="left-container">
+                <div class="group-info">
+                    {% if group.image %}
+                        <img src="{{ group.image }}" alt="{{ group.name }} Image" class="group-image">
+                    {% else %}
+                        <img src="{% static 'events/images/placeholder.png' %}" alt="Placeholder Image" class="group-image">
+                    {% endif %}
+                    <h1 class="group-name">{{ group.name }}</h1>
+                    <p class="group-topic"><strong>Topic:</strong> {{ group.topic }}</p>
+                    <p class="group-description"><strong>Description:</strong> {{ group.description }}</p>
+                </div>
+            </div>
+
+<!-- Right Container: Messages -->
+<div class="right-container">
+    <h2 class="messages-heading">Messages</h2>
+    <div class="conversations-list">
+        {% for conversation in conversations %}
+            <div class="conversation-card">
+                <strong class="username">{{ conversation.user_profile.user.username }}</strong>
+                <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
+                <p class="message-text">{{ conversation.message }}</p>
+
+                {% if conversation.conversation_attachments.all %}
+                <div class="attachments">
+                    {% for attachment in conversation.conversation_attachments.all %}
+                        <div class="attachment">
+                            {% if attachment.file %}
+                                <a href="{{ attachment.file.url }}" target="_blank">View Attachment</a>
+                            {% else %}
+                                <p>No attachment available.</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            </div>
+        {% endfor %}
+    </div>
+
+                                        
+                <!-- Message Input Form (Now inside the right container) -->
+                <div class="form-container">
+                    <form method="POST" class="message-form" enctype="multipart/form-data" action="{% url 'group_conversation_detail' group_id=group.id %}">
+                        {% csrf_token %}
+                        <div class="input-section">
+                            <textarea id="message-input" name="message" placeholder="Type a message..." required></textarea>
+                            <label for="attachment-input" class="attachment-btn" aria-label="Attach File">
+                                <i class="fas fa-paperclip"></i>
+                            </label>
+                            <input type="file" id="attachment-input" name="attachment" class="attachment-input" style="display: none;" onchange="showAttachmentPreview()">
+                            <button type="button" class="emoji-btn" aria-label="Choose Emoji" onclick="toggleEmojiPicker()">
+                                <i class="fas fa-smile"></i>
+                            </button>
+                            <div id="emoji-picker" class="emoji-picker" style="display:none;">
+                                <span onclick="insertEmoji('😊')">😊</span>
+                                <span onclick="insertEmoji('😂')">😂</span>
+                                <span onclick="insertEmoji('😍')">😍</span>
+                                <span onclick="insertEmoji('😢')">😢</span>
+                                <span onclick="insertEmoji('😡')">😡</span>
+                                <span onclick="insertEmoji('😎')">😎</span>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">Send</button>
+                        <div id="attachment-preview" class="attachment-preview"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+  
+<section data-bs-version="5.1" class="gallery07 cid-utDfZqH1xZ" id="gallery-14-utDfZqH1xZ">
+  
+  
+  <div class="container-fluid gallery-wrapper">
+    <div class="row justify-content-center">
+      <div class="col-12 content-head">
+        
+      </div>
+    </div>
+    <div class="grid-container">
+      <div class="grid-container-3 moving-left" style="transform: translate3d(-200px, 0px, 0px);">
+        <div class="grid-item">
+          <img src="https://r.mobirisesite.com/881540/assets/images/photo-1576670159871-dd9d88d3f68b.jpeg" alt="">
+        </div>
+        <div class="grid-item">
+          <img src="https://r.mobirisesite.com/881540/assets/images/photo-1577896851231-70ef18881754.jpeg" alt="">
+        </div>
+        <div class="grid-item">
+          <img src="https://r.mobirisesite.com/881540/assets/images/photo-1573165067541-4cd6d9837902.jpeg" alt="">
+        </div>
+        <div class="grid-item">
+          <img src="https://r.mobirisesite.com/881540/assets/images/photo-1606836591695-4d58a73eba1e.jpeg" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-bs-version="5.1" class="people04 cid-utDfZqHibw" id="testimonials-4-utDfZqHibw">
+	
+	
+	<div class="container">
+		<div class="row mb-5 justify-content-center">
+			<div class="col-12 mb-0 content-head">
+				<h3 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+					<strong>Cheers</strong>
+				</h3>
+				
+			</div>
+		</div>
+		<div class="row mbr-masonry" data-masonry="{&quot;percentPosition&quot;: true }">
+			<div class="item features-without-image col-12 col-md-6 col-lg-4 active">
+				<div class="item-wrapper">
+					<div class="card-box align-left">
+						<p class="card-text mbr-fonts-style display-7">Chatterbox is where my ideas come alive!</p>
+						<div class="img-wrapper mt-4 mb-3">
+							<img src="https://r.mobirisesite.com/881540/assets/images/photo-1589571894960-20bbe2828d0a.jpeg" data-slide-to="0" data-bs-slide-to="0" alt="">
+						</div>
+						<h5 class="card-title mbr-fonts-style display-7">
+							<strong>Emily R.</strong>
+						</h5>
+					</div>
+				</div>
+			</div>
+			<div class="item features-without-image col-12 col-md-6 col-lg-4">
+				<div class="item-wrapper">
+					<div class="card-box align-left">
+						<p class="card-text mbr-fonts-style display-7">I love the debates! It’s like a mental gym!</p>
+						<div class="img-wrapper mt-4 mb-3">
+							<img src="https://r.mobirisesite.com/881540/assets/images/photo-1679746584014-fb31d4eb0a5e.jpeg" data-slide-to="4" data-bs-slide-to="4" alt="">
+						</div>
+						<h5 class="card-title mbr-fonts-style display-7">
+							<strong>Mark T.</strong>
+						</h5>
+					</div>
+				</div>
+			</div>
+			<div class="item features-without-image col-12 col-md-6 col-lg-4">
+				<div class="item-wrapper">
+					<div class="card-box align-left">
+						<p class="card-text mbr-fonts-style display-7">Best place to unleash my thoughts!</p>
+						<div class="img-wrapper mt-4 mb-3">
+							<img src="https://r.mobirisesite.com/881540/assets/images/photo-1545803928-04e3f4cdd4ed.jpeg" data-slide-to="5" data-bs-slide-to="5" alt="">
+						</div>
+						<h5 class="card-title mbr-fonts-style display-7">
+							<strong>Sophie L.</strong>
+						</h5>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section data-bs-version="5.1" class="gallery10 cid-utDfZqHh7Q" id="features-61-utDfZqHh7Q">
+  
+
+
+  <div class="container-fluid">
+
+      <div class="loop-container">
+        <div class="item display-1" data-linewords="Engaging Discussions * Diverse Perspectives * Real-Time Chats * Expert Insights * Community Driven * Fun Atmosphere *" data-direction="-1" data-speed="0.05">☁️ Best offers ☁️ Free delivery ☁️ Perfect design ☁️ Comfort ☁️ Support 24/7 ☁️ Vibes</div>
+
+        <div class="item display-1" data-linewords="Engaging Discussions * Diverse Perspectives * Real-Time Chats * Expert Insights * Community Driven * Fun Atmosphere *" data-direction="-1" data-speed="0.05">☁️ Best offers ☁️ Free delivery ☁️ Perfect design ☁️ Comfort ☁️ Support 24/7 ☁️ Vibes</div>
+      </div>
+    
+  </div>
+</section>
+
+<section data-bs-version="5.1" class="features5 cid-utDfZqIyXA mbr-parallax-background" id="features-33-utDfZqIyXA">
+    
+
+    
+    
+    <div class="container">
+        
+        <div class="row">
+            <div class="item features-without-image col-12 col-md-6 col-lg-4 item-mb">
+                <div class="item-wrapper">
+                    <div class="card-box align-left">
+                        
+                        <h5 class="card-title mbr-fonts-style display-5">
+                            <strong>Join Us</strong>
+                        </h5>
+                        <p class="card-text mbr-fonts-style display-7">Dive into discussions that matter to you.</p>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="item features-without-image col-12 col-md-6 col-lg-4 item-mb">
+                <div class="item-wrapper">
+                    <div class="card-box align-left">
+                        
+                        <h5 class="card-title mbr-fonts-style display-5">
+                            <strong>Speak Up</strong>
+                        </h5>
+                        <p class="card-text mbr-fonts-style display-7">Your voice is important—let it be heard!</p>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="item features-without-image col-12 col-md-6 col-lg-4 item-mb">
+                <div class="item-wrapper">
+                    <div class="card-box align-left">
+                        
+                        <h5 class="card-title mbr-fonts-style display-5">
+                            <strong>Learn Together</strong>
+                        </h5>
+                        <p class="card-text mbr-fonts-style display-7">Share knowledge and gain new insights.</p>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="item features-without-image col-12 col-md-6 col-lg-4 item-mb">
+                <div class="item-wrapper">
+                    <div class="card-box align-left">
+                        
+                        <h5 class="card-title mbr-fonts-style display-5">
+                            <strong>Have Fun</strong>
+                        </h5>
+                        <p class="card-text mbr-fonts-style display-7">Who said discussions can't be entertaining?</p>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="item features-without-image col-12 col-md-6 col-lg-4 item-mb">
+                <div class="item-wrapper">
+                    <div class="card-box align-left">
+                        
+                        <h5 class="card-title mbr-fonts-style display-5">
+                            <strong>Connect Globally</strong>
+                        </h5>
+                        <p class="card-text mbr-fonts-style display-7">Meet people from all walks of life.</p>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="item features-without-image col-12 col-md-6 col-lg-4 item-mb">
+                <div class="item-wrapper">
+                    <div class="card-box align-left">
+                        
+                        <h5 class="card-title mbr-fonts-style display-5">
+                            <strong>Be Inspired</strong>
+                        </h5>
+                        <p class="card-text mbr-fonts-style display-7">Spark creativity through engaging conversations.</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section data-bs-version="5.1" class="list1 cid-utDfZqIbot" id="faq-1-utDfZqIbot">
+    
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-12 col-lg-10 m-auto">
+                <div class="content">
+                    <div class="row justify-content-center mb-5">
+                        <div class="col-12 content-head">
+                            <div class="mbr-section-head">
+                                <h4 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+                                    <strong>Curious Minds Want to Know</strong>
+                                </h4>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div id="bootstrap-accordion_11" class="panel-group accordionStyles accordion" role="tablist" aria-multiselectable="true">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse1_11" aria-expanded="false" aria-controls="collapse1">
+                                    <h6 class="panel-title-edit mbr-semibold mbr-fonts-style mb-0 display-5">What topics can we discuss here?</h6>
+                                    <span class="sign mbr-iconfont mobi-mbri-arrow-down"></span>
+                                </a>
+                            </div>
+                            <div id="collapse1_11" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_11">
+                                <div class="panel-body">
+                                    <p class="mbr-fonts-style panel-text display-7">Anything and everything! From the latest tech trends to the most ridiculous conspiracy theories, we welcome all topics. Just remember, no cat memes—unless they're really funny!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse2_11" aria-expanded="false" aria-controls="collapse2">
+                                    <h6 class="panel-title-edit mbr-semibold mbr-fonts-style mb-0 display-5">How do I join a discussion?</h6>
+                                    <span class="sign mbr-iconfont mobi-mbri-arrow-down"></span>
+                                </a>
+                            </div>
+                            <div id="collapse2_11" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_11">
+                                <div class="panel-body">
+                                    <p class="mbr-fonts-style panel-text display-7">Simply click the 'Start the Conversation!' button and dive right in. It's as easy as pie—unless you're baking a pie, then it's a bit more complicated.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse3_11" aria-expanded="false" aria-controls="collapse3">
+                                    <h6 class="panel-title-edit mbr-semibold mbr-fonts-style mb-0 display-5">Can I invite friends to join?</h6>
+                                    <span class="sign mbr-iconfont mobi-mbri-arrow-down"></span>
+                                </a>
+                            </div>
+                            <div id="collapse3_11" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_11">
+                                <div class="panel-body">
+                                    <p class="mbr-fonts-style panel-text display-7">Absolutely! The more, the merrier! Bring your friends, your enemies, or even that random guy from the coffee shop. Everyone's welcome!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse4_11" aria-expanded="false" aria-controls="collapse4">
+                                    <h6 class="panel-title-edit mbr-semibold mbr-fonts-style mb-0 display-5">Is there a code of conduct?</h6>
+                                    <span class="sign mbr-iconfont mobi-mbri-arrow-down"></span>
+                                </a>
+                            </div>
+                            <div id="collapse4_11" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_11">
+                                <div class="panel-body">
+                                    <p class="mbr-fonts-style panel-text display-7">Yes, be respectful, be funny, and for the love of all that is good, no trolling! We want lively debates, not internet wars.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse5_11" aria-expanded="false" aria-controls="collapse5">
+                                    <h6 class="panel-title-edit mbr-semibold mbr-fonts-style mb-0 display-5">What if I have a crazy idea?</h6>
+                                    <span class="sign mbr-iconfont mobi-mbri-arrow-down"></span>
+                                </a>
+                            </div>
+                            <div id="collapse5_11" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_11">
+                                <div class="panel-body">
+                                    <p class="mbr-fonts-style panel-text display-7">Bring it on! Crazy ideas are the spice of life. Just be prepared for some wild discussions!</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section data-bs-version="5.1" class="features10 cid-utDfZqJZKf" id="metrics-2-utDfZqJZKf">
+  
+
+  
+  
+  <div class="container">
+    
+    <div class="row justify-content-center">
+      <div class="item features-without-image col-12 col-md-6 col-lg-4">
+        <div class="item-wrapper">
+          <div class="card-box align-left">
+            
+            <p class="card-title mbr-fonts-style mb-3 display-1">
+              <strong>1,000+</strong>
+            </p>
+            <p class="card-text mbr-fonts-style mb-3 display-7">Active Members</p>
+            
+          </div>
+        </div>
+      </div>
+      <div class="item features-without-image col-12 col-md-6 col-lg-4">
+        <div class="item-wrapper">
+          <div class="card-box align-left">
+            
+            <p class="card-title mbr-fonts-style mb-3 display-1">
+              <strong>500+</strong>
+            </p>
+            <p class="card-text mbr-fonts-style mb-3 display-7">Topics Discussed</p>
+            
+          </div>
+        </div>
+      </div>
+      <div class="item features-without-image col-12 col-md-6 col-lg-4">
+        <div class="item-wrapper">
+          <div class="card-box align-left">
+            
+            <p class="card-title mbr-fonts-style mb-3 display-1">
+              <strong>10,000+</strong>
+            </p>
+            <p class="card-text mbr-fonts-style mb-3 display-7">Messages Sent</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-bs-version="5.1" class="social4 cid-utDfZqJrW4" id="follow-us-1-utDfZqJrW4">
+    
+    
+    
+
+    <div class="container">
+        <div class="media-container-row">
+            <div class="col-12">
+                <h3 class="mbr-section-title align-center mb-5 mbr-fonts-style display-2">
+                    <strong>Join the Conversation!</strong>
+                </h3>
+                <div class="social-list align-center">
+                    <a class="iconfont-wrapper bg-facebook m-2 " target="_blank" href="#">
+                        <span class="socicon-facebook socicon"></span>
+                    </a>
+                    <a class="iconfont-wrapper bg-twitter m-2" href="#" target="_blank">
+                        <span class="socicon-twitter socicon"></span>
+                    </a>
+                    <a class="iconfont-wrapper bg-instagram m-2" href="#" target="_blank">
+                        <span class="socicon-instagram socicon"></span>
+                    </a>
+                    
+                    
+                    
+                    
+                    
+                    <a class="iconfont-wrapper bg-tiktok m-2" href="#" target="_blank">
+                        <span class="socicon-tiktok socicon"></span>
+                    </a>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section data-bs-version="5.1" class="form5 cid-utDfZqJBWr" id="contact-form-2-utDfZqJBWr">
+    
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 content-head">
+                <div class="mbr-section-head mb-5">
+                    <h3 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+                        <strong>Get in Touch!</strong>
+                    </h3>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
+                <form action="https://mobirise.eu/" method="POST" class="mbr-form form-with-styler" data-form-title="Form Name"><input type="hidden" name="email" data-form-email="true" value="0z8csC6k+pTeglH3gl05/BwNqbIGUn393lOPMLCwBDzSTysLiBmOZC5zy9Ov/usfgqiOBelKf7krAnkLX+bprPRhHTSZnQ7faLVQNVG9s0ASAFdAJrQ1LTklN5tCqd3P">
+                    <div class="row">
+                        <div hidden="hidden" data-form-alert="" class="alert alert-success col-12">Thanks for filling out the form!</div>
+                        <div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">
+                            Oops...! some problem!
+                        </div>
+                    </div>
+                    <div class="dragArea row">
+                        <div class="col-md col-sm-12 form-group mb-3" data-for="name">
+                            <input type="text" name="name" placeholder="Name" data-form-field="name" class="form-control" value="" id="name-contact-form-2-utDfZqJBWr">
+                        </div>
+                        <div class="col-md col-sm-12 form-group mb-3" data-for="email">
+                            <input type="email" name="email" placeholder="Email" data-form-field="email" class="form-control" value="" id="email-contact-form-2-utDfZqJBWr">
+                        </div>
+                        <div class="col-12 form-group mb-3" data-for="textarea">
+                            <textarea name="textarea" placeholder="Message" data-form-field="textarea" class="form-control" id="textarea-contact-form-2-utDfZqJBWr"></textarea>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
+                            <button type="submit" class="btn btn-primary display-7">Send It!</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section data-bs-version="5.1" class="contacts02 map1 cid-utDfZqJAca" id="contacts-2-utDfZqJAca">
+
+    
+
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 content-head">
+                <div class="mbr-section-head mb-5">
+                    <h3 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+                        <strong>Contact Us</strong>
+                    </h3>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="card col-12 col-md-12 col-lg-6">
+                <div class="card-wrapper">
+                    <div class="text-wrapper">
+                        
+                        <ul class="list mbr-fonts-style display-7">
+                            <li class="mbr-text item-wrap">
+                            Phone:                                
+                            <a href="tel:1-800-555-0199" class="text-black">1-800-555-0199</a></li>
+
+                            <li class="mbr-text item-wrap">WhatsApp: 
+                            <a href="tel:1-800-555-0199" class="text-black">1-800-555-0199</a></li> 
+
+                            <li class="mbr-text item-wrap">                            
+                            Email:
+                            <a href="mailto:info@discussionroom.com" class="text-black">info@communionapp.com</a>                        
+                            </li>
+
+                            <li class="mbr-text item-wrap">                        
+                            Address:
+                             India
+                            </li>
+
+                            <li class="mbr-text item-wrap">
+                            Working Hours:
+                            Mon-Fri: 9am - 5pm
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="map-wrapper col-md-12 col-lg-6">
+                <div class="google-map"><iframe frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCt1265A4qvZy9HKUeA8J15AOC4SrCyZe4&amp;q=%20India" allowfullscreen=""></iframe></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section data-bs-version="5.1" class="footer3 cid-utDfZqJPAd" once="footers" id="footer-3-utDfZqJPAd">
+
+        
+
+    
+
+    <div class="container">
+        <div class="row">
+            <div class="row-links">
+                <ul class="header-menu">
+                  
+                  
+                  
+                  
+                <li class="header-menu-item mbr-fonts-style display-5">
+                    <a href="#" class="text-white">Home</a>
+                  </li><li class="header-menu-item mbr-fonts-style display-5">
+                    <a href="#faq-1-utDfZqIbot" class="text-white">About</a>
+                  </li><li class="header-menu-item mbr-fonts-style display-5">
+                    <a href="#hero-16-utDfZqGEoS" class="text-white">Topics</a>
+                  </li><li class="header-menu-item mbr-fonts-style display-5">
+                    <a href="#contact-form-2-utDfZqJBWr" class="text-white">Contact</a>
+                  </li></ul>
+              </div>
+
+            <div class="col-12 mt-4">
+                <div class="social-row">
+                    <div class="soc-item">
+                        <a href="#" target="_blank">
+                            <span class="mbr-iconfont socicon socicon-facebook display-7"></span>
+                        </a>
+                    </div>
+                    <div class="soc-item">
+                        <a href="#" target="_blank">
+                            <span class="mbr-iconfont socicon-twitter socicon"></span>
+                        </a>
+                    </div>
+                    <div class="soc-item">
+                        <a href="#" target="_blank">
+                            <span class="mbr-iconfont socicon-instagram socicon"></span>
+                        </a>
+                    </div>
+                    <div class="soc-item">
+                        <a href="#" target="_blank">
+                            <span class="mbr-iconfont socicon socicon-linkedin"></span>
+                        </a>
+                    </div>
+                    <div class="soc-item">
+                        <a href="#" target="_blank">
+                            <span class="mbr-iconfont socicon socicon-twitch"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-5">
+                <p class="mbr-fonts-style copyright display-7">© 2024 Communion App. Let's Chat!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+  <script src="https://r.mobirisesite.com/881540/assets/web/assets/jquery/jquery.min.js?rnd=1731155146071"></script>
+  <script src="https://r.mobirisesite.com/881540/assets/bootstrap/js/bootstrap.bundle.min.js?rnd=1731155146071"></script>
+  <script src="https://r.mobirisesite.com/881540/assets/parallax/jarallax.js?rnd=1731155146071"></script>
+  <script src="https://r.mobirisesite.com/881540/assets/smoothscroll/smooth-scroll.js?rnd=1731155146071"></script>
+  <script src="https://r.mobirisesite.com/881540/assets/ytplayer/index.js?rnd=1731155146071"></script>
+  <script src="https://r.mobirisesite.com/881540/assets/dropdown/js/navbar-dropdown.js?rnd=1731155146071"></script>
+  <script src="https://r.mobirisesite.com/881540/assets/vimeoplayer/player.js?rnd=1731155146071"></script>
+  <script src="https://r.mobirisesite.com/881540/assets/scrollgallery/scroll-gallery.js?rnd=1731155146071"></script>
+  <script src="https://r.mobirisesite.com/881540/assets/masonry/masonry.pkgd.min.js?rnd=1731155146071"></script>
+  <script src="https://r.mobirisesite.com/881540/assets/imagesloaded/imagesloaded.pkgd.min.js?rnd=1731155146071"></script>
+  <script src="https://r.mobirisesite.com/881540/assets/mbr-switch-arrow/mbr-switch-arrow.js?rnd=1731155146071"></script>
+  <script src="https://r.mobirisesite.com/881540/assets/theme/js/script.js?rnd=1731155146071"></script>
+  <script src="https://r.mobirisesite.com/881540/assets/formoid.min.js?rnd=1731155146071"></script>
+  <script>
+    // Toggle emoji picker visibility
+    function toggleEmojiPicker() {
+      const emojiPicker = document.getElementById('emoji-picker');
+      emojiPicker.style.display = (emojiPicker.style.display === 'none' || emojiPicker.style.display === '') ? 'flex' : 'none';
+    }
+    
+    // Insert selected emoji into the message input
+    function insertEmoji(emoji) {
+      const messageInput = document.getElementById('message-input');
+      messageInput.value += emoji;
+      toggleEmojiPicker();  // Close the emoji picker after selecting an emoji
+    }
+  
+    // Close emoji picker if clicked outside
+    window.onclick = function(event) {
+      const emojiPicker = document.getElementById('emoji-picker');
+      const emojiButton = document.querySelector('.emoji-btn');  // Ensure it's the correct emoji button
+      if (!emojiPicker.contains(event.target) && !emojiButton.contains(event.target)) {
+        emojiPicker.style.display = 'none';
+      }
+    };
+  
+    // Handle file selection for attachments and display preview
+    document.getElementById('attachment-input').addEventListener('change', function() {
+      const fileInput = this;
+      const file = fileInput.files[0];  // Get the first file
+      const previewContainer = document.getElementById('attachment-preview');
+      
+      // Clear previous attachments
+      previewContainer.innerHTML = '';
+  
+      if (file) {
+        const reader = new FileReader();
+      
+        reader.onload = function(e) {
+          previewContainer.innerHTML = '';  // Clear previous preview
+          
+          // Check if the file is an image
+          if (file.type.startsWith('image')) {
+            const img = document.createElement('img');
+            img.src = e.target.result;  // Set image source to the result
+            img.classList.add('attachment-preview-image');  // Add custom styles
+            previewContainer.appendChild(img);  // Append image to preview container
+          }
+          // Check if the file is a video
+          else if (file.type.startsWith('video')) {
+            const video = document.createElement('video');
+            video.src = e.target.result;
+            video.controls = true;  // Add controls for video playback
+            video.classList.add('attachment-preview-video');  // Add custom styles
+            previewContainer.appendChild(video);
+          }
+          // Handle other file types (e.g., documents, audio)
+          else {
+            const fileElement = document.createElement('div');
+            fileElement.textContent = `Selected file: ${file.name}`;  // Display the file name
+            previewContainer.appendChild(fileElement);
+          }
+        };
+  
+        reader.readAsDataURL(file);  // Start reading the file as a data URL
+      }
+    });
+  
+    // Function to handle form submission with attachment
+    function uploadAttachment(event) {
+      event.preventDefault();  // Prevent the form from submitting normally
+  
+      const form = document.getElementById('conversation-form');
+      const formData = new FormData(form);  // Form data includes text and file attachments
+  
+      // Send the form data (including files) using AJAX
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/path/to/upload/', true);  // Update URL to your server endpoint
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          alert('Attachment uploaded successfully!');
+          // Handle the server response here if necessary (e.g., show success message, update UI)
+        } else {
+          alert('Error uploading attachment!');
+        }
+      };
+      xhr.send(formData);  // Send form data
+    }
+  
+    // Add event listener to the form submission button
+    document.getElementById('send-button').addEventListener('click', uploadAttachment);
+
+    function showAttachmentPreview() {
+  const input = document.getElementById('attachment-input');
+  const preview = document.getElementById('attachment-preview');
+  preview.innerHTML = ''; // Clear existing preview
+
+  for (let i = 0; i < input.files.length; i++) {
+    const file = input.files[i];
+    const filePreview = document.createElement('div');
+    filePreview.classList.add('file-preview');
+    filePreview.innerText = file.name;
+    preview.appendChild(filePreview);
+  }
+}
+
+  </script>
+    
+</body>
+</html>
