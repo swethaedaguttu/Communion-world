@@ -313,7 +313,6 @@ def update_personal_info(request):
             user_profile.location = request.POST.get('location', user_profile.location)
             user_profile.country = request.POST.get('country', user_profile.country)
             user_profile.state = request.POST.get('state', user_profile.state)
-            user_profile.faith_background = request.POST.get('faith_background', user_profile.faith_background)
             user_profile.language = request.POST.get('language', user_profile.language)
 
             # Handle date of birth (ensure it's a valid date format before assigning)
