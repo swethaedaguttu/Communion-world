@@ -867,8 +867,7 @@ textarea.form-control {
         <h2>Profile</h2>
         <div class="profile-header">
             <div class="profile-picture-container">
-                <p>{{ user_profile.profile_picture }}</p>  <!-- Debugging: Check the value of profile_picture -->
-                <img class="profile-picture" src="{{ user_profile.profile_picture.url }}" alt="{{ user_profile.user.username }}'s Profile Picture">
+                <img src="{{ MEDIA_URL }}{{ user_profile.profile_picture.url }}" alt="Profile Picture">
             </div>
                 <div class="profile-info">
                 <h1>{{ user.username }}</h1>

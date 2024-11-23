@@ -62,13 +62,8 @@ class ProfilePictureForm(forms.ModelForm):
 
     def clean_profile_picture(self):
         profile_picture = self.cleaned_data.get('profile_picture')
-        
-        # Validate URL pattern (checking if it's a valid image URL)
-        image_url_pattern = re.compile(r'^(https?://)([a-zA-Z0-9_-]+)([a-zA-Z0-9/._-]+)(\.)(jpg|jpeg|png|gif)$')
-        
-        if profile_picture and not image_url_pattern.match(profile_picture):
-            raise forms.ValidationError("Please provide a valid image URL (jpg, jpeg, png, gif).")
-        
+        if profile_picture.size > 5 * 1024 * 1024:  # Limit size to 5 MB
+            raise forms.ValidationError("Image file too large ( > 5 MB )")
         return profile_picture
 
 class ProfileUpdateForm(forms.ModelForm):

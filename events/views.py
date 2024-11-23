@@ -423,6 +423,8 @@ def profile_view(request):
 
     context = {
         'user_profile': user_profile,
+        'MEDIA_URL': settings.MEDIA_URL,  # Pass MEDIA_URL to the template
+
     }
 
     return render(request, 'events/profile.html', context)
