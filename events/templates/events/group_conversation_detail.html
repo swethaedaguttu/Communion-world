@@ -1434,45 +1434,60 @@
 <!-- Right Container: Messages -->
 <div class="right-container">
     <h2 class="messages-heading">Messages</h2>
-    <div class="conversations-list">
+    <div class="conversations-list" id="conversations-list">
         {% for conversation in conversations %}
             <div class="conversation-card">
                 <strong class="username">{{ conversation.user_profile.user.username }}</strong>
                 <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
                 <p class="message-text">{{ conversation.message }}</p>
 
-            
+                <!-- Display attachment if present -->
+                {% if conversation.attachment %}
+                    <div class="attachment-container">
+                        <!-- Check if the attachment is an image -->
+                        {% if conversation.attachment.url.endswith '.jpg' or conversation.attachment.url.endswith '.png' or conversation.attachment.url.endswith '.jpeg' %}
+                            <img src="{{ conversation.attachment.url }}" alt="Attachment" class="attachment-preview-img">
+                        {% else %}
+                            <!-- For non-image files, show file name -->
+                            <a href="{{ conversation.attachment.url }}" target="_blank">
+                                <p>Download Attachment: {{ conversation.attachment.name }}</p>
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
         {% endfor %}
     </div>
 
-                                        
-                <!-- Message Input Form (Now inside the right container) -->
-                <div class="form-container">
-                    <form method="POST" class="message-form" enctype="multipart/form-data" action="{% url 'group_conversation_detail' group_id=group.id %}">
-                        {% csrf_token %}
-                        <div class="input-section">
-                            <textarea id="message-input" name="message" placeholder="Type a message..." required></textarea>
-                            <label for="attachment-input" class="attachment-btn" aria-label="Attach File">
-                                <i class="fas fa-paperclip"></i>
-                            </label>
-                            <input type="file" id="attachment-input" name="attachment" class="attachment-input" style="display: none;" onchange="showAttachmentPreview()">
-                            <button type="button" class="emoji-btn" aria-label="Choose Emoji" onclick="toggleEmojiPicker()">
-                                <i class="fas fa-smile"></i>
-                            </button>
-                            <div id="emoji-picker" class="emoji-picker" style="display:none;">
-                                <span onclick="insertEmoji('😊')">😊</span>
-                                <span onclick="insertEmoji('😂')">😂</span>
-                                <span onclick="insertEmoji('😍')">😍</span>
-                                <span onclick="insertEmoji('😢')">😢</span>
-                                <span onclick="insertEmoji('😡')">😡</span>
-                                <span onclick="insertEmoji('😎')">😎</span>
-                            </div>
-                        </div>
-                        <button type="submit" class="submit-btn">Send</button>
-                        <div id="attachment-preview" class="attachment-preview"></div>
-                    </form>
+    <!-- Message Input Form -->
+    <div class="form-container">
+        <form method="POST" class="message-form" id="message-form">
+            {% csrf_token %}
+            <div class="input-section">
+                <textarea id="message-input" name="message" placeholder="Type a message..."></textarea>
+                <label for="attachment-input" class="attachment-btn" aria-label="Attach File">
+                    <i class="fas fa-paperclip"></i>
+                </label>
+                <input type="file" id="attachment-input" name="attachment" class="attachment-input" style="display: none;" onchange="showAttachmentPreview()">
+                <button type="button" class="emoji-btn" aria-label="Choose Emoji" onclick="toggleEmojiPicker()">
+                    <i class="fas fa-smile"></i>
+                </button>
+                <!-- Emoji Picker -->
+                <div id="emoji-picker" class="emoji-picker" style="display:none;">
+                    <span onclick="insertEmoji('😊')">😊</span>
+                    <span onclick="insertEmoji('😂')">😂</span>
+                    <span onclick="insertEmoji('😍')">😍</span>
+                    <span onclick="insertEmoji('😢')">😢</span>
+                    <span onclick="insertEmoji('😡')">😡</span>
+                    <span onclick="insertEmoji('😎')">😎</span>
                 </div>
+                <!-- Attachment Preview -->
+                <div id="attachment-preview" class="attachment-preview"></div>
+            </div>
+            <button type="button" class="submit-btn" onclick="sendMessage()">Send</button>
+        </form>
+    </div>
+</div>
             </div>
         </div>
     </div>
@@ -2078,43 +2093,62 @@
     });
   
     // Function to handle form submission with attachment
-    function uploadAttachment(event) {
-      event.preventDefault();  // Prevent the form from submitting normally
-  
-      const form = document.getElementById('conversation-form');
-      const formData = new FormData(form);  // Form data includes text and file attachments
-  
-      // Send the form data (including files) using AJAX
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', '/path/to/upload/', true);  // Update URL to your server endpoint
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          alert('Attachment uploaded successfully!');
-          // Handle the server response here if necessary (e.g., show success message, update UI)
+// Show Attachment Preview
+function showAttachmentPreview() {
+    const attachmentInput = document.getElementById('attachment-input');
+    const previewContainer = document.getElementById('attachment-preview');
+    previewContainer.innerHTML = ''; // Clear previous previews
+
+    if (attachmentInput.files.length > 0) {
+        const file = attachmentInput.files[0];
+
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = file.name;
+                img.classList.add('attachment-preview-img');
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
         } else {
-          alert('Error uploading attachment!');
+            const fileName = document.createElement('p');
+            fileName.textContent = file.name;
+            previewContainer.appendChild(fileName);
         }
-      };
-      xhr.send(formData);  // Send form data
     }
-  
-    // Add event listener to the form submission button
-    document.getElementById('send-button').addEventListener('click', uploadAttachment);
-
-    function showAttachmentPreview() {
-  const input = document.getElementById('attachment-input');
-  const preview = document.getElementById('attachment-preview');
-  preview.innerHTML = ''; // Clear existing preview
-
-  for (let i = 0; i < input.files.length; i++) {
-    const file = input.files[i];
-    const filePreview = document.createElement('div');
-    filePreview.classList.add('file-preview');
-    filePreview.innerText = file.name;
-    preview.appendChild(filePreview);
-  }
 }
 
+// Send message with attachment preview
+function sendMessage() {
+    const messageInput = document.getElementById('message-input');
+    const attachmentPreview = document.getElementById('attachment-preview');
+    const conversationsList = document.getElementById('conversations-list');
+    
+    const messageText = messageInput.value;
+    const attachment = attachmentPreview.innerHTML; // This can be the image preview or file name
+
+    if (messageText || attachment) {
+        // Create new message element in the conversation list
+        const newConversationCard = document.createElement('div');
+        newConversationCard.classList.add('conversation-card');
+
+        const messageContent = `
+            <strong class="username">You</strong>
+            <span class="timestamp">${new Date().toLocaleDateString()}</span>
+            <p class="message-text">${messageText}</p>
+            <div class="attachment-container">${attachment}</div>
+        `;
+        
+        newConversationCard.innerHTML = messageContent;
+        conversationsList.appendChild(newConversationCard);
+        
+        // Clear the input fields after sending
+        messageInput.value = '';
+        attachmentPreview.innerHTML = '';
+    }
+}
 
   </script>
     
