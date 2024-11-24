@@ -881,7 +881,7 @@ textarea.form-control {
     <!-- Profile Picture Section -->
     <section class="profile-picture">
         <h2>Profile Picture</h2>
-        <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture" id="profilePicturePreview" class="profile-picture-preview">
+        <img src="{{ user_profile.profile_picture }}" alt="Profile Picture" id="profilePicturePreview" class="profile-picture-preview">
         <form method="post" enctype="multipart/form-data" id="profilePictureForm">
             {% csrf_token %}
             <input type="file" id="profile_picture" name="profile_picture" accept="image/*" required class="input-file">

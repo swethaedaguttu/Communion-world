@@ -286,34 +286,19 @@ def profile_edit(request):
 def update_profile_picture(request):
     if request.method == 'POST':
         try:
-            user_profile = request.user.userprofile  # Access the associated UserProfile
-
-            # Check if a profile picture was uploaded
-            if 'profile_picture' in request.FILES:
-                profile_picture = request.FILES['profile_picture']
-
-                # Optional: Check the size of the uploaded image
-                if profile_picture.size > 5 * 1024 * 1024:  # Limit size to 5 MB
-                    return JsonResponse({'success': False, 'message': 'Image file too large ( > 5 MB )'}, status=400)
-
-                # Optional: Validate the file type (e.g., JPEG, PNG)
-                if not profile_picture.name.endswith(('jpg', 'jpeg', 'png')):
-                    return JsonResponse({'success': False, 'message': 'Invalid file type (only jpg, jpeg, or png allowed)'}, status=400)
-
-                # Update the profile picture
-                user_profile.profile_picture = profile_picture
+            if request.user.is_authenticated:
+                user_profile = request.user.userprofile  # Access the UserProfile
+                profile_picture_url = request.POST.get('profile_picture')  # Get the URL from the form
+                if profile_picture_url:
+                    user_profile.profile_picture = profile_picture_url
+                else:
+                    user_profile.profile_picture = 'default.jpg'  # Set default if no URL provided
+                user_profile.save()
+                return JsonResponse({'success': True, 'message': 'Profile picture updated successfully'})
             else:
-                # If no file uploaded, set the default image
-                user_profile.profile_picture = 'profile_pictures/default.jpg'
-
-            user_profile.save()  # Save the user profile with the updated picture
-            return JsonResponse({'success': True, 'message': 'Profile picture updated successfully'})
-
+                return JsonResponse({'success': False, 'message': 'User is not authenticated'}, status=403)
         except Exception as e:
-            # Handle unexpected errors
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
-    # If the method isn't POST, return an error response
     return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=400)
 
 @csrf_exempt
