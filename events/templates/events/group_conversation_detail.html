@@ -2115,6 +2115,75 @@
   }
 }
 
+// Show Attachment Preview
+function showAttachmentPreview() {
+    const attachmentInput = document.getElementById('attachment-input');
+    const previewContainer = document.getElementById('attachment-preview');
+    previewContainer.innerHTML = ''; // Clear previous previews
+
+    // Find the message input value
+    const messageInput = document.getElementById('message-input').value;
+    
+    // Check if a file is selected
+    if (attachmentInput.files.length > 0) {
+        const file = attachmentInput.files[0];
+        const messageContainer = document.getElementById('conversation-list');
+        
+        // Create preview for attachment
+        const attachmentPreview = document.createElement('div');
+        attachmentPreview.classList.add('attachment-container');
+
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = file.name;
+                img.classList.add('attachment-preview-img');
+                attachmentPreview.appendChild(img);
+                
+                // Add the message with the image preview to the conversation list
+                appendMessageToConversation(messageContainer, messageInput, attachmentPreview);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            const fileName = document.createElement('p');
+            fileName.textContent = file.name;
+            attachmentPreview.appendChild(fileName);
+            
+            // Add the message with the file preview to the conversation list
+            appendMessageToConversation(messageContainer, messageInput, attachmentPreview);
+        }
+    }
+}
+
+// Append the message and attachment preview to the conversation list
+function appendMessageToConversation(container, message, attachmentPreview) {
+    const conversationCard = document.createElement('div');
+    conversationCard.classList.add('conversation-card');
+    
+    const username = document.createElement('strong');
+    username.classList.add('username');
+    username.textContent = 'User';  // Replace 'User' with the dynamic user info as needed
+    
+    const timestamp = document.createElement('span');
+    timestamp.classList.add('timestamp');
+    timestamp.textContent = new Date().toLocaleString();
+
+    const messageText = document.createElement('p');
+    messageText.classList.add('message-text');
+    messageText.textContent = message;
+
+    // Append message, timestamp, and preview to the conversation card
+    conversationCard.appendChild(username);
+    conversationCard.appendChild(timestamp);
+    conversationCard.appendChild(messageText);
+    conversationCard.appendChild(attachmentPreview);
+    
+    // Add the new message with attachment to the conversation list
+    container.appendChild(conversationCard);
+}
+
 
   </script>
     
