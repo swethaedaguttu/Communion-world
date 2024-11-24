@@ -1452,11 +1452,11 @@
                     <form method="POST" class="message-form" enctype="multipart/form-data" action="{% url 'group_conversation_detail' group_id=group.id %}">
                         {% csrf_token %}
                         <div class="input-section">
-                            <textarea id="message-input" placeholder="Type a message..."></textarea>
-                            <label for="attachment-input" class="attachment-btn">
+                            <textarea id="message-input" name="message" placeholder="Type a message..." required></textarea>
+                            <label for="attachment-input" class="attachment-btn" aria-label="Attach File">
                                 <i class="fas fa-paperclip"></i>
-                            </label>                        
-                            <input type="file" id="attachment-input" style="display: none;" />
+                            </label>
+                            <input type="file" id="attachment-input" name="attachment" class="attachment-input" style="display: none;" onchange="showAttachmentPreview()">
                             <button type="button" class="emoji-btn" aria-label="Choose Emoji" onclick="toggleEmojiPicker()">
                                 <i class="fas fa-smile"></i>
                             </button>
@@ -2036,96 +2036,154 @@
     };
   
     // Handle file selection for attachments and display preview
-// Show Attachment Preview
-function showAttachmentPreview() {
-    const attachmentInput = document.getElementById('attachment-input');
-    const previewContainer = document.getElementById('attachment-preview');
-    previewContainer.innerHTML = ''; // Clear any previous previews
+    document.getElementById('attachment-input').addEventListener('change', function() {
+      const fileInput = this;
+      const file = fileInput.files[0];  // Get the first file
+      const previewContainer = document.getElementById('attachment-preview');
+      
+      // Clear previous attachments
+      previewContainer.innerHTML = '';
+  
+      if (file) {
+        const reader = new FileReader();
+      
+        reader.onload = function(e) {
+          previewContainer.innerHTML = '';  // Clear previous preview
+          
+          // Check if the file is an image
+          if (file.type.startsWith('image')) {
+            const img = document.createElement('img');
+            img.src = e.target.result;  // Set image source to the result
+            img.classList.add('attachment-preview-image');  // Add custom styles
+            previewContainer.appendChild(img);  // Append image to preview container
+          }
+          // Check if the file is a video
+          else if (file.type.startsWith('video')) {
+            const video = document.createElement('video');
+            video.src = e.target.result;
+            video.controls = true;  // Add controls for video playback
+            video.classList.add('attachment-preview-video');  // Add custom styles
+            previewContainer.appendChild(video);
+          }
+          // Handle other file types (e.g., documents, audio)
+          else {
+            const fileElement = document.createElement('div');
+            fileElement.textContent = `Selected file: ${file.name}`;  // Display the file name
+            previewContainer.appendChild(fileElement);
+          }
+        };
+  
+        reader.readAsDataURL(file);  // Start reading the file as a data URL
+      }
+    });
+  
+    // Function to handle form submission with attachment
+    function uploadAttachment(event) {
+      event.preventDefault();  // Prevent the form from submitting normally
+  
+      const form = document.getElementById('conversation-form');
+      const formData = new FormData(form);  // Form data includes text and file attachments
+  
+      // Send the form data (including files) using AJAX
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/path/to/upload/', true);  // Update URL to your server endpoint
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          alert('Attachment uploaded successfully!');
+          // Handle the server response here if necessary (e.g., show success message, update UI)
+        } else {
+          alert('Error uploading attachment!');
+        }
+      };
+      xhr.send(formData);  // Send form data
+    }
+  
+    // Add event listener to the form submission button
+    document.getElementById('send-button').addEventListener('click', uploadAttachment);
 
-    if (attachmentInput.files.length > 0) {
-        const file = attachmentInput.files[0];
+    function showAttachmentPreview() {
+  const input = document.getElementById('attachment-input');
+  const preview = document.getElementById('attachment-preview');
+  preview.innerHTML = ''; // Clear existing preview
 
-        if (file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
+  for (let i = 0; i < input.files.length; i++) {
+    const file = input.files[i];
+    const filePreview = document.createElement('div');
+    filePreview.classList.add('file-preview');
+    filePreview.innerText = file.name;
+    preview.appendChild(filePreview);
+  }
+}
+
+// Show Attachment Preview and append to conversation list
+    // Show attachment preview
+    function showAttachmentPreview() {
+        const input = document.getElementById('attachment-input');
+        const preview = document.getElementById('attachment-preview');
+        preview.innerHTML = ''; // Clear existing preview
+
+        if (input.files.length > 0) {
+            const file = input.files[0];
+
+            if (file.type.startsWith('image/')) {
                 const img = document.createElement('img');
-                img.src = e.target.result;
+                img.src = URL.createObjectURL(file);
                 img.alt = file.name;
                 img.classList.add('attachment-preview-img');
-                previewContainer.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        } else {
-            const fileName = document.createElement('p');
-            fileName.textContent = `File: ${file.name}`;
-            previewContainer.appendChild(fileName);
+                preview.appendChild(img);
+            } else {
+                const filePreview = document.createElement('p');
+                filePreview.textContent = file.name;
+                preview.appendChild(filePreview);
+            }
         }
     }
-}
 
-// Add Message and Attachment to Conversation List
-function addMessageToConversation(message, file) {
-    const conversationList = document.getElementById('conversation-list');
+    // Handle form submission and add message to the conversation list
+    document.getElementById('message-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent page reload
 
-    const conversationCard = document.createElement('div');
-    conversationCard.classList.add('conversation-card');
+        const messageInput = document.getElementById('message-input');
+        const attachmentInput = document.getElementById('attachment-input');
+        const conversationsList = document.getElementById('conversations-list');
 
-    // Add message text
-    if (message) {
-        const messageText = document.createElement('p');
-        messageText.classList.add('message-text');
-        messageText.textContent = message;
-        conversationCard.appendChild(messageText);
-    }
+        // Create a new conversation card
+        const conversationCard = document.createElement('div');
+        conversationCard.classList.add('conversation-card');
 
-    // Add attachment
-    if (file) {
-        const attachmentContainer = document.createElement('div');
-        attachmentContainer.classList.add('attachment-container');
-
-        if (file.type.startsWith('image/')) {
-            const img = document.createElement('img');
-            img.src = URL.createObjectURL(file);
-            img.alt = file.name;
-            img.classList.add('attachment-preview-img');
-            attachmentContainer.appendChild(img);
-        } else {
-            const fileLink = document.createElement('a');
-            fileLink.href = URL.createObjectURL(file);
-            fileLink.textContent = `Download: ${file.name}`;
-            fileLink.target = '_blank';
-            attachmentContainer.appendChild(fileLink);
+        // Add the text message
+        if (messageInput.value.trim() !== '') {
+            const messageText = document.createElement('p');
+            messageText.classList.add('message-text');
+            messageText.textContent = messageInput.value.trim();
+            conversationCard.appendChild(messageText);
         }
 
-        conversationCard.appendChild(attachmentContainer);
-    }
+        // Add the attachment preview
+        if (attachmentInput.files.length > 0) {
+            const file = attachmentInput.files[0];
 
-    // Append the card to the conversation list
-    conversationList.appendChild(conversationCard);
-}
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.alt = file.name;
+                img.classList.add('message-attachment-img');
+                conversationCard.appendChild(img);
+            } else {
+                const filePreview = document.createElement('p');
+                filePreview.textContent = file.name;
+                conversationCard.appendChild(filePreview);
+            }
+        }
 
-// Handle Form Submission
-document.getElementById('message-form').addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent actual form submission
+        // Append the new conversation card to the list
+        conversationsList.appendChild(conversationCard);
 
-    const messageInput = document.getElementById('message-input');
-    const attachmentInput = document.getElementById('attachment-input');
-
-    const message = messageInput.value.trim();
-    const file = attachmentInput.files[0] || null;
-
-    if (message || file) {
-        addMessageToConversation(message, file);
-
-        // Clear input fields
+        // Clear the input fields and preview
         messageInput.value = '';
         attachmentInput.value = '';
         document.getElementById('attachment-preview').innerHTML = '';
-    }
-});
-
-// Attachment Input Change Event
-document.getElementById('attachment-input').addEventListener('change', showAttachmentPreview);
+    });
 
 
   </script>
