@@ -887,8 +887,8 @@ textarea.form-control {
                 alt="Profile Picture" 
                 id="profilePicturePreview" 
                 class="profile-picture-preview"
-                onerror="this.src='https://example.com/path-to-default.jpg';" <!-- Fallback image -->
-            >
+                onerror="this.src='https://example.com/path-to-default.jpg';"> <!-- Fallback image -->
+            
             <!-- Form to update the profile picture URL -->
             <form method="post" id="profilePictureForm">
                 {% csrf_token %}
