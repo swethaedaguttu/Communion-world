@@ -1441,10 +1441,22 @@
                             <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
                             <p class="message-text">{{ conversation.message }}</p>
                             {% if conversation.attachment %}
-                                <div class="attachment-preview">
-                                    <img src="{{ conversation.attachment.url }}" alt="Attachment Preview">
-                                </div>
-                            {% endif %}
+                            <div class="attachment-preview">
+                                {% if conversation.attachment.content_type.startswith 'image/' %}
+                                    <!-- Display image preview if the attachment is an image -->
+                                    <img src="{{ conversation.attachment.url }}" alt="Attachment Preview" class="attachment-image">
+                                {% elif conversation.attachment.content_type.startswith 'video/' %}
+                                    <!-- Display video preview if the attachment is a video -->
+                                    <video controls class="attachment-video">
+                                        <source src="{{ conversation.attachment.url }}" type="{{ conversation.attachment.content_type }}">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                {% else %}
+                                    <!-- Handle other file types, e.g., show a generic preview message -->
+                                    <p>Unsupported file type</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
                         </div>
                     {% endfor %}
                 </div>
