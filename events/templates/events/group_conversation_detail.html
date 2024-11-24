@@ -1431,36 +1431,41 @@
                 </div>
             </div>
 
-<!-- Right Container: Messages -->
-<div class="right-container">
-    <h2 class="messages-heading">Messages</h2>
-    <div class="conversations-list">
-        {% for conversation in conversations %}
-            <div class="conversation-card">
-                <strong class="username">{{ conversation.user_profile.user.username }}</strong>
-                <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
-                <p class="message-text">{{ conversation.message }}</p>
+            <!-- Right Container: Messages -->
+            <div class="right-container">
+                <h2 class="messages-heading">Messages</h2>
+                <div class="conversations-list" id="conversations-list">
+                    {% for conversation in conversations %}
+                        <div class="conversation-card">
+                            <strong class="username">{{ conversation.user_profile.user.username }}</strong>
+                            <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
+                            <p class="message-text">{{ conversation.message }}</p>
+                            
+                            <!-- Display attachments -->
+                            {% if conversation.attachment %}
+                                {% if conversation.attachment.filetype == "image" %}
+                                    <img src="{{ conversation.attachment.url }}" alt="Attachment Image" class="attachment-image">
+                                {% else %}
+                                    <a href="{{ conversation.attachment.url }}" class="attachment-link" target="_blank">Download {{ conversation.attachment.filename }}</a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
 
-            
-            </div>
-        {% endfor %}
-    </div>
-
-                                        
-                <!-- Message Input Form (Now inside the right container) -->
+                <!-- Message Input Form -->
                 <div class="form-container">
-                    <form method="POST" class="message-form" enctype="multipart/form-data" action="{% url 'group_conversation_detail' group_id=group.id %}">
-                        {% csrf_token %}
+                    <form id="message-form" class="message-form">
                         <div class="input-section">
                             <textarea id="message-input" name="message" placeholder="Type a message..." required></textarea>
                             <label for="attachment-input" class="attachment-btn" aria-label="Attach File">
                                 <i class="fas fa-paperclip"></i>
                             </label>
-                            <input type="file" id="attachment-input" name="attachment" class="attachment-input" style="display: none;" onchange="showAttachmentPreview()">
+                            <input type="file" id="attachment-input" class="attachment-input" style="display: none;" onchange="showAttachmentPreview()">
                             <button type="button" class="emoji-btn" aria-label="Choose Emoji" onclick="toggleEmojiPicker()">
                                 <i class="fas fa-smile"></i>
                             </button>
-                            <div id="emoji-picker" class="emoji-picker" style="display:none;">
+                            <div id="emoji-picker" class="emoji-picker" style="display: none;">
                                 <span onclick="insertEmoji('😊')">😊</span>
                                 <span onclick="insertEmoji('😂')">😂</span>
                                 <span onclick="insertEmoji('😍')">😍</span>
@@ -1469,14 +1474,13 @@
                                 <span onclick="insertEmoji('😎')">😎</span>
                             </div>
                         </div>
-                        <button type="submit" class="submit-btn">Send</button>
+                        <button type="button" id="send-button" class="submit-btn">Send</button>
                         <div id="attachment-preview" class="attachment-preview"></div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    
 </section>
   
 <section data-bs-version="5.1" class="gallery07 cid-utDfZqH1xZ" id="gallery-14-utDfZqH1xZ">
@@ -2114,6 +2118,75 @@
     preview.appendChild(filePreview);
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const messageForm = document.getElementById("message-form");
+    const messageInput = document.getElementById("message-input");
+    const attachmentInput = document.getElementById("attachment-input");
+    const conversationList = document.getElementById("conversations-list");
+
+    // Handle Send Button Click
+    document.getElementById("send-button").addEventListener("click", () => {
+        const messageText = messageInput.value.trim();
+        const attachmentFile = attachmentInput.files[0];
+
+        // Validate input
+        if (!messageText && !attachmentFile) {
+            alert("Please enter a message or attach a file.");
+            return;
+        }
+
+        // Create a conversation card dynamically
+        const messageCard = document.createElement("div");
+        messageCard.classList.add("conversation-card");
+
+        // Add username and timestamp
+        const username = document.createElement("strong");
+        username.classList.add("username");
+        username.textContent = "You";
+        messageCard.appendChild(username);
+
+        const timestamp = document.createElement("span");
+        timestamp.classList.add("timestamp");
+        timestamp.textContent = new Date().toLocaleDateString("en-GB");
+        messageCard.appendChild(timestamp);
+
+        // Add message text
+        if (messageText) {
+            const messageTextElement = document.createElement("p");
+            messageTextElement.classList.add("message-text");
+            messageTextElement.textContent = messageText;
+            messageCard.appendChild(messageTextElement);
+        }
+
+        // Add attachment preview
+        if (attachmentFile) {
+            const fileURL = URL.createObjectURL(attachmentFile);
+
+            if (attachmentFile.type.startsWith("image/")) {
+                const img = document.createElement("img");
+                img.src = fileURL;
+                img.alt = "Attachment Image";
+                img.classList.add("attachment-image");
+                messageCard.appendChild(img);
+            } else {
+                const link = document.createElement("a");
+                link.href = fileURL;
+                link.textContent = `Download ${attachmentFile.name}`;
+                link.classList.add("attachment-link");
+                link.target = "_blank";
+                messageCard.appendChild(link);
+            }
+        }
+
+        // Append the new message card to the conversation list
+        conversationList.appendChild(messageCard);
+
+        // Reset form fields
+        messageInput.value = "";
+        attachmentInput.value = "";
+    });
+});
 
 
   </script>
