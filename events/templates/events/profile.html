@@ -867,8 +867,13 @@ textarea.form-control {
         <h2>Profile</h2>
         <div class="profile-header">
             <div class="profile-picture-container">
-                <img src="{{ user_profile.profile_picture }}" alt="Profile Picture">
+                <img 
+                    src="{{ user_profile.profile_picture }}" 
+                    alt="Profile Picture"
+                    onerror="this.src='https://example.com/path-to-default.jpg';" <!-- Fallback image -->
+                >
             </div>
+    
                 <div class="profile-info">
                 <h1>{{ user.username }}</h1>
                 <p><strong>First Name:</strong> {{ user_profile.first_name }}</p>
