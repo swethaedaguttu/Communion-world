@@ -420,7 +420,7 @@
 }
 /* Style for the attachment images */
 .attachment-image {
-  max-width: 100%;
+  max-width: 30%;
   height: auto;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -428,7 +428,7 @@
 
 /* Style for video attachments */
 .attachment-video {
-  width: 100%;
+  width: 30%;
   max-width: 400px;
   height: auto;
   margin-top: 10px;
@@ -1455,17 +1455,18 @@
 
                 <!-- Message Input Form -->
                 <div class="form-container">
-                    <form id="message-form" class="message-form">
+                    <form method="POST" id="message-form" class="message-form" enctype="multipart/form-data">
+                        {% csrf_token %}
                         <div class="input-section">
                             <textarea id="message-input" name="message" placeholder="Type a message..." required></textarea>
                             <label for="attachment-input" class="attachment-btn" aria-label="Attach File">
                                 <i class="fas fa-paperclip"></i>
                             </label>
-                            <input type="file" id="attachment-input" class="attachment-input" style="display: none;" onchange="showAttachmentPreview()">
+                            <input type="file" id="attachment-input" name="attachment" class="attachment-input" style="display: none;">
                             <button type="button" class="emoji-btn" aria-label="Choose Emoji" onclick="toggleEmojiPicker()">
                                 <i class="fas fa-smile"></i>
                             </button>
-                            <div id="emoji-picker" class="emoji-picker" style="display: none;">
+                            <div id="emoji-picker" class="emoji-picker" style="display:none;">
                                 <span onclick="insertEmoji('😊')">😊</span>
                                 <span onclick="insertEmoji('😂')">😂</span>
                                 <span onclick="insertEmoji('😍')">😍</span>
@@ -1474,7 +1475,7 @@
                                 <span onclick="insertEmoji('😎')">😎</span>
                             </div>
                         </div>
-                        <button type="button" id="send-button" class="submit-btn">Send</button>
+                        <button type="submit" id="send-button" class="submit-btn">Send</button>
                         <div id="attachment-preview" class="attachment-preview"></div>
                     </form>
                 </div>
@@ -2147,8 +2148,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Handle Send Button Click
-    document.getElementById("send-button").addEventListener("click", () => {
+    // Handle form submission
+    messageForm.addEventListener("submit", (e) => {
+        e.preventDefault(); // Prevent default form submission
+
         const messageText = messageInput.value.trim();
         const attachmentFile = attachmentInput.files[0];
 
@@ -2181,7 +2184,7 @@ document.addEventListener("DOMContentLoaded", () => {
             messageCard.appendChild(messageTextElement);
         }
 
-        // Add attachment preview
+        // Add attachment preview to the message card
         if (attachmentFile) {
             const fileURL = URL.createObjectURL(attachmentFile);
 
@@ -2204,8 +2207,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // Append the new message card to the conversation list
         conversationList.appendChild(messageCard);
 
-        // Reset only the message text field, keep the attachment
+        // Reset form fields and preview
         messageInput.value = "";
+        attachmentInput.value = "";
+        attachmentPreview.innerHTML = ""; // Clear the preview
     });
 });
 
