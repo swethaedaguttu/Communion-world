@@ -655,20 +655,22 @@ def group_conversation_detail(request, group_id):
             # Handle attachments if uploaded
             attachments = request.FILES.getlist('attachment')
             if attachments:
+                # Process attachments if available
                 for file in attachments:
-                    # Use the new ConversationAttachment model
                     ConversationAttachment.objects.create(conversation=conversation, file=file)
+                messages.success(request, 'Your message and attachments have been sent successfully!')
             else:
-                messages.warning(request, 'No attachments were uploaded.')
+                messages.warning(request, 'Message sent without any attachments.')
 
-            messages.success(request, 'Your message has been sent successfully!')
             return redirect('group_conversation_detail', group_id=group.id)
         else:
-            messages.error(request, 'There was an error sending your message. Please try again.')
+            # Handle form validation errors
+            messages.error(request, 'There was an error with your message. Please try again.')
     else:
+        # Initialize an empty form if the method is GET
         form = GroupConversationForm()
 
-    # Render the conversation page with form and data
+    # Render the page with the necessary context
     return render(request, 'events/group_conversation_detail.html', {
         'group': group,
         'conversations': conversations,
