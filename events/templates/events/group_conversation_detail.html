@@ -1431,25 +1431,27 @@
                 </div>
             </div>
 
-<!-- Right Container: Messages -->
-<div class="right-container">
-    <h2 class="messages-heading">Messages</h2>
-    <div class="conversations-list">
-        {% for conversation in conversations %}
-            <div class="conversation-card">
-                <strong class="username">{{ conversation.user_profile.user.username }}</strong>
-                <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
-                <p class="message-text">{{ conversation.message }}</p>
+            <!-- Right Container: Messages -->
+            <div class="right-container">
+                <h2 class="messages-heading">Messages</h2>
+                <div class="conversations-list" id="conversation-list">
+                    {% for conversation in conversations %}
+                        <div class="conversation-card">
+                            <strong class="username">{{ conversation.user_profile.user.username }}</strong>
+                            <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
+                            <p class="message-text">{{ conversation.message }}</p>
+                            {% if conversation.attachment %}
+                                <div class="attachment-preview">
+                                    <img src="{{ conversation.attachment.url }}" alt="Attachment Preview">
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
 
-            
-            </div>
-        {% endfor %}
-    </div>
-
-                                        
                 <!-- Message Input Form (Now inside the right container) -->
                 <div class="form-container">
-                    <form method="POST" class="message-form" enctype="multipart/form-data" action="{% url 'group_conversation_detail' group_id=group.id %}">
+                    <form method="POST" class="message-form" enctype="multipart/form-data" id="message-form" action="{% url 'group_conversation_detail' group_id=group.id %}">
                         {% csrf_token %}
                         <div class="input-section">
                             <textarea id="message-input" name="message" placeholder="Type a message..." required></textarea>
@@ -1476,7 +1478,6 @@
             </div>
         </div>
     </div>
-    
 </section>
   
 <section data-bs-version="5.1" class="gallery07 cid-utDfZqH1xZ" id="gallery-14-utDfZqH1xZ">
@@ -2015,178 +2016,67 @@
   <script>
     // Toggle emoji picker visibility
     function toggleEmojiPicker() {
-      const emojiPicker = document.getElementById('emoji-picker');
-      emojiPicker.style.display = (emojiPicker.style.display === 'none' || emojiPicker.style.display === '') ? 'flex' : 'none';
+        const emojiPicker = document.getElementById('emoji-picker');
+        emojiPicker.style.display = (emojiPicker.style.display === 'none' || emojiPicker.style.display === '') ? 'flex' : 'none';
     }
-    
+
     // Insert selected emoji into the message input
     function insertEmoji(emoji) {
-      const messageInput = document.getElementById('message-input');
-      messageInput.value += emoji;
-      toggleEmojiPicker();  // Close the emoji picker after selecting an emoji
+        const messageInput = document.getElementById('message-input');
+        messageInput.value += emoji;
+        toggleEmojiPicker();  // Close the emoji picker after selecting an emoji
     }
-  
+
     // Close emoji picker if clicked outside
     window.onclick = function(event) {
-      const emojiPicker = document.getElementById('emoji-picker');
-      const emojiButton = document.querySelector('.emoji-btn');  // Ensure it's the correct emoji button
-      if (!emojiPicker.contains(event.target) && !emojiButton.contains(event.target)) {
-        emojiPicker.style.display = 'none';
-      }
-    };
-  
-    // Handle file selection for attachments and display preview
-    document.getElementById('attachment-input').addEventListener('change', function() {
-      const fileInput = this;
-      const file = fileInput.files[0];  // Get the first file
-      const previewContainer = document.getElementById('attachment-preview');
-      
-      // Clear previous attachments
-      previewContainer.innerHTML = '';
-  
-      if (file) {
-        const reader = new FileReader();
-      
-        reader.onload = function(e) {
-          previewContainer.innerHTML = '';  // Clear previous preview
-          
-          // Check if the file is an image
-          if (file.type.startsWith('image')) {
-            const img = document.createElement('img');
-            img.src = e.target.result;  // Set image source to the result
-            img.classList.add('attachment-preview-image');  // Add custom styles
-            previewContainer.appendChild(img);  // Append image to preview container
-          }
-          // Check if the file is a video
-          else if (file.type.startsWith('video')) {
-            const video = document.createElement('video');
-            video.src = e.target.result;
-            video.controls = true;  // Add controls for video playback
-            video.classList.add('attachment-preview-video');  // Add custom styles
-            previewContainer.appendChild(video);
-          }
-          // Handle other file types (e.g., documents, audio)
-          else {
-            const fileElement = document.createElement('div');
-            fileElement.textContent = `Selected file: ${file.name}`;  // Display the file name
-            previewContainer.appendChild(fileElement);
-          }
-        };
-  
-        reader.readAsDataURL(file);  // Start reading the file as a data URL
-      }
-    });
-  
-    // Function to handle form submission with attachment
-    function uploadAttachment(event) {
-      event.preventDefault();  // Prevent the form from submitting normally
-  
-      const form = document.getElementById('conversation-form');
-      const formData = new FormData(form);  // Form data includes text and file attachments
-  
-      // Send the form data (including files) using AJAX
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', '/path/to/upload/', true);  // Update URL to your server endpoint
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          alert('Attachment uploaded successfully!');
-          // Handle the server response here if necessary (e.g., show success message, update UI)
-        } else {
-          alert('Error uploading attachment!');
+        const emojiPicker = document.getElementById('emoji-picker');
+        const emojiButton = document.querySelector('.emoji-btn');  // Ensure it's the correct emoji button
+        if (!emojiPicker.contains(event.target) && !emojiButton.contains(event.target)) {
+            emojiPicker.style.display = 'none';
         }
-      };
-      xhr.send(formData);  // Send form data
-    }
-  
-    // Add event listener to the form submission button
-    document.getElementById('send-button').addEventListener('click', uploadAttachment);
+    };
 
-    function showAttachmentPreview() {
-  const input = document.getElementById('attachment-input');
-  const preview = document.getElementById('attachment-preview');
-  preview.innerHTML = ''; // Clear existing preview
-
-  for (let i = 0; i < input.files.length; i++) {
-    const file = input.files[i];
-    const filePreview = document.createElement('div');
-    filePreview.classList.add('file-preview');
-    filePreview.innerText = file.name;
-    preview.appendChild(filePreview);
-  }
-}
-
-// Show Attachment Preview and append to conversation list
-    // Show attachment preview
+    // Handle file selection for attachments and display preview
     function showAttachmentPreview() {
         const input = document.getElementById('attachment-input');
         const preview = document.getElementById('attachment-preview');
         preview.innerHTML = ''; // Clear existing preview
 
-        if (input.files.length > 0) {
-            const file = input.files[0];
-
-            if (file.type.startsWith('image/')) {
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
-                img.alt = file.name;
-                img.classList.add('attachment-preview-img');
-                preview.appendChild(img);
-            } else {
-                const filePreview = document.createElement('p');
-                filePreview.textContent = file.name;
-                preview.appendChild(filePreview);
-            }
+        for (let i = 0; i < input.files.length; i++) {
+            const file = input.files[i];
+            const filePreview = document.createElement('div');
+            filePreview.classList.add('file-preview');
+            filePreview.innerText = file.name;
+            preview.appendChild(filePreview);
         }
     }
 
-    // Handle form submission and add message to the conversation list
-    document.getElementById('message-form').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent page reload
+    // Handle form submission with message and attachment preview
+    document.getElementById('message-form').addEventListener('submit', function(event) {
+        event.preventDefault();  // Prevent the form from submitting normally
 
-        const messageInput = document.getElementById('message-input');
-        const attachmentInput = document.getElementById('attachment-input');
-        const conversationsList = document.getElementById('conversations-list');
+        const form = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input').value;
+        const attachmentInput = document.getElementById('attachment-input').files[0];
+        const attachmentPreview = document.getElementById('attachment-preview').innerHTML;
 
-        // Create a new conversation card
-        const conversationCard = document.createElement('div');
-        conversationCard.classList.add('conversation-card');
+        // Show the message in the conversation list (without saving it to the server yet)
+        const conversationList = document.getElementById('conversation-list');
+        const newMessage = document.createElement('div');
+        newMessage.classList.add('conversation-card');
+        newMessage.innerHTML = `
+            <strong class="username">You</strong>
+            <span class="timestamp">${new Date().toLocaleDateString()}</span>
+            <p class="message-text">${messageInput}</p>
+            ${attachmentPreview ? `<div class="attachment-preview">${attachmentPreview}</div>` : ''}
+        `;
+        conversationList.appendChild(newMessage);  // Add the new message to the list
 
-        // Add the text message
-        if (messageInput.value.trim() !== '') {
-            const messageText = document.createElement('p');
-            messageText.classList.add('message-text');
-            messageText.textContent = messageInput.value.trim();
-            conversationCard.appendChild(messageText);
-        }
-
-        // Add the attachment preview
-        if (attachmentInput.files.length > 0) {
-            const file = attachmentInput.files[0];
-
-            if (file.type.startsWith('image/')) {
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
-                img.alt = file.name;
-                img.classList.add('message-attachment-img');
-                conversationCard.appendChild(img);
-            } else {
-                const filePreview = document.createElement('p');
-                filePreview.textContent = file.name;
-                conversationCard.appendChild(filePreview);
-            }
-        }
-
-        // Append the new conversation card to the list
-        conversationsList.appendChild(conversationCard);
-
-        // Clear the input fields and preview
-        messageInput.value = '';
-        attachmentInput.value = '';
-        document.getElementById('attachment-preview').innerHTML = '';
+        // Reset the form after previewing
+        form.reset();
+        document.getElementById('attachment-preview').innerHTML = '';  // Clear attachment preview
     });
-
-
-  </script>
+</script>
     
 </body>
 </html>
