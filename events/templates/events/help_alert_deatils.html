@@ -1269,11 +1269,11 @@
 		<div class="container">
 			<div class="navbar-brand">
 				<span class="navbar-logo">
-					<a href="#">
+					<a href="{% url 'index' %}">
 						<img src="https://r.mobirisesite.com/875197/assets/images/g19a635698b1b94ea78769e054825-h_m37du4g9.png" alt="" style="height: 4.3rem;">
 					</a>
 				</span>
-				<span class="navbar-caption-wrap"><a class="navbar-caption text-black display-4" href="#">Communion</a></span>
+				<span class="navbar-caption-wrap"><a class="navbar-caption text-black display-4" href="{% url 'index' %}">Communion</a></span>
 			</div>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-bs-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 				<div class="hamburger">
@@ -1349,7 +1349,7 @@
 
 				
 				<div class="navbar-buttons mbr-section-btn">
-					<a class="btn btn-primary display-4" href="#help-request-form">Get Help</a>
+					<a class="btn btn-primary display-4" href="{% url 'help_alert' %}">Get Help</a>
 				</div>
 			</div>
 		</div>
@@ -1369,7 +1369,7 @@
         
         <p class="mbr-fonts-style mbr-text mbr-white mb-4 display-7">We're here to connect you with the right people fast!</p>
         <div class="mbr-section-btn">
-          <a class="btn btn-white-outline display-7" href="#news-1-utwSmHJyLO">Start Now</a> 
+          <a class="btn btn-white-outline display-7" href="#help-requests">Start Now</a> 
         </div>
       </div>
     </div>
