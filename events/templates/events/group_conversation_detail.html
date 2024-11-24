@@ -1452,11 +1452,11 @@
                     <form method="POST" class="message-form" enctype="multipart/form-data" action="{% url 'group_conversation_detail' group_id=group.id %}">
                         {% csrf_token %}
                         <div class="input-section">
-                            <textarea id="message-input" name="message" placeholder="Type a message..." required></textarea>
-                            <label for="attachment-input" class="attachment-btn" aria-label="Attach File">
+                            <textarea id="message-input" placeholder="Type a message..."></textarea>
+                            <label for="attachment-input" class="attachment-btn">
                                 <i class="fas fa-paperclip"></i>
-                            </label>
-                            <input type="file" id="attachment-input" name="attachment" class="attachment-input" style="display: none;" onchange="showAttachmentPreview()">
+                            </label>                        
+                            <input type="file" id="attachment-input" style="display: none;" />
                             <button type="button" class="emoji-btn" aria-label="Choose Emoji" onclick="toggleEmojiPicker()">
                                 <i class="fas fa-smile"></i>
                             </button>
