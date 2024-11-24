@@ -9,7 +9,7 @@ from .models import (
     Event,
     Notification,
     UserProfile,
-    Donation, HelpAlert,  CommunityLeader, SocialIssuesGroup, GroupConversation, Message, ConversationAttachment
+    Donation, HelpAlert,  CommunityLeader, SocialIssuesGroup, GroupConversation, Message, 
 
 
  # Import your UserProfile model correctly

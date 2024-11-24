@@ -9,7 +9,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
   <link rel="shortcut icon" href="https://r.mobirisesite.com/881540/assets/images/photo-1551135049-8a33b5883817.jpeg" type="image/x-icon">
   <meta name="description" content="Join our vibrant discussion room to engage in meaningful conversations on various topics. Share your thoughts, learn from others, and connect with like-minded individuals.">
-  <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
   <title>Engage in Conversations</title>
   <link rel="stylesheet" href="https://r.mobirisesite.com/881540/assets/web/assets/mobirise-icons2/mobirise2.css?rnd=1731155146071">
   <link rel="stylesheet" href="https://r.mobirisesite.com/881540/assets/bootstrap/css/bootstrap.min.css?rnd=1731155146071">
@@ -421,17 +420,10 @@
 }
 /* Style for the attachment images */
 .attachment-image {
-    max-width: 200px;
-    max-height: 200px;
-    margin-top: 10px;
-    border-radius: 5px;
-    display: block;
-    margin-bottom: 10px;
-}
-
-.attachment {
-    margin-top: 10px;
-    margin-bottom: 15px;
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 /* Style for video attachments */
@@ -1439,34 +1431,35 @@
                 </div>
             </div>
 
-            <!-- Right Container: Messages -->
-            <div class="right-container">
-                <h2 class="messages-heading">Messages</h2>
-                <div class="conversations-list">
-                    {% for conversation in conversations %}
-                        <div class="conversation-card">
-                            <strong class="username">{{ conversation.user_profile.user.username }}</strong>
-                            <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
-                            <p class="message-text">{{ conversation.message }}</p>
+<!-- Right Container: Messages -->
+<div class="right-container">
+    <h2 class="messages-heading">Messages</h2>
+    <div class="conversations-list">
+        {% for conversation in conversations %}
+            <div class="conversation-card">
+                <strong class="username">{{ conversation.user_profile.user.username }}</strong>
+                <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
+                <p class="message-text">{{ conversation.message }}</p>
 
-                            {% if conversation.conversation_attachments.all %}
-                            <div class="attachments">
-                                {% for attachment in conversation.conversation_attachments.all %}
-                                    <div class="attachment">
-                                        {% if attachment.file %}
-                                            <!-- Directly display the attachment in the message container -->
-                                            <img src="{{ attachment.file.url }}" alt="Attachment" class="attachment-image">
-                                        {% else %}
-                                            <p>No attachment available.</p>
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-                            </div>
+                {% if conversation.conversation_attachments.all %}
+                <div class="attachments">
+                    {% for attachment in conversation.conversation_attachments.all %}
+                        <div class="attachment">
+                            {% if attachment.file %}
+                                <a href="{{ attachment.file.url }}" target="_blank">View Attachment</a>
+                            {% else %}
+                                <p>No attachment available.</p>
                             {% endif %}
                         </div>
                     {% endfor %}
                 </div>
+            {% endif %}
+            
+            </div>
+        {% endfor %}
+    </div>
 
+                                        
                 <!-- Message Input Form (Now inside the right container) -->
                 <div class="form-container">
                     <form method="POST" class="message-form" enctype="multipart/form-data" action="{% url 'group_conversation_detail' group_id=group.id %}">
@@ -1495,7 +1488,83 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div><section class="discussion-container" id="discussion-section">
+        <div class="container">
+            <div class="discussion-layout">
+                <!-- Left Container: Group Info -->
+                <div class="left-container">
+                    <div class="group-info">
+                        {% if group.image %}
+                            <img src="{{ group.image }}" alt="{{ group.name }} Image" class="group-image">
+                        {% else %}
+                            <img src="{% static 'events/images/placeholder.png' %}" alt="Placeholder Image" class="group-image">
+                        {% endif %}
+                        <h1 class="group-name">{{ group.name }}</h1>
+                        <p class="group-topic"><strong>Topic:</strong> {{ group.topic }}</p>
+                        <p class="group-description"><strong>Description:</strong> {{ group.description }}</p>
+                    </div>
+                </div>
+    
+                <!-- Right Container: Messages -->
+                <div class="right-container">
+                    <h2 class="messages-heading">Messages</h2>
+                    <div class="conversations-list" id="conversationsList">
+                        {% for conversation in conversations %}
+                            <div class="conversation-card">
+                                <strong class="username">{{ conversation.user_profile.user.username }}</strong>
+                                <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
+                                <p class="message-text">{{ conversation.message }}</p>
+    
+                                <!-- Attachments Displayed Directly Here -->
+                                {% if conversation.conversation_attachments.all %}
+                                    <div class="attachments">
+                                        {% for attachment in conversation.conversation_attachments.all %}
+                                            {% if attachment.file %}
+                                                <img src="{{ attachment.file.url }}" alt="Attachment" class="attachment-image">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+    
+                    <!-- Message Input Form (Now inside the right container) -->
+                    <div class="form-container">
+                        <form method="POST" class="message-form" enctype="multipart/form-data" action="{% url 'group_conversation_detail' group_id=group.id %}">
+                            {% csrf_token %}
+                            <div class="input-section">
+                                <textarea id="message-input" name="message" placeholder="Type a message..." required></textarea>
+    
+                                <!-- Attachment Button -->
+                                <label for="attachment-input" class="attachment-btn" aria-label="Attach File">
+                                    <i class="fas fa-paperclip"></i>
+                                </label>
+                                <input type="file" id="attachment-input" name="attachment" class="attachment-input" style="display: none;" onchange="previewAttachment()">
+    
+                                <!-- Emoji Picker Button -->
+                                <button type="button" class="emoji-btn" aria-label="Choose Emoji" onclick="toggleEmojiPicker()">
+                                    <i class="fas fa-smile"></i>
+                                </button>
+    
+                                <div id="emoji-picker" class="emoji-picker" style="display:none;">
+                                    <span onclick="insertEmoji('😊')">😊</span>
+                                    <span onclick="insertEmoji('😂')">😂</span>
+                                    <span onclick="insertEmoji('😍')">😍</span>
+                                    <span onclick="insertEmoji('😢')">😢</span>
+                                    <span onclick="insertEmoji('😡')">😡</span>
+                                    <span onclick="insertEmoji('😎')">😎</span>
+                                </div>
+                            </div>
+                            <button type="submit" class="submit-btn">Send</button>
+                            <div id="attachment-preview" class="attachment-preview"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
 </section>
   
 <section data-bs-version="5.1" class="gallery07 cid-utDfZqH1xZ" id="gallery-14-utDfZqH1xZ">
@@ -2097,80 +2166,26 @@
     });
   
     // Function to handle form submission with attachment
-    document.addEventListener("DOMContentLoaded", function() {
-    const attachmentInput = document.getElementById('attachment-input');
-    const sendButton = document.getElementById('send-button');
-    
-    if (attachmentInput) {
-        attachmentInput.addEventListener('change', function() {
-            const fileInput = this;
-            const file = fileInput.files[0];  // Get the first file
-            const previewContainer = document.getElementById('attachment-preview');
-            
-            // Clear previous attachments
-            previewContainer.innerHTML = '';
-    
-            if (file) {
-                const reader = new FileReader();
-            
-                reader.onload = function(e) {
-                    previewContainer.innerHTML = '';  // Clear previous preview
-                    
-                    // Check if the file is an image
-                    if (file.type.startsWith('image')) {
-                        const img = document.createElement('img');
-                        img.src = e.target.result;  // Set image source to the result
-                        img.classList.add('attachment-preview-image');  // Add custom styles
-                        previewContainer.appendChild(img);  // Append image to preview container
-                    }
-                    // Check if the file is a video
-                    else if (file.type.startsWith('video')) {
-                        const video = document.createElement('video');
-                        video.src = e.target.result;
-                        video.controls = true;  // Add controls for video playback
-                        video.classList.add('attachment-preview-video');  // Add custom styles
-                        previewContainer.appendChild(video);
-                    }
-                    // Handle other file types (e.g., documents, audio)
-                    else {
-                        const fileElement = document.createElement('div');
-                        fileElement.textContent = `Selected file: ${file.name}`;  // Display the file name
-                        previewContainer.appendChild(fileElement);
-                    }
-                };
-    
-                reader.readAsDataURL(file);  // Start reading the file as a data URL
-            }
-        });
-    }
-
-    // Add event listener to send button (check if button exists first)
-    if (sendButton) {
-        sendButton.addEventListener('click', function(event) {
-            uploadAttachment(event);
-        });
-    }
-
     function uploadAttachment(event) {
-        event.preventDefault();  // Prevent the form from submitting normally
-
-        const form = document.getElementById('conversation-form');
-        const formData = new FormData(form);  // Form data includes text and file attachments
-
-        // Send the form data (including files) using AJAX
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/path/to/upload/', true);  // Update URL to your server endpoint
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                alert('Attachment uploaded successfully!');
-                // Handle the server response here if necessary (e.g., show success message, update UI)
-            } else {
-                alert('Error uploading attachment!');
-            }
-        };
-        xhr.send(formData);  // Send form data
+      event.preventDefault();  // Prevent the form from submitting normally
+  
+      const form = document.getElementById('conversation-form');
+      const formData = new FormData(form);  // Form data includes text and file attachments
+  
+      // Send the form data (including files) using AJAX
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/path/to/upload/', true);  // Update URL to your server endpoint
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          alert('Attachment uploaded successfully!');
+          // Handle the server response here if necessary (e.g., show success message, update UI)
+        } else {
+          alert('Error uploading attachment!');
+        }
+      };
+      xhr.send(formData);  // Send form data
     }
-});
+  
     // Add event listener to the form submission button
     document.getElementById('send-button').addEventListener('click', uploadAttachment);
 
@@ -2187,6 +2202,33 @@
     preview.appendChild(filePreview);
   }
 }
+
+function previewAttachment() {
+        const fileInput = document.getElementById('attachment-input');
+        const previewContainer = document.getElementById('attachment-preview');
+
+        // Clear previous previews
+        previewContainer.innerHTML = '';
+
+        const file = fileInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const fileURL = e.target.result;
+
+                const img = document.createElement('img');
+                img.src = fileURL;
+                img.alt = "Attachment Preview";
+                img.classList.add('preview-image');
+                previewContainer.appendChild(img);
+            };
+
+            reader.readAsDataURL(file);  // Read the file as a data URL
+        }
+    }
+
 
   </script>
     
