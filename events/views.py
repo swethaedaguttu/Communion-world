@@ -513,7 +513,7 @@ def help_alert(request):
             need_help=request.POST['needHelp'],
             description=request.POST['description'],
             contact_details=request.POST['contactDetails'],
-            image_url=image_url  # Save the external image URL
+            image=image_url  # Save the external image URL
         )
         
         # Return JSON response with the new help request data
@@ -525,7 +525,7 @@ def help_alert(request):
                 'description': help_request.description,
                 'contact_details': help_request.contact_details,
                 'created_at': help_request.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-                'image_url': help_request.image_url  # Provide image URL if available
+                'image': help_request.image_url  # Provide image URL if available
             }
         })
 
