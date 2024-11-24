@@ -2124,6 +2124,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const messageInput = document.getElementById("message-input");
     const attachmentInput = document.getElementById("attachment-input");
     const conversationList = document.getElementById("conversations-list");
+    const attachmentPreview = document.getElementById("attachment-preview");
+
+    // Function to show attachment preview
+    attachmentInput.addEventListener("change", () => {
+        attachmentPreview.innerHTML = ""; // Clear any previous preview
+        const file = attachmentInput.files[0];
+
+        if (file) {
+            if (file.type.startsWith("image/")) {
+                const img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.alt = "Attachment Preview";
+                img.classList.add("attachment-preview-image");
+                attachmentPreview.appendChild(img);
+            } else {
+                const fileName = document.createElement("p");
+                fileName.textContent = `File: ${file.name}`;
+                fileName.classList.add("attachment-preview-file");
+                attachmentPreview.appendChild(fileName);
+            }
+        }
+    });
 
     // Handle Send Button Click
     document.getElementById("send-button").addEventListener("click", () => {
@@ -2182,9 +2204,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Append the new message card to the conversation list
         conversationList.appendChild(messageCard);
 
-        // Reset form fields
+        // Reset only the message text field, keep the attachment
         messageInput.value = "";
-        attachmentInput.value = "";
     });
 });
 
