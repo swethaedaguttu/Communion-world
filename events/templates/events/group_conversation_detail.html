@@ -1455,18 +1455,17 @@
 
                 <!-- Message Input Form -->
                 <div class="form-container">
-                    <form method="POST" id="message-form" class="message-form" enctype="multipart/form-data">
-                        {% csrf_token %}
+                    <form id="message-form" class="message-form">
                         <div class="input-section">
                             <textarea id="message-input" name="message" placeholder="Type a message..." required></textarea>
                             <label for="attachment-input" class="attachment-btn" aria-label="Attach File">
                                 <i class="fas fa-paperclip"></i>
                             </label>
-                            <input type="file" id="attachment-input" name="attachment" class="attachment-input" style="display: none;">
+                            <input type="file" id="attachment-input" class="attachment-input" style="display: none;" onchange="showAttachmentPreview()">
                             <button type="button" class="emoji-btn" aria-label="Choose Emoji" onclick="toggleEmojiPicker()">
                                 <i class="fas fa-smile"></i>
                             </button>
-                            <div id="emoji-picker" class="emoji-picker" style="display:none;">
+                            <div id="emoji-picker" class="emoji-picker" style="display: none;">
                                 <span onclick="insertEmoji('😊')">😊</span>
                                 <span onclick="insertEmoji('😂')">😂</span>
                                 <span onclick="insertEmoji('😍')">😍</span>
@@ -1475,7 +1474,7 @@
                                 <span onclick="insertEmoji('😎')">😎</span>
                             </div>
                         </div>
-                        <button type="submit" id="send-button" class="submit-btn">Send</button>
+                        <button type="button" id="send-button" class="submit-btn">Send</button>
                         <div id="attachment-preview" class="attachment-preview"></div>
                     </form>
                 </div>
