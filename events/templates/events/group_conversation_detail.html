@@ -1434,24 +1434,33 @@
             <!-- Right Container: Messages -->
             <div class="right-container">
                 <h2 class="messages-heading">Messages</h2>
-                <div class="conversations-list" id="conversation-list">
+                <div class="conversations-list">
                     {% for conversation in conversations %}
                         <div class="conversation-card">
                             <strong class="username">{{ conversation.user_profile.user.username }}</strong>
                             <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
                             <p class="message-text">{{ conversation.message }}</p>
+
+                            <!-- Displaying Attachments without File Names -->
                             {% if conversation.attachment %}
                                 <div class="attachment-preview">
-                                    <img src="{{ conversation.attachment.url }}" alt="Attachment Preview">
+                                    {% if conversation.attachment|lowerendswith:'.jpg' or conversation.attachment|lowerendswith:'.jpeg' or conversation.attachment|lowerendswith:'.png' %}
+                                        <img src="{{ conversation.attachment.url }}" class="attachment-preview-image" alt="Image Attachment">
+                                    {% elif conversation.attachment|lowerendswith:'.mp4' or conversation.attachment|lowerendswith:'.mov' %}
+                                        <video src="{{ conversation.attachment.url }}" controls class="attachment-preview-video"></video>
+                                    {% else %}
+                                        <!-- For non-image/video files, we just show a generic preview (no filename) -->
+                                        <div class="attachment-placeholder">Attachment</div>
+                                    {% endif %}
                                 </div>
                             {% endif %}
                         </div>
                     {% endfor %}
                 </div>
 
-                <!-- Message Input Form (Now inside the right container) -->
+                <!-- Message Input Form -->
                 <div class="form-container">
-                    <form method="POST" class="message-form" enctype="multipart/form-data" id="message-form" action="{% url 'group_conversation_detail' group_id=group.id %}">
+                    <form method="POST" class="message-form" enctype="multipart/form-data" action="{% url 'group_conversation_detail' group_id=group.id %}">
                         {% csrf_token %}
                         <div class="input-section">
                             <textarea id="message-input" name="message" placeholder="Type a message..." required></textarea>
@@ -1479,7 +1488,7 @@
         </div>
     </div>
 </section>
-  
+
 <section data-bs-version="5.1" class="gallery07 cid-utDfZqH1xZ" id="gallery-14-utDfZqH1xZ">
   
   
@@ -2076,6 +2085,49 @@
         form.reset();
         document.getElementById('attachment-preview').innerHTML = '';  // Clear attachment preview
     });
+    // Handle file selection for attachments and display preview
+document.getElementById('attachment-input').addEventListener('change', function() {
+    const fileInput = this;
+    const file = fileInput.files[0];  // Get the first file
+    const previewContainer = document.getElementById('attachment-preview');
+    
+    // Clear previous attachments
+    previewContainer.innerHTML = '';
+  
+    if (file) {
+        const reader = new FileReader();
+      
+        reader.onload = function(e) {
+            previewContainer.innerHTML = '';  // Clear previous preview
+          
+            // Check if the file is an image
+            if (file.type.startsWith('image')) {
+                const img = document.createElement('img');
+                img.src = e.target.result;  // Set image source to the result
+                img.classList.add('attachment-preview-image');  // Add custom styles
+                previewContainer.appendChild(img);  // Append image to preview container
+            }
+            // Check if the file is a video
+            else if (file.type.startsWith('video')) {
+                const video = document.createElement('video');
+                video.src = e.target.result;
+                video.controls = true;  // Add controls for video playback
+                video.classList.add('attachment-preview-video');  // Add custom styles
+                previewContainer.appendChild(video);
+            }
+            // Handle other file types (e.g., documents, audio)
+            else {
+                const placeholder = document.createElement('div');
+                placeholder.classList.add('attachment-placeholder');
+                placeholder.textContent = 'Attachment';  // Display a simple message
+                previewContainer.appendChild(placeholder);
+            }
+        };
+  
+        reader.readAsDataURL(file);  // Start reading the file as a data URL
+    }
+});
+
 </script>
     
 </body>
