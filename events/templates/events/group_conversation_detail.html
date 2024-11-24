@@ -1441,22 +1441,10 @@
                             <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
                             <p class="message-text">{{ conversation.message }}</p>
                             {% if conversation.attachment %}
-                            <div class="attachment-preview">
-                                {% if conversation.attachment.content_type.startswith 'image/' %}
-                                    <!-- Display image preview if the attachment is an image -->
-                                    <img src="{{ conversation.attachment.url }}" alt="Attachment Preview" class="attachment-image">
-                                {% elif conversation.attachment.content_type.startswith 'video/' %}
-                                    <!-- Display video preview if the attachment is a video -->
-                                    <video controls class="attachment-video">
-                                        <source src="{{ conversation.attachment.url }}" type="{{ conversation.attachment.content_type }}">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                {% else %}
-                                    <!-- Handle other file types, e.g., show a generic preview message -->
-                                    <p>Unsupported file type</p>
-                                {% endif %}
-                            </div>
-                        {% endif %}
+                                <div class="attachment-preview">
+                                    <img src="{{ conversation.attachment.url }}" alt="Attachment Preview">
+                                </div>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
@@ -2054,12 +2042,33 @@
         const preview = document.getElementById('attachment-preview');
         preview.innerHTML = ''; // Clear existing preview
 
+        // Loop through selected files and create appropriate previews
         for (let i = 0; i < input.files.length; i++) {
             const file = input.files[i];
-            const filePreview = document.createElement('div');
-            filePreview.classList.add('file-preview');
-            filePreview.innerText = file.name;
-            preview.appendChild(filePreview);
+            const fileType = file.type.split('/')[0]; // Get the general type (image, video, etc.)
+
+            if (fileType === 'image') {
+                // If the file is an image, create an <img> element
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file); // Create a temporary URL for the image
+                img.alt = file.name; // Optional: Use file name as alt text
+                img.style.maxWidth = '100px'; // Adjust as needed
+                img.style.borderRadius = '5px'; // Add some styling
+                preview.appendChild(img);
+            } else if (fileType === 'video') {
+                // If the file is a video, create a <video> element
+                const video = document.createElement('video');
+                video.src = URL.createObjectURL(file); // Create a temporary URL for the video
+                video.controls = true; // Add playback controls
+                video.style.maxWidth = '150px'; // Adjust as needed
+                preview.appendChild(video);
+            } else {
+                // For unsupported file types, show a message or generic icon
+                const unsupported = document.createElement('div');
+                unsupported.textContent = `Unsupported file type: ${file.name}`;
+                unsupported.style.color = 'red';
+                preview.appendChild(unsupported);
+            }
         }
     }
 
@@ -2069,7 +2078,6 @@
 
         const form = document.getElementById('message-form');
         const messageInput = document.getElementById('message-input').value;
-        const attachmentInput = document.getElementById('attachment-input').files[0];
         const attachmentPreview = document.getElementById('attachment-preview').innerHTML;
 
         // Show the message in the conversation list (without saving it to the server yet)
@@ -2089,6 +2097,6 @@
         document.getElementById('attachment-preview').innerHTML = '';  // Clear attachment preview
     });
 </script>
-    
+
 </body>
 </html>
