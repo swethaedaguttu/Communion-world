@@ -506,31 +506,34 @@ def donation_list(request):
 @csrf_exempt  # Only if you are sure about CSRF token handling
 def help_alert(request):
     if request.method == "POST":
-        # Handle form submission, including image upload
-        image_url = request.POST.get('image_url')  # For external image URL
-        help_request = HelpAlert.objects.create(  # Corrected model name
+        # Handle form submission, including optional image URL
+        image_url = request.POST.get('image_url')  # Get external image URL, if provided
+        
+        # Create a new help alert record
+        help_request = HelpAlert.objects.create(
             username=request.POST['username'],
             need_help=request.POST['needHelp'],
             description=request.POST['description'],
             contact_details=request.POST['contactDetails'],
-            image=image_url  # Save the external image URL
+            image=image_url  # Save the external image URL in the database
         )
         
-        # Return JSON response with the new help request data
+        # Return a JSON response with the new help request data
         return JsonResponse({
             'status': 'success',
             'request': {
+                'id': help_request.id,
                 'username': help_request.username,
                 'need_help': help_request.need_help,
                 'description': help_request.description,
                 'contact_details': help_request.contact_details,
                 'created_at': help_request.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-                'image': help_request.image_url  # Provide image URL if available
+                'image': help_request.image  # Return the image URL, if available
             }
         })
 
-    # For GET requests, render the existing help requests
-    help_requests = HelpAlert.objects.all()  # Ensure the correct model is used
+    # For GET requests, render the existing help requests in the template
+    help_requests = HelpAlert.objects.all()
     return render(request, 'events/help_alert.html', {'help_requests': help_requests})
 
 # Display a specific help alert's details
