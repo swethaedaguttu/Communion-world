@@ -2118,7 +2118,6 @@
     preview.appendChild(filePreview);
   }
 }
-
 document.addEventListener("DOMContentLoaded", () => {
     const messageForm = document.getElementById("message-form");
     const messageInput = document.getElementById("message-input");
@@ -2126,7 +2125,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const conversationList = document.getElementById("conversations-list");
     const attachmentPreview = document.getElementById("attachment-preview");
 
-    // Function to show attachment preview
+    // Show attachment preview
     attachmentInput.addEventListener("change", () => {
         attachmentPreview.innerHTML = ""; // Clear any previous preview
         const file = attachmentInput.files[0];
@@ -2148,7 +2147,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Handle form submission
-    messageForm.addEventListener("submit", (e) => {
+    messageForm.addEventListener("submit", async (e) => {
         e.preventDefault(); // Prevent default form submission
 
         const messageText = messageInput.value.trim();
@@ -2160,59 +2159,80 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Create a conversation card dynamically
-        const messageCard = document.createElement("div");
-        messageCard.classList.add("conversation-card");
-
-        // Add username and timestamp
-        const username = document.createElement("strong");
-        username.classList.add("username");
-        username.textContent = "You";
-        messageCard.appendChild(username);
-
-        const timestamp = document.createElement("span");
-        timestamp.classList.add("timestamp");
-        timestamp.textContent = new Date().toLocaleDateString("en-GB");
-        messageCard.appendChild(timestamp);
-
-        // Add message text
-        if (messageText) {
-            const messageTextElement = document.createElement("p");
-            messageTextElement.classList.add("message-text");
-            messageTextElement.textContent = messageText;
-            messageCard.appendChild(messageTextElement);
-        }
-
-        // Add attachment preview to the message card
+        // Prepare form data for backend
+        const formData = new FormData();
+        formData.append("message", messageText);
         if (attachmentFile) {
-            const fileURL = URL.createObjectURL(attachmentFile);
-
-            if (attachmentFile.type.startsWith("image/")) {
-                const img = document.createElement("img");
-                img.src = fileURL;
-                img.alt = "Attachment Image";
-                img.classList.add("attachment-image");
-                messageCard.appendChild(img);
-            } else {
-                const link = document.createElement("a");
-                link.href = fileURL;
-                link.textContent = `Download ${attachmentFile.name}`;
-                link.classList.add("attachment-link");
-                link.target = "_blank";
-                messageCard.appendChild(link);
-            }
+            formData.append("attachment", attachmentFile);
         }
 
-        // Append the new message card to the conversation list
-        conversationList.appendChild(messageCard);
+        try {
+            // Send the form data to the server
+            const response = await fetch("/path/to/your/backend/api/", {
+                method: "POST",
+                body: formData,
+            });
 
-        // Reset form fields and preview
-        messageInput.value = "";
-        attachmentInput.value = "";
-        attachmentPreview.innerHTML = ""; // Clear the preview
+            if (!response.ok) {
+                throw new Error("Failed to send message");
+            }
+
+            const responseData = await response.json();
+
+            // Update the conversation list dynamically
+            const messageCard = document.createElement("div");
+            messageCard.classList.add("conversation-card");
+
+            // Add username and timestamp
+            const username = document.createElement("strong");
+            username.classList.add("username");
+            username.textContent = responseData.user || "You";
+            messageCard.appendChild(username);
+
+            const timestamp = document.createElement("span");
+            timestamp.classList.add("timestamp");
+            timestamp.textContent = new Date(responseData.timestamp).toLocaleDateString("en-GB");
+            messageCard.appendChild(timestamp);
+
+            // Add message text
+            if (responseData.message) {
+                const messageTextElement = document.createElement("p");
+                messageTextElement.classList.add("message-text");
+                messageTextElement.textContent = responseData.message;
+                messageCard.appendChild(messageTextElement);
+            }
+
+            // Add attachment to the message card
+            if (responseData.attachment) {
+                if (responseData.attachment.type === "image") {
+                    const img = document.createElement("img");
+                    img.src = responseData.attachment.url;
+                    img.alt = "Attachment Image";
+                    img.classList.add("attachment-image");
+                    messageCard.appendChild(img);
+                } else {
+                    const link = document.createElement("a");
+                    link.href = responseData.attachment.url;
+                    link.textContent = `Download ${responseData.attachment.name}`;
+                    link.classList.add("attachment-link");
+                    link.target = "_blank";
+                    messageCard.appendChild(link);
+                }
+            }
+
+            // Append the new message card to the conversation list
+            conversationList.appendChild(messageCard);
+
+            // Reset form fields and preview
+            messageInput.value = "";
+            attachmentInput.value = "";
+            attachmentPreview.innerHTML = "";
+        } catch (error) {
+            console.error("Error sending message:", error);
+            alert("Failed to send message. Please try again.");
+        }
     });
 });
-
 
   </script>
     
