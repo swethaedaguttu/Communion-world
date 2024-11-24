@@ -224,6 +224,22 @@ class GroupConversation(models.Model):
     def __str__(self):
         return f'{self.user_profile.user.username} - {self.group.name}'
 
+class ConversationAttachment(models.Model):
+    conversation = models.ForeignKey(
+        'GroupConversation', 
+        related_name='conversation_attachments',
+        on_delete=models.CASCADE 
+    )
+    file = models.URLField(
+        max_length=500, 
+        blank=True, 
+        null=True, 
+        default=None  # External URL for the file
+     )
+
+    def __str__(self):
+        return f"Attachment for conversation {self.conversation.id}"
+
 
 class Message(models.Model):
     content = models.TextField()  # To store the message content
