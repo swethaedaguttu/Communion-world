@@ -1395,14 +1395,14 @@
 
       <!-- Image Display -->
       {% if help_alert.image %}
-        <div class="image-container">
-          <p><strong>Uploaded Image:</strong></p>
-          <img src="{{ help_alert.image.url }}" alt="Help Request Image" class="img-fluid">
-        </div>
-      {% else %}
-        <p>No image uploaded for this request.</p>
-      {% endif %}
-
+      <div class="image-container">
+        <p><strong>Uploaded Image:</strong></p>
+        <img src="{{ help_alert.image }}" alt="Help Request Image" class="img-fluid">
+      </div>
+    {% else %}
+      <p>No image uploaded for this request.</p>
+    {% endif %}
+    
       <!-- Chat Button -->
       <button class="btn btn-primary chat-button" data-bs-toggle="modal" data-bs-target="#chatModal">
         Chat Now
