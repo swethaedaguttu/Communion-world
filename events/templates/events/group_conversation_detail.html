@@ -2056,76 +2056,125 @@
   
     // Handle file selection for attachments and display preview
     document.getElementById('attachment-input').addEventListener('change', function() {
-  const fileInput = this;
-  const previewContainer = document.getElementById('attachment-preview');
-
-  // Clear previous attachment previews
-  previewContainer.innerHTML = '';
-
-  const files = fileInput.files;  // Get all the selected files
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-      // Clear previous preview
+      const fileInput = this;
+      const file = fileInput.files[0];  // Get the first file
+      const previewContainer = document.getElementById('attachment-preview');
+      
+      // Clear previous attachments
       previewContainer.innerHTML = '';
-
-      // Check if the file is an image
-      if (file.type.startsWith('image')) {
-        const img = document.createElement('img');
-        img.src = e.target.result;  // Set image source to the result
-        img.classList.add('attachment-preview-image');  // Add custom styles
-        previewContainer.appendChild(img);  // Append image to preview container
+  
+      if (file) {
+        const reader = new FileReader();
+      
+        reader.onload = function(e) {
+          previewContainer.innerHTML = '';  // Clear previous preview
+          
+          // Check if the file is an image
+          if (file.type.startsWith('image')) {
+            const img = document.createElement('img');
+            img.src = e.target.result;  // Set image source to the result
+            img.classList.add('attachment-preview-image');  // Add custom styles
+            previewContainer.appendChild(img);  // Append image to preview container
+          }
+          // Check if the file is a video
+          else if (file.type.startsWith('video')) {
+            const video = document.createElement('video');
+            video.src = e.target.result;
+            video.controls = true;  // Add controls for video playback
+            video.classList.add('attachment-preview-video');  // Add custom styles
+            previewContainer.appendChild(video);
+          }
+          // Handle other file types (e.g., documents, audio)
+          else {
+            const fileElement = document.createElement('div');
+            fileElement.textContent = `Selected file: ${file.name}`;  // Display the file name
+            previewContainer.appendChild(fileElement);
+          }
+        };
+  
+        reader.readAsDataURL(file);  // Start reading the file as a data URL
       }
-      // Check if the file is a video
-      else if (file.type.startsWith('video')) {
-        const video = document.createElement('video');
-        video.src = e.target.result;
-        video.controls = true;  // Add controls for video playback
-        video.classList.add('attachment-preview-video');  // Add custom styles
-        previewContainer.appendChild(video);
-      }
-      // Handle other file types (e.g., documents, audio)
-      else {
-        const fileElement = document.createElement('div');
-        fileElement.textContent = `Selected file: ${file.name}`;  // Display the file name
-        previewContainer.appendChild(fileElement);
-      }
-    };
-
-    reader.readAsDataURL(file);  // Start reading the file as a data URL
-  }
-});
-
-// Function to handle form submission with attachment (via AJAX)
-function uploadAttachment(event) {
-  event.preventDefault();  // Prevent the form from submitting normally
-
-  const form = document.getElementById('conversation-form');
-  const formData = new FormData(form);  // Collect form data including text and file attachments
-
-  // Send the form data (including files) using AJAX
-  const xhr = new XMLHttpRequest();
-  xhr.open('POST', '/path/to/upload/', true);  // Replace with your server endpoint
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      alert('Attachment uploaded successfully!');
-      // Handle server response if necessary (e.g., show success message, update UI)
-    } else {
-      alert('Error uploading attachment!');
+    });
+  
+    // Function to handle form submission with attachment
+    document.addEventListener("DOMContentLoaded", function() {
+    const attachmentInput = document.getElementById('attachment-input');
+    const sendButton = document.getElementById('send-button');
+    
+    if (attachmentInput) {
+        attachmentInput.addEventListener('change', function() {
+            const fileInput = this;
+            const file = fileInput.files[0];  // Get the first file
+            const previewContainer = document.getElementById('attachment-preview');
+            
+            // Clear previous attachments
+            previewContainer.innerHTML = '';
+    
+            if (file) {
+                const reader = new FileReader();
+            
+                reader.onload = function(e) {
+                    previewContainer.innerHTML = '';  // Clear previous preview
+                    
+                    // Check if the file is an image
+                    if (file.type.startsWith('image')) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;  // Set image source to the result
+                        img.classList.add('attachment-preview-image');  // Add custom styles
+                        previewContainer.appendChild(img);  // Append image to preview container
+                    }
+                    // Check if the file is a video
+                    else if (file.type.startsWith('video')) {
+                        const video = document.createElement('video');
+                        video.src = e.target.result;
+                        video.controls = true;  // Add controls for video playback
+                        video.classList.add('attachment-preview-video');  // Add custom styles
+                        previewContainer.appendChild(video);
+                    }
+                    // Handle other file types (e.g., documents, audio)
+                    else {
+                        const fileElement = document.createElement('div');
+                        fileElement.textContent = `Selected file: ${file.name}`;  // Display the file name
+                        previewContainer.appendChild(fileElement);
+                    }
+                };
+    
+                reader.readAsDataURL(file);  // Start reading the file as a data URL
+            }
+        });
     }
-  };
-  xhr.send(formData);  // Send the form data with files
-}
 
-// Add event listener to the form submission button
-document.getElementById('send-button').addEventListener('click', uploadAttachment);
+    // Add event listener to send button (check if button exists first)
+    if (sendButton) {
+        sendButton.addEventListener('click', function(event) {
+            uploadAttachment(event);
+        });
+    }
 
-// Optional: If you need to trigger the preview when a file is selected (and form is not yet submitted)
-document.getElementById('attachment-input').addEventListener('change', showAttachmentPreview);
+    function uploadAttachment(event) {
+        event.preventDefault();  // Prevent the form from submitting normally
 
-function showAttachmentPreview() {
+        const form = document.getElementById('conversation-form');
+        const formData = new FormData(form);  // Form data includes text and file attachments
+
+        // Send the form data (including files) using AJAX
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/path/to/upload/', true);  // Update URL to your server endpoint
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                alert('Attachment uploaded successfully!');
+                // Handle the server response here if necessary (e.g., show success message, update UI)
+            } else {
+                alert('Error uploading attachment!');
+            }
+        };
+        xhr.send(formData);  // Send form data
+    }
+});
+    // Add event listener to the form submission button
+    document.getElementById('send-button').addEventListener('click', uploadAttachment);
+
+    function showAttachmentPreview() {
   const input = document.getElementById('attachment-input');
   const preview = document.getElementById('attachment-preview');
   preview.innerHTML = ''; // Clear existing preview
@@ -2134,7 +2183,7 @@ function showAttachmentPreview() {
     const file = input.files[i];
     const filePreview = document.createElement('div');
     filePreview.classList.add('file-preview');
-    filePreview.innerText = file.name;  // Display file name
+    filePreview.innerText = file.name;
     preview.appendChild(filePreview);
   }
 }
