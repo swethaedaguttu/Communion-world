@@ -420,10 +420,17 @@
 }
 /* Style for the attachment images */
 .attachment-image {
-  max-width: 100%;
-  height: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
+    max-width: 200px;
+    max-height: 200px;
+    margin-top: 10px;
+    border-radius: 5px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.attachment {
+    margin-top: 10px;
+    margin-bottom: 15px;
 }
 
 /* Style for video attachments */
@@ -1431,35 +1438,34 @@
                 </div>
             </div>
 
-<!-- Right Container: Messages -->
-<div class="right-container">
-    <h2 class="messages-heading">Messages</h2>
-    <div class="conversations-list">
-        {% for conversation in conversations %}
-            <div class="conversation-card">
-                <strong class="username">{{ conversation.user_profile.user.username }}</strong>
-                <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
-                <p class="message-text">{{ conversation.message }}</p>
+            <!-- Right Container: Messages -->
+            <div class="right-container">
+                <h2 class="messages-heading">Messages</h2>
+                <div class="conversations-list">
+                    {% for conversation in conversations %}
+                        <div class="conversation-card">
+                            <strong class="username">{{ conversation.user_profile.user.username }}</strong>
+                            <span class="timestamp">{{ conversation.timestamp|date:"d-m-Y" }}</span>
+                            <p class="message-text">{{ conversation.message }}</p>
 
-                {% if conversation.conversation_attachments.all %}
-                <div class="attachments">
-                    {% for attachment in conversation.conversation_attachments.all %}
-                        <div class="attachment">
-                            {% if attachment.file %}
-                                <a href="{{ attachment.file.url }}" target="_blank">View Attachment</a>
-                            {% else %}
-                                <p>No attachment available.</p>
+                            {% if conversation.conversation_attachments.all %}
+                            <div class="attachments">
+                                {% for attachment in conversation.conversation_attachments.all %}
+                                    <div class="attachment">
+                                        {% if attachment.file %}
+                                            <!-- Directly display the attachment in the message container -->
+                                            <img src="{{ attachment.file.url }}" alt="Attachment" class="attachment-image">
+                                        {% else %}
+                                            <p>No attachment available.</p>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
                             {% endif %}
                         </div>
                     {% endfor %}
                 </div>
-            {% endif %}
-            
-            </div>
-        {% endfor %}
-    </div>
 
-                                        
                 <!-- Message Input Form (Now inside the right container) -->
                 <div class="form-container">
                     <form method="POST" class="message-form" enctype="multipart/form-data" action="{% url 'group_conversation_detail' group_id=group.id %}">
