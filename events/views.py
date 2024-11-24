@@ -506,19 +506,23 @@ def donation_list(request):
 @csrf_exempt  # Only if you are sure about CSRF token handling
 def help_alert(request):
     if request.method == "POST":
-        # Handle form submission, including optional image URL
-        image_url = request.POST.get('image_url')  # Get external image URL, if provided
+        # Retrieve data from the request
+        username = request.POST.get('username')
+        need_help = request.POST.get('needHelp')
+        description = request.POST.get('description')
+        contact_details = request.POST.get('contactDetails')
+        image_url = request.POST.get('image_url')  # Optional field
         
-        # Create a new help alert record
+        # Create a new help request entry
         help_request = HelpAlert.objects.create(
-            username=request.POST['username'],
-            need_help=request.POST['needHelp'],
-            description=request.POST['description'],
-            contact_details=request.POST['contactDetails'],
-            image=image_url  # Save the external image URL in the database
+            username=username,
+            need_help=need_help,
+            description=description,
+            contact_details=contact_details,
+            image=image_url
         )
         
-        # Return a JSON response with the new help request data
+        # Respond with the created data
         return JsonResponse({
             'status': 'success',
             'request': {
@@ -528,11 +532,11 @@ def help_alert(request):
                 'description': help_request.description,
                 'contact_details': help_request.contact_details,
                 'created_at': help_request.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-                'image': help_request.image  # Return the image URL, if available
+                'image': help_request.image  # Include image URL
             }
         })
 
-    # For GET requests, render the existing help requests in the template
+    # Handle GET requests by rendering the list of help requests
     help_requests = HelpAlert.objects.all()
     return render(request, 'events/help_alert.html', {'help_requests': help_requests})
 

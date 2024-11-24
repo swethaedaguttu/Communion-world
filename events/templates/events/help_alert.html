@@ -1519,11 +1519,12 @@
         <div class="item features-image col-12 col-md-6 col-lg-3 {% if forloop.first %}active{% endif %}">
           <div class="item-wrapper">
             <div class="item-img mb-3">
-                {% if request.image_url %}
-                    <img src="{{ request.image }}" alt="Help Image" class="img-thumbnail" style="max-width: 500px;">
-                {% else %}
-                    <img src="https://r.mobirisesite.com/877954/assets/images/default-placeholder.png" alt="Default Image">
-                {% endif %}
+                {% if request.image %}
+                <img src="{{ request.image }}" alt="Help Image" class="img-thumbnail" style="max-width: 500px;">
+            {% else %}
+                <img src="https://r.mobirisesite.com/877954/assets/images/default-placeholder.png" alt="Default Image">
+            {% endif %}
+            
             </div>            
             <div class="item-content align-left">
               <h5 class="item-title mbr-fonts-style mt-0 mb-2 display-5">
