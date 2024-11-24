@@ -2045,65 +2045,73 @@
         }
     };
 
-    // Handle file selection for attachments and display preview without file name
+    // Handle file selection for attachments and display preview
     function showAttachmentPreview() {
-        const input = document.getElementById('attachment-input');
-        const preview = document.getElementById('attachment-preview');
-        preview.innerHTML = ''; // Clear existing preview
+    const input = document.getElementById('attachment-input');
+    const preview = document.getElementById('attachment-preview');
+    preview.innerHTML = ''; // Clear existing preview
 
-        for (let i = 0; i < input.files.length; i++) {
-            const file = input.files[i];
-            const filePreview = document.createElement('div');
-            const previewContainer = document.createElement('div');
-            previewContainer.classList.add('attachment-preview-container');
+    for (let i = 0; i < input.files.length; i++) {
+        const file = input.files[i];
+        const filePreview = document.createElement('div');
+        filePreview.classList.add('file-preview');
 
-            // Check the file type and display accordingly
-            if (file.type.startsWith('image')) {
+        // Check the file type and display preview accordingly
+        const fileReader = new FileReader();
+
+        fileReader.onload = function(event) {
+            const fileContent = event.target.result;
+
+            if (file.type.startsWith('image/')) {
+                // If it's an image file
                 const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
-                img.classList.add('attachment-preview-image');  // Add styles
-                previewContainer.appendChild(img);
-            } else if (file.type.startsWith('video')) {
+                img.src = fileContent;
+                img.classList.add('attachment-image');
+                filePreview.appendChild(img);
+            } else if (file.type.startsWith('video/')) {
+                // If it's a video file
                 const video = document.createElement('video');
-                video.src = URL.createObjectURL(file);
+                video.src = fileContent;
                 video.controls = true;
-                video.classList.add('attachment-preview-video');  // Add styles
-                previewContainer.appendChild(video);
+                video.classList.add('attachment-video');
+                filePreview.appendChild(video);
             } else {
-                const placeholder = document.createElement('div');
-                placeholder.classList.add('attachment-placeholder');
-                placeholder.textContent = 'Attachment';  // For other file types
-                previewContainer.appendChild(placeholder);
+                // For unsupported file types, you can show a generic icon or message
+                filePreview.innerText = 'Unsupported file type';
             }
 
-            preview.appendChild(previewContainer);  // Add the preview container
-        }
+            preview.appendChild(filePreview);
+        };
+
+        fileReader.readAsDataURL(file); // Read file as data URL for preview
     }
+}
 
-    // Handle form submission with message and attachment preview
-    document.getElementById('message-form').addEventListener('submit', function(event) {
-        event.preventDefault();  // Prevent the form from submitting normally
+// Handle form submission with message and attachment preview
+document.getElementById('message-form').addEventListener('submit', function(event) {
+    event.preventDefault();  // Prevent the form from submitting normally
 
-        const form = document.getElementById('message-form');
-        const messageInput = document.getElementById('message-input').value;
-        const attachmentPreview = document.getElementById('attachment-preview').innerHTML;
+    const form = document.getElementById('message-form');
+    const messageInput = document.getElementById('message-input').value;
+    const attachmentPreview = document.getElementById('attachment-preview').innerHTML;
 
-        // Show the message in the conversation list (without saving it to the server yet)
-        const conversationList = document.getElementById('conversation-list');
-        const newMessage = document.createElement('div');
-        newMessage.classList.add('conversation-card');
-        newMessage.innerHTML = `
-            <strong class="username">You</strong>
-            <span class="timestamp">${new Date().toLocaleDateString()}</span>
-            <p class="message-text">${messageInput}</p>
-            ${attachmentPreview ? `<div class="attachment-preview">${attachmentPreview}</div>` : ''}
-        `;
-        conversationList.appendChild(newMessage);  // Add the new message to the list
+    // Show the message in the conversation list (without saving it to the server yet)
+    const conversationList = document.getElementById('conversation-list');
+    const newMessage = document.createElement('div');
+    newMessage.classList.add('conversation-card');
+    newMessage.innerHTML = `
+        <strong class="username">You</strong>
+        <span class="timestamp">${new Date().toLocaleDateString()}</span>
+        <p class="message-text">${messageInput}</p>
+        ${attachmentPreview ? `<div class="attachment-preview">${attachmentPreview}</div>` : ''}
+    `;
+    conversationList.appendChild(newMessage);  // Add the new message to the list
 
-        // Reset the form after previewing
-        form.reset();
-        document.getElementById('attachment-preview').innerHTML = '';  // Clear attachment preview
-    });
+    // Reset the form after previewing
+    form.reset();
+    document.getElementById('attachment-preview').innerHTML = '';  // Clear attachment preview
+});
+    
 </script>
     
 </body>
