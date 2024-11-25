@@ -607,11 +607,12 @@ def community_leaders_list(request):
 def create_community_leader(request):
     if request.method == 'POST':
         form = CommunityLeaderForm(request.POST)
-        if form.is_valid():  # Validate form data
-            form.save()  # Save data to the database
+        if form.is_valid():
+            leader = form.save()
+            print(f"Leader saved: {leader}")
             return redirect('community_leaders_list')
         else:
-            print(form.errors)  # Debugging aid: prints errors in the terminal
+            print("Form errors:", form.errors)  # Debug form errors
     else:
         form = CommunityLeaderForm()
     return render(request, 'events/create_community_leader.html', {'form': form})
