@@ -610,6 +610,8 @@ def create_community_leader(request):
         if form.is_valid():  # Validate form data
             form.save()  # Save data to the database
             return redirect('community_leaders_list')
+        else:
+            print(form.errors)  # This will print errors to the terminal for debugging
     else:
         form = CommunityLeaderForm()
     return render(request, 'events/create_community_leader.html', {'form': form})
