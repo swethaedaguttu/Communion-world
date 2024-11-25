@@ -233,7 +233,7 @@ class DonationForm(forms.Form):
 class CommunityLeaderForm(forms.ModelForm):
     class Meta:
         model = CommunityLeader
-        fields = ['name', 'community', 'description', 'image']  # Included 'image' field
+        fields = ['name', 'community', 'description', 'image']  # Exclude 'identity_symbol'
         labels = {
             'name': 'Leader Name',
             'community': 'Community Name',
