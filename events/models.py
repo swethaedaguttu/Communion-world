@@ -28,7 +28,7 @@ class UserProfile(models.Model):
     community = models.CharField(max_length=100, blank=True)
     country = models.CharField(max_length=100, blank=True)
     state = models.CharField(max_length=100, blank=True)
-    
+    is_2fa_enabled = models.BooleanField(default=False)  # Add default value
 
     # New fields added
     language = models.CharField(max_length=50, blank=True, null=True)  # Language preference
