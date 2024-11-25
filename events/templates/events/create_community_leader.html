@@ -1401,51 +1401,69 @@ textarea::placeholder {
 </section>
 
 <section data-bs-version="5.1" class="header18 cid-utHDI1aSUy mbr-fullscreen" id="hero-15-utHDI1aSUy">
-    <div class="mbr-overlay"></div>
     <div class="container-fluid">
         <div class="row">
-            <h1 class="text-white text-center mb-9">Create a New Community Leader</h1>
+            <h1 class="text-white text-center mb-4">Create a New Community Leader</h1>
+
             <form method="post">
                 {% csrf_token %}
-
-                <!-- Render form errors -->
-                {% if form.errors %}
+                
+                <!-- General Form Errors -->
+                {% if form.non_field_errors %}
                     <div class="alert alert-danger">
                         <ul>
-                            {% for field in form %}
-                                {% for error in field.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
                             {% endfor %}
                         </ul>
                     </div>
                 {% endif %}
-
+                
                 <!-- Name Field -->
                 <div class="form-group mb-4">
-                    {{ form.name.label_tag }}
+                    <label for="{{ form.name.id_for_label }}" class="text-white font-weight-bold">{{ form.name.label }}:</label>
                     {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="text-danger">
+                            <small>{{ form.name.errors.0 }}</small>
+                        </div>
+                    {% endif %}
                     <small class="form-text text-muted">{{ form.name.help_text }}</small>
                 </div>
 
                 <!-- Community Field -->
                 <div class="form-group mb-4">
-                    {{ form.community.label_tag }}
+                    <label for="{{ form.community.id_for_label }}" class="text-white font-weight-bold">{{ form.community.label }}:</label>
                     {{ form.community }}
+                    {% if form.community.errors %}
+                        <div class="text-danger">
+                            <small>{{ form.community.errors.0 }}</small>
+                        </div>
+                    {% endif %}
                     <small class="form-text text-muted">{{ form.community.help_text }}</small>
                 </div>
 
                 <!-- Description Field -->
                 <div class="form-group mb-4">
-                    {{ form.description.label_tag }}
+                    <label for="{{ form.description.id_for_label }}" class="text-white font-weight-bold">{{ form.description.label }}:</label>
                     {{ form.description }}
+                    {% if form.description.errors %}
+                        <div class="text-danger">
+                            <small>{{ form.description.errors.0 }}</small>
+                        </div>
+                    {% endif %}
                     <small class="form-text text-muted">{{ form.description.help_text }}</small>
                 </div>
 
                 <!-- Image URL Field -->
                 <div class="form-group mb-4">
-                    {{ form.image.label_tag }}
+                    <label for="{{ form.image.id_for_label }}" class="text-white font-weight-bold">{{ form.image.label }}:</label>
                     {{ form.image }}
+                    {% if form.image.errors %}
+                        <div class="text-danger">
+                            <small>{{ form.image.errors.0 }}</small>
+                        </div>
+                    {% endif %}
                     <small class="form-text text-muted">{{ form.image.help_text }}</small>
                 </div>
 
