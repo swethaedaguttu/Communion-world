@@ -1,157 +1,698 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Communion</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <style media="screen">
+    {% load static %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Modern Color Palette */
+            --primary-900: #1a365d;
+            --primary-800: #1e429f;
+            --primary-700: #1a56db;
+            --primary-600: #1c64f2;
+            --primary-500: #3f83f8;
+            --primary-400: #76a9fa;
+            --primary-300: #a4cafe;
+            --primary-200: #c3ddfd;
+            --primary-100: #e1effe;
+
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #1a365d 0%, #1c64f2 100%);
+            --gradient-hover: linear-gradient(135deg, #1e429f 0%, #3f83f8 100%);
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
+            display: flex;
+            background: var(--primary-100);
+            overflow: hidden;
+        }
+
+        /* Messages */
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            animation: slideIn 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #FEE2E2 0%, #FEF2F2 100%);
+            color: #DC2626;
+            border: 1px solid #FCA5A5;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #DCFCE7 0%, #F0FDF4 100%);
+            color: #16A34A;
+            border: 1px solid #86EFAC;
+        }
+
+        .message.info {
+            background: linear-gradient(135deg, #E0F2FE 0%, #F0F9FF 100%);
+            color: #0284C7;
+            border: 1px solid #7DD3FC;
+        }
+
+        .message.warning {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FFFBEB 100%);
+            color: #D97706;
+            border: 1px solid #FCD34D;
+        }
+
+        /* Left Panel Styles */
+        .brand-panel {
+            flex: 1;
+            background: var(--gradient-primary);
+            position: relative;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px;
+        }
+
+        .brand-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15) 0%, transparent 70%);
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+            animation: float-particle 20s infinite linear;
+            filter: blur(1px);
+        }
+
+        .brand-content {
+            text-align: center;
+            z-index: 2;
+            animation: fadeIn 1.2s ease-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .brand-logo {
+            width: 220px;
+            height: 220px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            filter: drop-shadow(0 0 40px rgba(255,255,255,0.5));
+            transition: all 0.5s ease;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .brand-logo img {
+            width: 65%;
+            height: 65%;
+            object-fit: contain;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            filter: brightness(1.1) drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+        }
+
+        .brand-content h1 {
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 4rem;
+            background: linear-gradient(to right, #ffffff, #a4cafe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(255,255,255,0.2);
+        }
+
+        .brand-content p {
+            margin-bottom: 25px;
+            color: var(--primary-200);
+            font-size: 1.3rem;
+            line-height: 1.6;
+            max-width: 440px;
+            opacity: 0.95;
+        }
+
+        /* Feature Items */
+        .brand-features {
+            margin-top: 40px;
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .feature-item {
+            padding: 25px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            transition: all 0.4s ease;
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .feature-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(255,255,255,0.18);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #76a9fa, #c3ddfd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Right Panel Styles */
+        .login-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
         }
 
         .login-container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: var(--shadow-xl);
+            border-radius: 24px;
+            padding: 50px;
             width: 100%;
-            max-width: 400px;
+            max-width: 460px;
+            animation: slideIn 0.7s ease-out;
         }
 
-        .brand {
+        .login-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
         }
 
-        .brand h3 {
-            color: #1a1a1a;
-            font-size: 24px;
+        .login-header h2 {
+            font-size: 32px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
             font-weight: 600;
         }
 
+        /* Form Styles */
         .form-group {
-            margin-bottom: 20px;
+            position: relative;
+            margin-bottom: 28px;
         }
 
-        label {
+        .form-group label {
             display: block;
-            color: #4a5568;
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--primary-800);
             font-weight: 500;
+            font-size: 15px;
         }
 
-        input {
+        .form-group input {
             width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            font-size: 14px;
+            padding: 16px 20px 16px 48px;
+            border: 2px solid rgba(203,213,224,0.4);
+            border-radius: 14px;
+            font-size: 16px;
             transition: all 0.3s ease;
+            background: rgba(255,255,255,0.9);
         }
 
-        input:focus {
-            border-color: #4299e1;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        .form-group input:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 4px rgba(63,131,248,0.1);
+            background: white;
             outline: none;
         }
 
-        button {
+        .form-group i {
+            position: absolute;
+            left: 18px;
+            top: 48px;
+            color: var(--primary-500);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus + i {
+            color: var(--primary-600);
+            transform: scale(1.1);
+        }
+
+        .form-group .field-error {
+            color: #DC2626;
+            font-size: 13px;
+            margin-top: 6px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .form-group input.error {
+            border-color: #DC2626;
+        }
+
+        .form-group input.error:focus {
+            box-shadow: 0 0 0 4px rgba(220,38,38,0.1);
+        }
+
+        /* Social Login */
+        /*
+        .social-login {
+            text-align: center;
+            position: relative;
+            margin-top: 35px;
+            padding-top: 35px;
+            border-top: 1px solid var(--primary-200);
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 18px;
+            margin-top: 25px;
+        }
+
+        .social-button {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid rgba(203,213,224,0.4);
+            border-radius: 14px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .social-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .social-button[onclick*="google"]:hover {
+            background: #DB4437;
+            border-color: #DB4437;
+            color: white;
+        }
+
+        .social-button[onclick*="facebook"]:hover {
+            background: #4267B2;
+            border-color: #4267B2;
+            color: white;
+        }
+        */
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(3deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(35px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .brand-panel {
+                padding: 40px 20px;
+                min-height: 320px;
+            }
+
+            .login-container {
+                padding: 35px;
+                margin: 20px;
+            }
+
+            .brand-features {
+                display: none;
+            }
+
+            .brand-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .brand-content p {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Additional Styles */
+        button[type="submit"] {
             width: 100%;
-            padding: 12px;
-            background: #4299e1;
+            padding: 16px;
+            background: var(--gradient-primary);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 14px;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            margin-top: 20px;
         }
 
-        button:hover {
-            background: #3182ce;
+        button[type="submit"]:hover {
+            background: var(--gradient-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
-        .footer {
-            text-align: center;
-            margin-top: 24px;
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        .footer a {
-            color: #4299e1;
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .forgot-password a {
+            color: var(--primary-600);
             text-decoration: none;
             font-size: 14px;
-            font-weight: 500;
+            transition: color 0.3s ease;
         }
 
-        .footer a:hover {
+        .forgot-password a:hover {
+            color: var(--primary-800);
             text-decoration: underline;
         }
 
-        .error-message {
-            background: #fff5f5;
-            color: #c53030;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: none;
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .register-link a {
+            color: var(--primary-600);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: var(--primary-800);
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="brand">
-            <h3>Welcome Back</h3>
+    <!-- Left Panel -->
+    <div class="brand-panel">
+        <div class="particles" id="particles"></div>
+        <div class="brand-content">
+            <img src="https://r.mobirisesite.com/875197/assets/images/g19a635698b1b94ea78769e054825-h_m37du4g9.png" alt="Communion Logo" class="brand-logo" style="border-radius: 50%;">
+            <h1>Communion</h1>
+            <p>Connect, Share, and Grow Together</p>
+            <div class="brand-features">
+                <div class="feature-item" style="animation-delay: 0.2s">
+                    <i class="fas fa-users feature-icon"></i>
+                    <p>Connect</p>
+                </div>
+                <div class="feature-item" style="animation-delay: 0.4s">
+                    <i class="fas fa-share-alt feature-icon"></i>
+                    <p>Share</p>
+                </div>
+                <div class="feature-item" style="animation-delay: 0.6s">
+                    <i class="fas fa-chart-line feature-icon"></i>
+                    <p>Grow</p>
+                </div>
+            </div>
         </div>
-        
-        <div class="error-message">
-            <!-- Add error messages here dynamically -->
-        </div>
-
-        <form method="post">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input 
-                    type="text" 
-                    id="username" 
-                    name="username" 
-                    placeholder="Enter your username"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    placeholder="Enter your password"
-                    required
-                >
-            </div>
-
-            <button type="submit">Sign In</button>
-
-            <div class="footer">
-                <a href="{% url 'register' %}">Don't have an account? Sign up</a>
-            </div>
-        </form>
     </div>
+
+    <!-- Right Panel -->
+    <div class="login-panel">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Please sign in to continue</p>
+            </div>
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    <i class="fas fa-info-circle" style="margin-right: 10px;"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="post" id="loginForm">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="username">Username or Email</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        placeholder="Enter your username or email"
+                        required
+                        autocomplete="username"
+                    >
+                    <i class="fas fa-user"></i>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <i class="fas fa-eye password-toggle" id="passwordToggle"></i>
+                </div>
+
+                <div class="form-footer">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <div class="forgot-password">
+                        <a href="{% url 'password_reset' %}">Forgot Password?</a>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitButton">
+                    <span>Sign In</span>
+                </button>
+
+                <div class="register-link">
+                    <p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // CSRF Token handling
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        // Password visibility toggle
+        const passwordToggle = document.getElementById('passwordToggle');
+        const passwordInput = document.getElementById('password');
+
+        passwordToggle.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Form validation
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const button = document.getElementById('submitButton');
+            
+            clearErrors();
+            
+            let hasError = false;
+            
+            if (!username) {
+                showFieldError('username', 'Username is required');
+                hasError = true;
+            }
+            
+            if (!password) {
+                showFieldError('password', 'Password is required');
+                hasError = true;
+            }
+            
+            if (!hasError) {
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+                button.disabled = true;
+                this.submit();
+            }
+        });
+
+        // Error handling functions
+        function showFieldError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'field-error';
+            errorDiv.textContent = message;
+            
+            field.classList.add('error');
+            field.parentNode.appendChild(errorDiv);
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.field-error').forEach(error => error.remove());
+            document.querySelectorAll('.error').forEach(field => field.classList.remove('error'));
+        }
+
+        // Social login handling
+        async function socialLogin(provider) {
+            const button = event.currentTarget;
+            const originalContent = button.innerHTML;
+            
+            try {
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+                button.disabled = true;
+
+                const urls = {
+                    'google': '{% url "social:begin" "google-oauth2" %}',
+                    'facebook': '{% url "social:begin" "facebook" %}'
+                };
+                
+                if (urls[provider]) {
+                    window.location.href = urls[provider];
+                } else {
+                    throw new Error('Authentication provider not configured');
+                }
+            } catch (error) {
+                showError(error.message);
+                button.innerHTML = originalContent;
+                button.disabled = false;
+            }
+        }
+
+        // Create particle effect
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Initialize particles
+        createParticles();
+    </script>
 </body>
 </html>
