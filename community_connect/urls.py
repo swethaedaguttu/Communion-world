@@ -30,7 +30,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('api/', include('events.urls')),  # Include the events app URLs
         # Password Reset URLs
-    path('password-reset/', 
+    path('password-reset/',
          auth_views.PasswordResetView.as_view(
              template_name='events/password_reset.html',
              email_template_name='events/password_reset_email.html',
@@ -38,22 +38,25 @@ urlpatterns = [
              success_url='/password-reset/done/'
          ),
          name='password_reset'),
-    path('password-reset/done/', 
+    
+    path('password-reset/done/',
          auth_views.PasswordResetDoneView.as_view(
              template_name='events/password_reset_done.html'
          ),
          name='password_reset_done'),
-    path('password-reset-confirm/<uidb64>/<token>/', 
+    
+    path('password-reset-confirm/<uidb64>/<token>/',
          auth_views.PasswordResetConfirmView.as_view(
-             template_name='events/password_reset_confirm.html'
+             template_name='events/password_reset_confirm.html',
+             success_url='/password-reset-complete/'
          ),
          name='password_reset_confirm'),
-    path('password-reset-complete/', 
+    
+    path('password-reset-complete/',
          auth_views.PasswordResetCompleteView.as_view(
              template_name='events/password_reset_complete.html'
          ),
          name='password_reset_complete'),
-
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
