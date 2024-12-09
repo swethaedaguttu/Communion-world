@@ -130,18 +130,30 @@ def register(request):
     return render(request, 'events/register.html')
 # Login view (use Django's built-in view or customize this)
 
-def user_login(request):
+def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
-        password = request.POST.get('password')  # Ensure this matches the input name in the form
-
+        password = request.POST.get('password')
+        remember_me = request.POST.get('remember') == 'on'
+        
         user = authenticate(request, username=username, password=password)
+        
         if user is not None:
             login(request, user)
+            
+            # Set session expiry based on remember me choice
+            if remember_me:
+                # Session will last for 2 weeks
+                request.session.set_expiry(1209600)
+            else:
+                # Session will end when browser closes
+                request.session.set_expiry(0)
+                
+            messages.success(request, f"Welcome back, {username}!")
             return redirect('index')
         else:
-            return HttpResponse("Username or Password is incorrect!!!")
-
+            messages.error(request, "Invalid username or password.")
+            
     return render(request, 'events/login.html')
 
 

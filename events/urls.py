@@ -2,7 +2,7 @@ from django.urls import path
 from events.views import (
     index,
     register,
-    user_login,
+    login_view,
     user_logout,
     event_list_view,
     event_create_view,
